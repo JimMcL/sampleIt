@@ -108,8 +108,8 @@ ruby 2.2.4p230 (2015-12-16 revision 53155) [i386-mingw32]
  On Windows, the server can be run using `server.bat [-p]`. If running
  production (-p option), it is necessary to first create a file called
  `SECRET_KEY_BASE.bat` which sets the environment variable
- SECRET_KEY_BASE. It should look like:
+ SECRET_KEY_BASE. The file should contain:
 
- `set SECRET_KEY_BASE=<secret>`
- where `<secret>` can be generated with he command:
+ `set SECRET_KEY_BASE=<secret>`  
+ where `<secret>` can be generated with the command:  
  `bundle exec rake secret`
