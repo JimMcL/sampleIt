@@ -1,0 +1,23 @@
+<p>
+  <strong>
+    <%= @site.label %>
+  </strong>
+</p>
+<p>
+  <strong>Notes:</strong>
+  <%= @site.notes %>
+</p>
+<p>
+  <strong>Location:</strong>
+  <%= @site.location %>
+</p>
+
+<p>
+  <% @site.photos.each do |photo| %>
+      <%= photo_image photo, true, 1, :thumb %>
+  <% end %>
+</p>
+
+
+<%= link_to 'Edit', edit_site_path(@site) %> |
+<%= link_to 'Back', sites_path %>

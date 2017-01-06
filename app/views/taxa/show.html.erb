@@ -1,0 +1,23 @@
+<p>
+  <strong>Rank:</strong>
+  <%= @taxon.rank %>
+</p>
+<p>
+  <strong>Scientific name:</strong>
+  <%= @taxon.scientific_name %>
+</p>
+<p>
+  <strong>Common name:</strong>
+  <%= @taxon.common_name %>
+</p>
+<p>
+  <strong>Description:</strong>
+  <%= @taxon.description %>
+</p>
+<p>
+  <strong>Parent taxon:</strong>
+  <%= @taxon.parent_taxon && @taxon.parent_taxon.description || "" %>
+</p>
+
+<%= link_to 'Edit', edit_taxon_path(@taxon) %> |
+<%= link_to 'Back', taxa_path %>

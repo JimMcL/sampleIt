@@ -1,0 +1,17 @@
+<% if Photo::NON_USER_DELETABLE.include?(file.ftype) %>
+<%   del_btn = image_tag('/delete.png', class: "delete disabled") %>
+<% else %>
+<%   del_btn = link_to(image_tag('/delete.png', class: :delete), "/photo_files/#{file.id}", method: :delete, data: { confirm: 'Are you sure?' }) -%>
+<% end %>
+
+<tr>
+  <td><%= file.ftype -%></td>
+  <td><%= file.size -%></td>
+  <td rowspan=2 class='delete'><%= del_btn %> </td>
+</tr>
+<tr>
+  <td colspan=2>
+    <% url = "/images/#{file.path}" %>
+    <%= link_to url, url -%>
+  </td>
+</tr>

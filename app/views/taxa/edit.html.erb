@@ -1,0 +1,10 @@
+<% content_for :title do -%>
+Taxon <%= @taxon.label %>
+<%- end %>
+ 
+<% content_for :sidebar do %>
+  <%= scientific_classification @taxon, false, true %>
+<% end %>
+ 
+<%= render 'form' %>
+ 

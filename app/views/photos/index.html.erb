@@ -1,0 +1,12 @@
+<% content_for :title do -%>
+Photos
+<%- end %>
+
+<% content_for :sidebar do %>
+  <div><%= search_form(photos_path) %></div>
+<% end %>
+
+<% @photos.each do |photo| %>
+  <%# Link to photo rather than owner -%>
+  <%= photo_image(photo, link_to_owner: false) %>
+<% end %>

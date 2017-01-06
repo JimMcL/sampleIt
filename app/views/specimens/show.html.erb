@@ -1,0 +1,36 @@
+<p>
+  <strong>Site:</strong>
+  <%= @specimen.site.label %>
+</p>
+<p>
+  <strong>Species:</strong>
+  <%= @specimen.taxon_description %>
+</p>
+<p>
+  <strong>Quantity:</strong>
+  <%= @specimen.quantity %>
+</p>
+<p>
+  <strong>Body length:</strong>
+  <%= @specimen.body_length %>
+</p>
+<p>
+  <strong>Description:</strong>
+  <%= @specimen.description %>
+</p>
+<p>
+  <strong>Notes:</strong>
+  <%= @specimen.notes %>
+</p>
+<p>
+  <% @specimen.photos.each do |photo| %>
+    <% if !photo.filename.nil? %>
+      <%= image_tag(photo.thumb_path) %>
+    <% else %>
+      Missing image <%= photo.id %>
+    <% end %>
+  <% end %>
+</p>
+
+<%= link_to 'Edit', edit_specimen_path(@specimen) %> |
+<%= link_to 'Back', specimens_path %>

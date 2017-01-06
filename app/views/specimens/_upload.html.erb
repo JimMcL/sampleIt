@@ -1,0 +1,41 @@
+<%= textbox 'Upload specimen photo', container_class: :upload do %>
+  <%= block do %>
+      <%= f.file_field(:photo) %>
+  <% end %>
+  <%= block do %>
+      <%= f.file_field :exif %>
+      <%= help_button 'If the EXIF photo is uploaded, the photo itself is ignored but its EXIF data will be used
+        in place of the EXIF data from the photo. This is useful when a photo has been processed (e.g. in Photoshop)
+        and the EXIF data has been lost, but the original (unprocessed) photo is still accessible.' %>
+  <% end %>
+
+  <%= block do %>
+    <%= label_tag :scalebar, class: 'checkbox' do %>
+      <%= check_box_tag 'scalebar', true, true, form: f.form_id %> <span>Add scale bar</span>
+    <% end %>
+  <% end %>
+    
+  <%= block do %>
+    <%= f.view_angle %>
+  <% end %>
+
+  <%= block do %>
+    <%= f.autocompleted_dbs_field 'Type', col_values(Photo, :ptype), :photo_ptype, title: 'E.g. photo or drawing' %>
+  <% end %>
+
+  <%= block do %>
+    <%= f.photo_state %>
+  <% end %>
+    
+  <%= block do %>
+    <%= f.field 'Source' do %>
+      <%= text_field_tag :photo_source, '', form: f.form_id %>
+    <% end %>
+  <% end %>
+    
+  <%= block do %>
+    <%= f.field 'Description' do %>
+      <%= text_field_tag :photo_description, '', size: 30, form: f.form_id %>
+    <% end %>
+  <% end %>
+<% end %>

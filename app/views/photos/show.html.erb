@@ -1,0 +1,8 @@
+<% content_for :title do -%>
+<%= @photo.to_s %>
+<%- end %>
+
+<div class='page'>
+  <div id='controls'><%= render 'form' %></div>
+  <div id='image'><%= image_tag @photo.file(:photo).path, class: :full %></div>
+</div>

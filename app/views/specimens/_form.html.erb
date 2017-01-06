@@ -1,0 +1,49 @@
+  <% if @specimen.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@specimen.errors.count, "error") %> prohibited
+        this specimen from being saved:
+      </h2>
+      <ul>
+        <% @specimen.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= labelled_block 'Identity' do %>
+    <%= f.collection_select :site_id, Site.all, :id, :label %>
+    <%= f.text_field :id, label: 'Specimen id', readonly: true, title: 'Automatically assigned unique number' %>
+    <%= f.text_field :ref, label: 'Reference' %>
+    <%= if !@specimen.id.nil? && !@specimen.site_id.nil?
+        f.field '' do
+            # button_to doesn't work, it just submits the main form
+            link_to 'View site', edit_site_specimen_path(@specimen), :method => :get
+          end
+        end %>
+  <% end %>
+ 
+  <%= labelled_block 'Taxon' do %>
+    <%= f.text_field :taxon_name, value: (@specimen.taxon ? @specimen.taxon.label : ''), size: '30em' %>
+    <%= f.hidden_field :taxon_id %>
+    <%= f.text_field :id_confidence, label: 'Confidence in ID' %>
+  <% end %>
+
+  <%= labelled_block 'Details' do %>
+      <%= f.text_field :body_length %>
+      <%= f.text_field :quantity %>
+      <%= f.text_field :description, title: 'Description of this specimen' %>
+  <% end %>
+ 
+  <%= labelled_block 'Notes' do %>
+    <%= f.text_area :notes, cols: 47, rows: 1 %>
+    <%= f.text_field :other, label: 'Other information' %>
+  <% end %>
+
+  <% photos = @specimen.photos %>
+  <% unless photos.empty? %>
+    <%= labelled_block 'Photos' do %>
+      <%= render partial: 'thumb', collection: @specimen.photos, as: :photo, locals: {parents: [@specimen]} %>
+    <% end %>
+  <% end %>

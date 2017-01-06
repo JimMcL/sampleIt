@@ -1,0 +1,20 @@
+<% content_for :title do -%>
+<%= @specimen.to_s %>
+<%- end %>
+
+<%# Note use of resource-oriented form_for %>
+<%= labelled_form_for @specimen do |f| %>
+
+<%# Note that this gets rendered outside the form because it is actually rendered by the layout %>
+<% content_for :sidebar do %>
+  <div><%= f.submit 'Save changes', form: f.form_id %></div>
+  <div><%= button_to 'Copy specimen', copy_specimen_path(@specimen), :method => :get %></div>
+  <div><%= search_form(specimens_path, hidden_field_tag(:shortcut, :true)) %></div>
+  <div><%= render partial: 'upload', locals: {f: f} %></div>
+  <div><%= scientific_classification @specimen.taxon, true, false %></div>
+<% end %>
+ 
+
+<%= render partial: 'form', locals: {f: f} %>
+ 
+<% end %>

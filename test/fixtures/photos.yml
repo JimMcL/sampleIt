@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: photos
+#
+#  id             :integer          not null, primary key
+#  rating         :integer
+#  filename       :text
+#  imageable_type :string
+#  imageable_id   :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  thumb_path     :text
+#  exif_json      :text
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rating: 1
+  imageable: one
+
+two:
+  rating: 1
+  imageable: two

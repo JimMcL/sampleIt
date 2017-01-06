@@ -1,0 +1,37 @@
+<% content_for :title do -%>
+Sites
+<%- end %>
+
+<% content_for :sidebar do %>
+<div>
+  <%= search_form(sites_path) %>
+</div>
+<p>
+  <%= button_to 'New site', new_site_path, :method => :get %>
+<% end %>
+
+<table>
+  <tr class='header'>
+    <th>Id</th>
+    <th>Project</th>
+    <th>Time</th>
+    <th>Notes</th>
+    <th></th>
+  </tr>
+
+   <% @sites.each do |site| %>
+    <tr>
+      <td><%= link_to site.label, edit_site_path(site) %></td>
+      <td><%= site.project ? site.project.title : '' %></td>
+      <%# HACK use server side local timezone and my preferred format %>
+      <!-- <td><%= site.started_at ? site.started_at.in_time_zone.strftime('%l:%M%P %d-%m-%Y') : '' %></td> -->
+      <td><%= site.started_at ? site.started_at.to_formatted_s(:short) : '' %></td>
+      <td><%= site.notes %></td>
+      <td><%= link_to image_tag('/delete18.png', size: 18),
+	      site_path(site),
+              method: :delete,
+              data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+
+</table>

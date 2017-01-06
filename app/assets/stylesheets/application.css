@@ -1,0 +1,84 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ *= require jquery-ui
+ */
+
+body, textarea { font-family: sans-serif }
+div.content { padding: 1em }
+h1 { font-size: 2em }
+p { padding: .5ex 0 }
+em, i { font-style: italic }
+
+.home { float: left; padding-right: 1em }
+.home img { width: 64px; height: 64px }
+div.banner { background: #b0483f; padding: 1ex }
+div.banner { color: #d0e0f0 }
+div.banner h1 { padding: .5em }
+
+div.banner .menu { list-style-type: none; float: right; padding:.6em .5em }
+div.banner .menu li { display: inline-block; background-color:#ccc; border: 1px solid #888; border-collapse: collapse; color: #135; padding:.8em .5em }
+div.banner .menu a.active { background-color:#fff; color: #000 }
+div.banner .menu a { font-weight: bold; text-decoration: none }
+
+.header { background-color:#135; color: #eee; padding-top:.5em; padding-bottom: .5em }
+table.index tr.no-photos { border-bottom: 1px solid #bdf }
+
+div.field { padding: .2em .5em; vertical-align: top }
+input, label.field-label { display: block }
+div.field label.field-label { font-weight: bold; padding-top: .5em; padding-bottom: .2em }
+div.field div.field { display: inline-block; padding: .1em 0 }
+div.field div.field label.field-label { font-weight: normal; opacity: .5; font-size:80%; padding-top: 0; padding-bottom: .2em }
+/* Input inside a label should not be a block */
+label input { display: inline }
+
+td, th { padding: .4em .5em }
+td.delete { padding: 0; vertical-align: middle; }
+.delete.disabled { opacity: 0.2 }
+
+div.search { position: relative; display: inline-block }
+input.search { padding:4px }
+img.search { position: absolute; top: 4px; right: 4px }
+
+/* Sidebar */
+.sidebar { float: right; margin-left: 1em }
+.sidebar > div { margin-bottom: 1ex }
+
+/* Help */
+.help-button { width:2em; border-radius: 5px }
+.help { display: none; position: absolute; z-index: 1000; left: -30em; top: 2em; border: 2px solid brown; padding: 1ex; width: 30em; background: #ffe8e0; border-radius: 1ex }
+.help-container { display: inline-block; position: relative }
+
+/* labelled_block */
+.textbox { border: 2px solid #135; border-radius: 4px; padding: 0; background: #eee }
+.textbox .header { text-align: center }
+.textbox .content { padding: 0 1ex 1.5ex .8ex }
+/* From https://two-wrongs.com/draw-a-tree-structure-with-only-css */
+.txtr, .txtr ul, .txtr li {position: relative;}
+.txtr li {padding-top: 8px }
+.txtr ul {list-style: none; padding-left: 14px; /* Defines indent */ }
+.txtr li::before, .txtr li::after {content: ""; position: absolute; left: -12px;}
+.txtr li::before {border-bottom: 1px solid #000; top: 10px; width: 8px; height: 5px;}
+.txtr li::after {border-left: 1px solid #000; height: 100%; width: 0px; top: 2px;}
+.txtr ul > li:last-child::after {height: 14px;}
+
+.txtr .focal-taxon { font-weight: bold }
+
+#error_explanation div {width: 450px; padding: 7px; margin-bottom: 20px; background-color: #f0f0f0;}
+#error_explanation .notice {border: 2px solid green;}
+#error_explanation .alert {border: 2px solid red;}
+
+.page-menu { float: right; margin-bottom: 1ex }
+.page-menu form { display: inline-block }
+.page-menu form, .page-menu a { padding: 4px }

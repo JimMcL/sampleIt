@@ -1,0 +1,12 @@
+<%- headers = ['id', 'photo_id', 'ftype', 'url', 'width', 'height'] -%>
+<%= CSV.generate_line headers -%>
+<%- @photo_files.each do | photo_file | -%>
+<%= CSV.generate_line([photo_file.id,
+        photo_file.photo_id,
+        photo_file.ftype,
+        image_url(photo_file.path),
+        photo_file.width,
+        photo_file.height
+        ]
+        ) -%>
+<%- end -%>

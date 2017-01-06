@@ -1,0 +1,30 @@
+<% content_for :title do -%>
+Projects
+<%- end %>
+
+<% content_for :sidebar do %>
+  <div><%= search_form(projects_path) %> </div>
+  <div><%= link_to 'New project', new_project_path %></div>
+<% end %>
+
+
+<table>
+  <thead>
+    <tr class='header'>
+      <th>Title</th>
+      <th>Description</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @projects.each do |project| %>
+      <tr>
+        <td><%= link_to project.title, edit_project_path(project) %></td>
+        <td><%= project.description %></td>
+        <td><%= link_to image_tag('/delete18.png', size: 18), project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

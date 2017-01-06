@@ -1,0 +1,45 @@
+<% content_for :title do -%>
+Taxa
+<%- end %>
+
+<div class='page-menu'>
+  <%= link_to 'New taxon', new_taxon_path %>
+  <%= search_form(taxa_path) %>
+</div>
+
+<table class='index'>
+  <tr class=header>
+    <th>Id</th>
+    <th>Scientific name</th>
+    <th>Common name</th>
+    <th>Rank</th>
+    <th>Description</th>
+    <th></th>
+  </tr>
+
+   <% @taxa.each do |taxon| %>
+    <% photos = taxon.choose_photos(4) %>
+    <tr class='<%= photos ? 'has-photos' : 'no-photos' %>'>
+      <td><%= link_to taxon.id, edit_taxon_path(taxon) %></td>
+      <td><%= taxon.scientific_name %></td>
+      <td><%= taxon.common_name %></td>
+      <td><%= taxon.rank %></td>
+      <td><%= taxon.description %></td>
+      <td class='delete'><%= link_to image_tag('/delete18.png', size: 18),
+	      taxon_path(taxon),
+              method: :delete,
+              data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <% if photos %>
+      <tr>
+        <td></td>
+        <td colspan="5">
+          <% photos.each do |photo| %>
+            <%= photo_image photo, delete_button: false, rating_flags: false, scale: 0.5 %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+
+</table>

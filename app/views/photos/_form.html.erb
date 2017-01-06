@@ -1,0 +1,60 @@
+<% if @photo.errors.any? %>
+  <div id="error_explanation">
+    <h2>
+      <%= pluralize(@photo.errors.count, "error") %> prohibited this photo from being saved:
+    </h2>
+    <ul>
+      <% @photo.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<%# I have no idea why multipart has to be explicit here and not elsewhere! %>
+<%= labelled_form_for(@photo, :html => { multipart: true }) do |f| %>
+
+  <%= f.field 'Owner' do %>
+    <%= link_to @photo.imageable, url_for(@photo.imageable) %>
+  <% end %>
+  
+  <%= f.view_angle("photo[view_angle]", @photo.view_angle) %>
+  <%= f.autocompleted_dbs_field 'Type', col_values(Photo, :ptype), 'photo[ptype]', title: 'E.g. photo or drawing', initial_value:@photo.ptype %>
+  <%= f.photo_state "photo[state]", @photo.state %>
+  <%= f.text_field :source, title: 'Source of this photo' %>
+  <%= f.text_field :description, title: 'Description of this photo' %>
+  
+  <%= f.field 'Rating' do %>
+    <%= rating_block(@photo) %>
+  <% end %>
+
+  <%= block do %>
+    <%= button_tag 'Show EXIF', type: 'button', id: 'show_exif', 'data-toggle-id' => 'exif' %>
+  <% end %>
+  <div id='exif'>
+    <%= image_tag('/close18.png', class: 'close', data: {'toggle-id' => 'exif'}) %>
+    <%= @photo.exif.map{ |k, v| "<p>#{k} - #{v}</p>" }.join.html_safe %>
+  </div>
+
+  <%= f.field 'Representations' do %>
+    <table>
+      <%= render partial: 'file', collection: @photo.photo_files %>
+    </table>
+  <% end %>
+
+  <%= labelled_block 'New representation' do %>
+    <%= f.field 'Type' do %>
+      <%= text_field_tag :ftype, '' %>
+    <% end %>
+  <% end %>
+    
+  <%= block do %>  
+    <%= file_field_tag :photo_file %>
+  <% end %>
+
+  <%= block do %>
+    <%= f.submit 'Save' %>
+  <% end %>
+
+<% end %>

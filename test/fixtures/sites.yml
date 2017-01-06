@@ -1,0 +1,33 @@
+# == Schema Information
+#
+# Table name: sites
+#
+#  id               :integer          not null, primary key
+#  notes            :text
+#  latitude         :float
+#  longitude        :float
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  horizontal_error :float
+#  altitude         :float
+#  temperature      :float
+#  weather          :text
+#  collector        :text
+#  sample_type      :string
+#  transect         :string
+#  duration         :integer
+#  started_at       :datetime
+#  description      :text
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  notes: MyText
+  latitude: 
+  longitude: 
+
+two:
+  notes: MyText
+  latitude: 
+  longitude: 

@@ -1,0 +1,32 @@
+# == Schema Information
+#
+# Table name: specimens
+#
+#  id          :integer          not null, primary key
+#  description :text
+#  site_id     :integer
+#  quantity    :integer
+#  body_length :float
+#  notes       :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  taxon_id    :integer
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: MyText
+  species: MyText
+  site: one
+  quantity: 1
+  body_length: 1.5
+  notes: MyText
+
+two:
+  description: MyText
+  species: MyText
+  site: two
+  quantity: 1
+  body_length: 1.5
+  notes: MyText

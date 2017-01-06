@@ -1,0 +1,7 @@
+<% content_for :title do -%>
+<%= @site.to_s %>
+<%- end %>
+ 
+<%= render 'form' %>
+ 
+<%= link_to 'Back', sites_path %>

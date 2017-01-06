@@ -1,0 +1,34 @@
+# == Schema Information
+#
+# Table name: taxa
+#
+#  id              :integer          not null, primary key
+#  description     :text
+#  scientific_name :text
+#  common_name     :text
+#  parent_taxon_id :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  rank            :text
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: Ant mimic spiders
+  scientific_name: Myrmarachne
+  common_name: 
+  parent_taxon: nil
+
+two:
+  description: Golden bum mimic
+  scientific_name: Myrmarachne luctuosa
+  common_name: Mournful ant mimic
+  parent_taxon: one
+
+three:
+  description: Black and red ant mimic
+  scientific_name: Myrmarachne bicolor
+  authority: L. Koch, 1879
+  common_name: Two-coloured Ant Mimic
+  parent_taxon: one

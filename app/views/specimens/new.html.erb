@@ -1,0 +1,15 @@
+<% content_for :title do -%>
+New Specimen
+<%- end %>
+
+<% # Note use of resource-oriented form_for %>
+<%= labelled_form_for @specimen do |f| %>
+
+<% content_for :sidebar do %>
+  <div><%= f.submit 'Save changes', form: f.form_id %></div>
+  <div><%= render partial: 'upload', locals: {f: f} %></div>
+<% end %>
+ 
+<%= render partial: 'form', locals: {f: f} %>
+
+<% end %>

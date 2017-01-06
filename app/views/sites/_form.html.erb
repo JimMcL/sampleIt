@@ -1,0 +1,65 @@
+<% # Note use of resource-oriented form_for %>
+<%= labelled_form_for @site do |f| %>
+ 
+  <% if @site.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@site.errors.count, "error") %> prohibited
+        this site from being saved:
+      </h2>
+      <ul>
+        <% @site.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.collection_select :project_id, Project.all, :id, :title %>
+
+  <%= labelled_block 'Location' do %>
+    <%= f.text_field :description, size: 45 %>
+    <%= f.text_field :ref, label: 'Reference' %>
+  <% end %>
+  <%= block do %>
+    <%= f.text_field :location, size: 45 %>
+  <% end %>
+  <%= block do %>
+    <%= f.text_field :altitude, label: 'Altitude (m)' %>
+  <% end %>
+
+  <%= labelled_block 'Weather' do %>
+    <%= f.text_field :temperature, size: 8 %>
+    <%= f.text_field :weather %>
+  <% end %>
+ 
+  <%= labelled_block 'Sample information' do %>
+    <%= f.text_field :collector %>
+    <%= f.text_field :sample_type %>
+    <%= f.text_field :transect %>
+  <% end %>
+
+  <%= block do %>
+      <%= f.datetime_select :started_at, label: 'Sampling started at', include_blank: true %>
+      <%= f.text_field :duration %>
+  <% end %>
+
+  <%= f.text_field :notes, size: 45 %>
+ 
+  <%= f.file_field :photo %>
+
+  <%= block do %>
+    <% @site.photos.each do |photo| %>
+      <%= photo_image(photo, rating_flags:false, link_to_owner: false) %>
+    <% end %>
+  <% end %>
+
+<div class='field-block'>
+  This site contains <%= @specimen_count %> <%= 'specimen'.pluralize @specimen_count %>
+</div>
+
+<div class='field-block'>
+    <%= f.submit %>
+</div>
+ 
+<% end %>

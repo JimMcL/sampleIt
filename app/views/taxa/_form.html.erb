@@ -1,0 +1,67 @@
+<% # Note use of resoure-oriented form_for %>
+<%= labelled_form_for @taxon do |f| %>
+ 
+  <% if @taxon.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@taxon.errors.count, "error") %> prohibited
+        this taxon from being saved:
+      </h2>
+      <ul>
+        <% @taxon.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= labelled_block 'Identity' do %>
+    <%= f.select(:rank, options_for_select(Taxon::common_ranks, selected = @taxon.rank), { include_blank: true }) %>
+    <%= f.text_field :scientific_name %>
+    <%= f.text_field :authority %>
+    <%= f.text_field :common_name %>
+  <% end %>
+ 
+  <%= labelled_block 'Parent taxon' do %>
+    <%= f.text_field :parent_taxon_name, value: (@taxon.parent_taxon ? @taxon.parent_taxon.label : ''), size: '30em' %>
+    <%= f.hidden_field :parent_taxon_id %>
+  <% end %>
+    
+  <%= f.text_area :description %>
+ 
+  <%= block do %>
+    <%= f.submit 'Save' %>
+  <% end %>
+
+  <% photos = @taxon.choose_photos(20) %>
+  <% if photos %>
+    <%= block do %>
+          <% photos.each do |photo| %>
+            <%= photo_image photo %>
+          <% end %>
+    <% end %>
+  <% end %>
+
+  <% specimens = @taxon.specimens.limit(41) %>
+  <% if specimens %>
+    <%= block do %>
+      <table>
+        <tr class=header>
+          <th>Id</th>
+          <th>Description</th>
+          <th>Photos</th>
+          <th>Reference</th>
+        </tr>
+        <% specimens.each do |sp| %>
+          <tr>
+            <td><%= link_to sp.human_id, edit_specimen_path(sp) %></td>
+            <td><%= sp.description %></td>
+            <td><%= sp.photos.count %></td>
+            <td><%= sp.ref %></td>
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  <% end %>
+
+<% end %>
