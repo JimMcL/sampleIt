@@ -100,9 +100,11 @@ ruby 2.2.4p230 (2015-12-16 revision 53155) [i386-mingw32]
 
 * Deployment instructions
 
+ Install Ruby and Ruby on Rails.
+ 
  Pre-compiled assets are not checked in to
  revision control. That means it is necessary to precompile them as
- part of a production deployment. Run the command
+ part of a production deployment. To do so, run the command
  `$ bundle exec rake assets:precompile`
 
  On Windows, the server can be run using `server.bat [-p]`. If running
