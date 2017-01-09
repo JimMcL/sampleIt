@@ -5,7 +5,7 @@ class SitesController < ApplicationController
   include HasPhotos
 
   def index
-    @sites = Site.search(params[:q])
+    @sites = Site.includes(:project).search(params[:q])
   end
  
   def show

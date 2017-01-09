@@ -23,6 +23,9 @@
   <% end %>
   <%= block do %>
     <%= f.text_field :location, size: 45 %>
+    <%= f.field '.' do %>
+        <%= button_tag 'Use current location', type: 'button', data: {'get-location' => 'site'} %>
+    <% end %>
   <% end %>
   <%= block do %>
     <%= f.text_field :altitude, label: 'Altitude (m)' %>
