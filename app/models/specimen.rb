@@ -14,6 +14,7 @@
 #  id_confidence :string
 #  other         :string
 #  ref           :string
+#  disposition   :string
 #
 # Indexes
 #
@@ -37,11 +38,12 @@ class Specimen < ApplicationRecord
     else
       lk = "%#{q}%"
       left_outer_joins(:taxon).
-        where("specimens.id = ? OR site_id = ? OR lower(taxa.rank) = ? OR specimens.ref = ?
-               OR specimens.description LIKE ? OR specimens.notes LIKE ? OR 
+        where("specimens.id = ? OR site_id = ? OR lower(taxa.rank) = ? OR 
+               specimens.ref = ? OR specimens.description LIKE ? OR 
+               specimens.notes LIKE ? OR specimens.disposition LIKE ? OR 
                taxa.scientific_name like ? OR taxa.common_name like ? OR taxa.description like ?",
             q, q, q ? q.downcase : nil, q,
-            lk, lk,
+            lk, lk, lk,
             lk, lk, lk)
     end
 end

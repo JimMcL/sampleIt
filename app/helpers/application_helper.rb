@@ -49,7 +49,7 @@ module ApplicationHelper
     content_tag('div',
                 delete_btn +
                 rating +
-                link_to(image_tag(file.path, size: file.size(scale)), link_to_owner ? photo.imageable : photo),
+                link_to(image_tag(file.path, size: file.size_s(scale)), link_to_owner ? photo.imageable : photo),
                 class: 'photo-container')
   end
 

@@ -85,7 +85,8 @@ class SpecimensController < ApplicationController
 
   def specimen_params
     params.require(:specimen).permit(:description, :taxon_id, :taxon_name, :site_id,
-                                     :quantity, :body_length, :notes, :photo, :exif, :id_confidence, :other)
+                                     :quantity, :body_length, :notes, :photo, :exif, :id_confidence,
+                                     :other, :disposition)
   end
 
   def handle_taxon(specimen, sp_params)

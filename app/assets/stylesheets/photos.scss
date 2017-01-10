@@ -35,3 +35,9 @@ body.photos div.sidebar #search { margin:6px }
 div#exif { display: none; position: absolute; left: 1em; top: 5em; border: 2px solid black; border-radius: 6px; padding: 6px; color: black; background: #e8e8e8 }
 
 div#exif .close { position: absolute; top: 2px; right: 2px; z-index: 100 }
+
+/* The table stuff is a hack to make the caption wrap */
+.photo-wrapper { display:inline-table; width: 10px }
+.photo-caption { display:table-caption; caption-side:bottom }
+
+.detail { display: none }

@@ -15,7 +15,7 @@
 <%# I have no idea why multipart has to be explicit here and not elsewhere! %>
 <%= labelled_form_for(@photo, :html => { multipart: true }) do |f| %>
 
-  <%= f.field 'Owner' do %>
+  <%= f.field @photo.imageable_type do %>
     <%= link_to @photo.imageable, url_for(@photo.imageable) %>
   <% end %>
   
@@ -24,6 +24,7 @@
   <%= f.photo_state "photo[state]", @photo.state %>
   <%= f.text_field :source, title: 'Source of this photo' %>
   <%= f.text_field :description, title: 'Description of this photo' %>
+  <%= f.text_field :camera, title: 'Model name of camera or microscope' %>
   
   <%= f.field 'Rating' do %>
     <%= rating_block(@photo) %>

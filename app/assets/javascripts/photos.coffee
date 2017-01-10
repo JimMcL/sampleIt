@@ -34,3 +34,6 @@ $ ->
         source: window.all_photo_ptypes
         select: (event,ui) -> $("#photo_ptype").val(ui.item)
 
+$ ->
+  $("#specimen_photo").click (e) ->
+    $(".detail").show('fast')

@@ -13,6 +13,7 @@ Specimens
     <th>Id</th>
     <th>Species</th>
     <th>Description</th>
+    <th>Reference</th>
     <th></th>
   </tr>
 
@@ -21,6 +22,7 @@ Specimens
       <td><%= link_to "#{specimen.site_id}-#{specimen.id}", edit_specimen_path(specimen) %></td>
       <td><%= specimen.taxon_label %></td>
       <td><%= specimen.description %></td>
+      <td><%= specimen.ref %></td>
       <td><%= link_to image_tag('/delete18.png', size: 18),
 	      specimen_path(specimen),
               method: :delete,

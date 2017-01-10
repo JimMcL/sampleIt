@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170105235153) do
+ActiveRecord::Schema.define(version: 20170110005904) do
 
   create_table "photo_files", force: :cascade do |t|
     t.string   "ftype",      null: false
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20170105235153) do
     t.string   "state"
     t.string   "ptype"
     t.string   "source"
+    t.string   "camera"
     t.index ["imageable_type", "imageable_id"], name: "index_photos_on_imageable_type_and_imageable_id"
   end
 
@@ -80,6 +81,7 @@ ActiveRecord::Schema.define(version: 20170105235153) do
     t.string   "id_confidence"
     t.string   "other"
     t.string   "ref"
+    t.string   "disposition"
     t.index ["site_id"], name: "index_specimens_on_site_id"
     t.index ["taxon_id"], name: "index_specimens_on_taxon_id"
   end

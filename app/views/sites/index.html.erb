@@ -3,11 +3,16 @@ Sites
 <%- end %>
 
 <% content_for :sidebar do %>
-<div>
-  <%= search_form(sites_path) %>
-</div>
-<p>
-  <%= button_to 'New site', new_site_path, :method => :get %>
+  <div>
+    <%= search_form(sites_path) %>
+  </div>
+  <p>
+    <%= button_to 'New site', new_site_path, :method => :get %>
+  </p>
+  <div class='map'>
+    <% map_size = [300, 400] %>
+    <%= image_tag sites_map_url(@sites, map_size), width: map_size[0], height: map_size[1] %>
+  </div>
 <% end %>
 
 <table>

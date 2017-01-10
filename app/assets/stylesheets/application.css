@@ -82,3 +82,5 @@ img.search { position: absolute; top: 4px; right: 4px }
 .page-menu { float: right; margin-bottom: 1ex }
 .page-menu form { display: inline-block }
 .page-menu form, .page-menu a { padding: 4px }
+
+.map { border: 2px solid #135; border-radius: 4px }

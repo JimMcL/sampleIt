@@ -3,9 +3,10 @@
 <%- end %>
 
 <% content_for :sidebar do %>
-  <!-- TODO <div><%#= f.submit 'Save changes', form: f.form_id %></div> -->
+<!-- TODO <div><%#= f.submit 'Save changes', form: f.form_id %></div> -->
   <% map_size = [300, 300] -%>
-   <div><%= image_tag site_map_url(@site, map_size), width: map_size[0], height: map_size[1] %>
+  <div class='map'>
+    <%= image_tag site_map_url(@site, map_size), width: map_size[0], height: map_size[1] %>
    </div>
 <% end %>
   

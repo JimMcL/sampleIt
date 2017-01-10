@@ -75,7 +75,12 @@ class PhotoTest < ActiveSupport::TestCase
     assert_equal "Ant head", p1.description
     assert_equal "Ant head", p1.label
     p1.view_angle = ViewAngle.new('lateral')
-    assert_equal "Ant head, Lateral view", p1.label
+    assert_equal "Ant head, lateral view", p1.label
+  end
+
+  test "camera from exif" do
+    p1 = create_test_photo('ant-head.jpg', 'image/jpeg')
+    assert_equal "Canon EOS 7D", p1.camera
   end
 
   ################################################################################

@@ -1,0 +1,24 @@
+<%- headers = ['id', 'photo_id', 'ftype', 'url', 'width', 'height'] -%>
+<%= CSV.generate_line headers -%>
+<%- @sites.each do | site | -%>
+<%= CSV.generate_line([site.id,
+    site.notes,
+    site.latitude,
+    site.longitude,
+    site.created_at,
+    site.updated_at,
+    site.horizontal_error,
+    site.altitude,
+    site.temperature,
+    site.weather,
+    site.collector,
+    site.sample_type,
+    site.transect,
+    site.duration,
+    site.started_at,
+    site.description,
+    site.project_id,
+    site.ref
+        ]
+        ) -%>
+<%- end -%>

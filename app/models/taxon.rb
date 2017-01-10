@@ -53,8 +53,11 @@ class Taxon < ApplicationRecord
       else
         # Accept "Ants" as a search for all sub-taxa of Formicidae
         sin = q.singularize.downcase
-        ancestors = where "lower(scientific_name) = ? OR lower(scientific_name) = ? OR lower(common_name) = ?", q.downcase, sin, sin
-        return ancestors.first.descendants if ancestors.count == 1
+        plural = sin.pluralize
+        if plural == q.downcase
+          ancestors = where "lower(scientific_name) = ? OR lower(scientific_name) = ? OR lower(common_name) = ?", q.downcase, sin, sin
+          return ancestors.first.descendants if ancestors.count == 1
+        end
 
         # Normal search across lots of fields
         lk = "%#{q}%"

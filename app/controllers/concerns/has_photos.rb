@@ -21,7 +21,8 @@ module HasPhotos
                                       view_angle: all_params[:view_angle],
                                       state: all_params[:photo_state],
                                       ptype: all_params[:photo_ptype],
-                                      source: all_params[:photo_source]})
+                                      source: all_params[:photo_source],
+                                      camera: all_params[:photo_camera]})
         container.photos << photo
       rescue => err
         container.errors.add(:photo, err.message)

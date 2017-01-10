@@ -2,6 +2,9 @@
   <%= block do %>
       <%= f.file_field(:photo) %>
   <% end %>
+
+  <div class='detail'>
+    
   <%= block do %>
       <%= f.file_field :exif %>
       <%= help_button 'If the EXIF photo is uploaded, the photo itself is ignored but its EXIF data will be used
@@ -38,4 +41,13 @@
       <%= text_field_tag :photo_description, '', size: 30, form: f.form_id %>
     <% end %>
   <% end %>
+
+  <%= block do %>
+    <%= f.field 'Camera' do %>
+      <%= text_field_tag :photo_camera, '', form: f.form_id %>
+    <% end %>
+  <% end %>
+
+  </div>
+
 <% end %>

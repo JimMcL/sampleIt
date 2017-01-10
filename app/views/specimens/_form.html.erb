@@ -13,9 +13,9 @@
   <% end %>
 
   <%= labelled_block 'Identity' do %>
-    <%= f.collection_select :site_id, Site.all, :id, :label %>
+    <%= f.collection_select :site_id, Site.all, :id, :label, title: 'Identifies when and where this specimen was collected' %>
     <%= f.text_field :id, label: 'Specimen id', readonly: true, title: 'Automatically assigned unique number' %>
-    <%= f.text_field :ref, label: 'Reference' %>
+    <%= f.text_field :ref, label: 'Reference', title: 'Optional external reference' %>
     <%= if !@specimen.id.nil? && !@specimen.site_id.nil?
         f.field '' do
             # button_to doesn't work, it just submits the main form
@@ -32,13 +32,17 @@
 
   <%= labelled_block 'Details' do %>
       <%= f.text_field :body_length %>
-      <%= f.text_field :quantity %>
+      <%= f.text_field :quantity, title: 'Number of individuals identified by this specimen data' %>
       <%= f.text_field :description, title: 'Description of this specimen' %>
   <% end %>
  
   <%= labelled_block 'Notes' do %>
-    <%= f.text_area :notes, cols: 47, rows: 1 %>
-    <%= f.text_field :other, label: 'Other information' %>
+    <%= f.text_area :notes, cols: 47, rows: 1, title: 'Any other information about the specimen such as where it was found, ID, notes etc.' %>
+    <%= f.text_field :other, label: 'Other information', title: 'May be used for project specific information, e.g. "Ant mimic"' %>
+  <% end %>
+
+  <%= block do %>
+    <%= f.text_field :disposition, title: 'The current state of the specimen, e.g. "in collection", "missing"' %>
   <% end %>
 
   <% photos = @specimen.photos %>

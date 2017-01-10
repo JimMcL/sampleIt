@@ -15,6 +15,7 @@
 #  state          :string
 #  ptype          :string
 #  source         :string
+#  camera         :string
 #
 # Indexes
 #
@@ -98,6 +99,9 @@ class Photo < ApplicationRecord
     
     # Generate thumbnail
     generate_thumbnail(photo_file, thumb_file)
+
+    # Maybe fill in some column values from the EXIF
+    atts_from_exif
     
     save!
     photo_file.update_size!
@@ -146,6 +150,11 @@ class Photo < ApplicationRecord
     ExifTags::time(self.exif)
   end
 
+  # Returns camera model as defined in the exif data
+  def camera_model
+    ExifTags::camera_model(self.exif)
+  end
+
   # Returns view_phi and view_lambda as a ViewAngle
   def view_angle
     ViewAngle.new(view_phi, view_lambda)
@@ -190,4 +199,8 @@ class Photo < ApplicationRecord
     FILE_TYPES[type].build_photo_file(id, extension)
   end
 
+  def atts_from_exif
+    self.camera = camera_model if self.camera.blank?
+  end
+  
 end

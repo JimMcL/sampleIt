@@ -63,11 +63,11 @@ class PhotosController < ApplicationController
   private
 
   def photo_params
-    params.require(:photo).permit(:rating, :description, :view_angle, :state, :ptype, :source)
+    params.require(:photo).permit(:rating, :description, :view_angle, :state, :ptype, :source, :camera)
   end
 
   def query_params
-    params.permit(:id, :rating, :imageable_type, :imageable_id, :view_phi, :view_lambda, :description, :view_angle, :state, :ptype, :source, :ftype)
+    params.permit(:id, :rating, :imageable_type, :imageable_id, :view_phi, :view_lambda, :description, :view_angle, :state, :ptype, :source, :ftype, :camera)
   end
 
   def extract_photo_file(photo, params)

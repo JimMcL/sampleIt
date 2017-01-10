@@ -29,8 +29,12 @@ module ExifTags
     exif_hash.blank? ? nil : parse_gps_datetime(exif_hash[ExifTags::DATETIME])
   end
 
+  def self.camera_model(exif_hash)
+    exif_hash[ExifTags::CAMERA_MODEL]
+  end
+  
   def self.camera_info!(exif_hash)
-    cam = exif_hash.blank? ? nil : CameraUtils::camera_info_from_model(exif_hash[ExifTags::CAMERA_MODEL])
+    cam = exif_hash.blank? ? nil : CameraUtils::camera_info_from_model(camera_model(exif_hash))
     # Hacky message to make sense when displayed as a model error
     raise 'does not contain camera model EXIF data' unless cam
     cam

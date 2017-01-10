@@ -58,9 +58,15 @@ class PhotoFile < ApplicationRecord
     save!
   end
 
-  # Returns "<width>x<height>", scaled
+  # Returns "<width>x<height>", scaled, or nil
+  def size_s(scale = 1)
+    s = size(scale)
+    "#{s[0].round}x#{s[1].round}" if s
+  end
+
+  # Returns [<width>, <height>], scaled, or nil
   def size(scale = 1)
-    "#{(width * scale).round}x#{(height * scale).round}" if width && height
+    [width * scale, height * scale] if width && height
   end
 
 end
