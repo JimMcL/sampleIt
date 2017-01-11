@@ -5,7 +5,7 @@ class SpecimensController < ApplicationController
   include HasPhotos
   
   def index
-    @specimens = Specimen.includes(:taxon).search(params[:q])
+    @specimens = Specimen.includes(:taxon, :site).search(params[:q])
 
     respond_to do |format|
       format.html do

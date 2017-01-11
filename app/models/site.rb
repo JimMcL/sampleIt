@@ -67,6 +67,9 @@ class Site < ApplicationRecord
     !latitude.blank? && !longitude.blank?
   end
 
+  def duration_s
+  end
+
   def to_s
     "Site #{id}"
   end

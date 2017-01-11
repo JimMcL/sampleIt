@@ -20,16 +20,16 @@ class PhotoTest < ActiveSupport::TestCase
     p1 = create_test_photo('ant1.jpg', 'image/jpeg')
     assert_equal 5184, p1.file(:photo).width
     assert_equal 3456, p1.file(:photo).height
-    assert_equal "5184x3456", p1.file(:photo).size, "Wrong jpeg file size"
+    assert_equal [5184, 3456], p1.file(:photo).size, "Wrong jpeg file size"
     assert_nil p1.file(:tiff).size, "wrong tiff file size"
-    assert_equal "300x200", p1.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
+    assert_equal [300,200], p1.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
 
     p2 = create_test_photo('ant-head.jpg', 'image/jpeg', nil, true)
     assert_equal 5184, p2.file(:photo).width
     assert_equal 3456, p2.file(:photo).height
-    assert_equal "5184x3456", p2.file(:photo).size, "Wrong jpeg file size"
-    assert_equal "5184x3456", p2.file(:tiff).size, "wrong tiff file size"
-    assert_equal "300x200", p2.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
+    assert_equal [5184,3456], p2.file(:photo).size, "Wrong jpeg file size"
+    assert_equal [5184,3456], p2.file(:tiff).size, "wrong tiff file size"
+    assert_equal [300,200], p2.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
   end
   
   test "create" do
@@ -70,7 +70,7 @@ class PhotoTest < ActiveSupport::TestCase
 
   test "label" do
     p1 = create_test_photo('ant-head.jpg', 'image/jpeg')
-    assert_equal "Photo #{p1.id}", p1.label
+    assert_equal "Photo", p1.label   # Label is ptype[, description][, angle]
     p1.description = 'Ant head'
     assert_equal "Ant head", p1.description
     assert_equal "Ant head", p1.label

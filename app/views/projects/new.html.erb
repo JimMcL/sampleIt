@@ -1,5 +1,15 @@
-<h1>New Project</h1>
+<% content_for :title do -%>
+New Project
+<%- end %>
 
-<%= render 'form', project: @project %>
+<%= labelled_form_for(@project) do |f| %>
 
-<%= link_to 'Back', projects_path %>
+<%# Note that this gets rendered outside the form because it is actually rendered by the layout %>
+<% content_for :sidebar do %>
+  <div><%= f.submit 'Save changes', form: f.form_id %></div>
+<% end %>
+
+
+<%= render partial: 'form', locals: {f: f, project: @project} %>
+
+<% end %>

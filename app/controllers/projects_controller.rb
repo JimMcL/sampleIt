@@ -10,6 +10,8 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
+    # Don't want this to exist, but too lazy to scrap it properly
+    render 'edit'
   end
 
   # GET /projects/new

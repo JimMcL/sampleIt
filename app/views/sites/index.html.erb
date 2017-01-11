@@ -9,34 +9,34 @@ Sites
   <p>
     <%= button_to 'New site', new_site_path, :method => :get %>
   </p>
-  <div class='map'>
-    <% map_size = [300, 400] %>
-    <%= image_tag sites_map_url(@sites, map_size), width: map_size[0], height: map_size[1] %>
-  </div>
+  <%= sites_map(@sites, [300, 300]) %>
 <% end %>
 
-<table>
-  <tr class='header'>
-    <th>Id</th>
-    <th>Project</th>
-    <th>Time</th>
-    <th>Notes</th>
-    <th></th>
-  </tr>
-
-   <% @sites.each do |site| %>
-    <tr>
-      <td><%= link_to site.label, edit_site_path(site) %></td>
-      <td><%= site.project ? site.project.title : '' %></td>
-      <%# HACK use server side local timezone and my preferred format %>
-      <!-- <td><%= site.started_at ? site.started_at.in_time_zone.strftime('%l:%M%P %d-%m-%Y') : '' %></td> -->
-      <td><%= site.started_at ? site.started_at.to_formatted_s(:short) : '' %></td>
-      <td><%= site.notes %></td>
-      <td><%= link_to image_tag('/delete18.png', size: 18),
-	      site_path(site),
-              method: :delete,
-              data: { confirm: 'Are you sure?' } %></td>
+<table id='sites'>
+  <thead>
+    <tr class='header'>
+      <th>Id</th>
+      <th>Project</th>
+      <th>Time</th>
+      <th>Notes</th>
+      <th></th>
     </tr>
-  <% end %>
+  </thead>
 
+  <tbody>
+    <% @sites.each do |site| %>
+      <tr>
+        <td><%= link_to site.label, edit_site_path(site) %></td>
+        <td><%= site.project ? site.project.title : '' %></td>
+        <%# HACK use server side local timezone and my preferred format %>
+        <td><%= site.started_at ? site.started_at.to_formatted_s(:short) : '' %></td>
+        <td><%= site.notes %></td>
+        <td><%= link_to image_tag('/delete18.png', size: 18),
+	        site_path(site),
+                method: :delete,
+                data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  
 </table>

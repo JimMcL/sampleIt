@@ -44,7 +44,7 @@
 
   <%= block do %>
       <%= f.datetime_select :started_at, label: 'Sampling started at', include_blank: true %>
-      <%= f.text_field :duration %>
+      <%= f.text_field :duration, title: 'Collecting duration (seconds)' %>
   <% end %>
 
   <%= f.text_field :notes, size: 45 %>

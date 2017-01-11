@@ -201,6 +201,13 @@ class Photo < ApplicationRecord
 
   def atts_from_exif
     self.camera = camera_model if self.camera.blank?
+    self.ptype = deduce_ptype if self.ptype.blank?
+  end
+
+  def deduce_ptype
+    if !self.camera.blank?
+      'Photo'
+    end
   end
   
 end

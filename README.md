@@ -10,7 +10,7 @@ photos.
 Everything is designed to make it easy to access the data. There are
 no access restrictions. Photos are stored in the public/images folder
 so they are served directly by the web server for maximum speed. This
-means that anyone with access to the server can see all of the data
+means that anyone with access to the server can see **and edit** all of the data
 and photos.
 
 It is a vanilla RoR setup.
