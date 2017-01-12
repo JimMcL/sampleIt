@@ -1,9 +1,15 @@
-<%- headers = ['id', 'description', 'angle', 'ftype', "#{@ftype}_url", 'specimenid', 'siteid' ] -%>
+<%- headers = ['id', 'ptype', 'angle', 'state', 'source', 'description', 'camera', 'rating', 'ftype', "#{@ftype}_url", 'specimenid', 'siteid' ] -%>
 <%= CSV.generate_line headers -%>
 <%- @photos.each do | photo | -%>
-<%= CSV.generate_line([photo.id,
-       photo.description,
+<%= CSV.generate_line([
+       photo.id,
+       photo.ptype,
        photo.view_angle,
+       photo.state,
+       photo.source,
+       photo.description,
+       photo.camera,
+       photo.rating,
        @ftype,
        image_url(photo.file(@ftype).path),
        photo.imageable_type == 'Specimen' ? photo.imageable_id : '',

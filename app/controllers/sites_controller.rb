@@ -6,6 +6,12 @@ class SitesController < ApplicationController
 
   def index
     @sites = Site.includes(:project).search(params[:q])
+    if params[:bounds]
+      # Assume value has format "lat_lo,lng_lo,lat_hi,lng_hi"
+      bounds = MapHelper::Bounds.new params[:bounds]
+      @sites = @sites.where("latitude >= ? AND latitude <= ? AND longitude >= ? AND longitude <= ?",
+                            bounds.south, bounds.north, bounds.west, bounds.east)
+    end
 
     respond_to do |format|
       format.html
@@ -27,7 +33,7 @@ class SitesController < ApplicationController
   end
  
   def edit
-    @site = Site.find(params[:id])
+    @site = Site.includes(:specimens).find(params[:id])
     @specimen_count = @site.specimens.count
   end
  
@@ -72,7 +78,7 @@ class SitesController < ApplicationController
   def site_params
     params.require(:site).permit(:notes, :location, :photo, :altitude,
                                  :temperature, :weather, :collector, :sample_type, :transect,
-                                 :duration, :started_at, :description, :project_id)
+                                 :duration, :duration_s, :started_at, :description, :project_id)
   end
 
   def maybe_set_started_at_from_photo(site, params = {})

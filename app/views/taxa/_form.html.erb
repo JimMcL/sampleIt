@@ -42,26 +42,6 @@
     <% end %>
   <% end %>
 
-  <% specimens = @taxon.specimens.limit(41) %>
-  <% if specimens %>
-    <%= block do %>
-      <table>
-        <tr class=header>
-          <th>Id</th>
-          <th>Description</th>
-          <th>Photos</th>
-          <th>Reference</th>
-        </tr>
-        <% specimens.each do |sp| %>
-          <tr>
-            <td><%= link_to sp.human_id, edit_specimen_path(sp) %></td>
-            <td><%= sp.description %></td>
-            <td><%= sp.photos.count %></td>
-            <td><%= sp.ref %></td>
-          </tr>
-        <% end %>
-      </table>
-    <% end %>
-  <% end %>
+  <%= render partial: 'specimens_table', locals: {specimens: @taxon.specimens.limit(41), show_taxon: false} %>
 
 <% end %>

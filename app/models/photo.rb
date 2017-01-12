@@ -171,7 +171,7 @@ class Photo < ApplicationRecord
   end
 
   def label
-    l = [ptype, description, view_angle.description].reject {|s| s.blank?}.join(', ')
+    l = [ptype, description, view_angle.description, state].reject(&:blank?).join(', ')
     l = "Photo #{id}" if l.blank?
     l.capitalize
   end

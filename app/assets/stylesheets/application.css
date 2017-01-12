@@ -42,6 +42,8 @@ div.field div.field { display: inline-block; padding: .1em 0 }
 div.field div.field label.field-label { font-weight: normal; opacity: .5; font-size:80%; padding-top: 0; padding-bottom: .2em }
 /* Input inside a label should not be a block */
 label input { display: inline }
+/* Highlight fields which have been modified by code */
+div.field .modified { background: #ffd; border-color: #faa }
 
 td, th { padding: .4em .5em }
 td.delete { padding: 0; vertical-align: middle; }

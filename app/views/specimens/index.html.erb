@@ -9,7 +9,7 @@ Specimens
   <%= sites_map(@specimens.collect(&:site), [300, 300]) %>
 <% end %>
 
-<p><%= @specimens.length -%> specimens</p>
+<p><%= pluralize(@specimens.count, 'specimen') -%></p>
 
 <table id='specimens'>
   <tr class='header'>

@@ -9,8 +9,15 @@ Sites
   <p>
     <%= button_to 'New site', new_site_path, :method => :get %>
   </p>
+  <p>
+    <%= button_tag 'Query within map extents', type: 'button', id: 'spatial-query' %>
+  </p>
   <%= sites_map(@sites, [300, 300]) %>
 <% end %>
+
+<p>
+  <%= pluralize(@sites.count, 'site') %>
+</p>
 
 <table id='sites'>
   <thead>

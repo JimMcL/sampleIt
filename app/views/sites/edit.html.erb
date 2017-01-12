@@ -4,9 +4,8 @@
 
 <% content_for :sidebar do %>
   <!-- TODO <div><%#= f.submit 'Save changes', form: f.form_id %></div> -->
-  <%= site_map(@site, [300, 300]) %>
+  <%= sites_map([@site], [300, 300], 17, 'site_location') %>
 <% end %>
   
 <%= render 'form' %>
  
-<%= link_to 'Back', sites_path %>

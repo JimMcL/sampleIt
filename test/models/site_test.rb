@@ -48,4 +48,15 @@ class SiteTest < ActiveSupport::TestCase
     assert_in_delta 155.5, m2.longitude, td, "m2 wrong longitude"
     assert_in_delta 15, m2.horizontal_error, td, "m2 wrong horizontal error"
   end
+
+  test "duration" do
+    s = Site.first
+    s.duration = 60
+    assert_equal 60, s.duration
+    assert_equal "1 minute", s.duration_s
+    s.duration_s = "5 minutes"
+    assert_equal 5 * 60, s.duration
+    s.duration_s = "4 days"
+    assert_equal 4 * 24 * 60 * 60, s.duration
+  end
 end

@@ -27,12 +27,15 @@
 #
 
 require 'exif_tags'
+require 'time_utils'
 
 # Schema notes:
 # horizontal_error units are metres
 # altitude units are metres
 # duration units are seconds
 class Site < ApplicationRecord
+  include ActionView::Helpers
+
   belongs_to :project
   has_many :specimens, :dependent => :restrict_with_exception
   has_many :photos, as: :imageable
@@ -68,6 +71,18 @@ class Site < ApplicationRecord
   end
 
   def duration_s
+    if duration
+      distance_of_time_in_words(duration)
+    end
+  end
+
+  def duration_s=(s)
+    begin
+      self.duration = TimeUtils::parse_duration_to_seconds(s)
+    rescue => err
+      # Just ignore it
+      Rails.logger.debug "Ignoring invalid duration string '#{s}': #{err}"
+    end
   end
 
   def to_s

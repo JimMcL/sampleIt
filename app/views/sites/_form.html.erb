@@ -22,7 +22,7 @@
     <%= f.text_field :ref, label: 'Reference' %>
   <% end %>
   <%= block do %>
-    <%= f.text_field :location, size: 45 %>
+    <%= f.text_field :location, label: 'Latitude & Longitude', size: 45, title: 'Latitude and longitude +- error' %>
     <%= f.field '.' do %>
         <%= button_tag 'Use current location', type: 'button', data: {'get-location' => 'site'} %>
     <% end %>
@@ -44,7 +44,7 @@
 
   <%= block do %>
       <%= f.datetime_select :started_at, label: 'Sampling started at', include_blank: true %>
-      <%= f.text_field :duration, title: 'Collecting duration (seconds)' %>
+      <%= f.text_field :duration_s, label: 'Duration', title: 'Collecting duration' %>
   <% end %>
 
   <%= f.text_field :notes, size: 45 %>
@@ -52,17 +52,15 @@
   <%= f.file_field :photo %>
 
   <%= block do %>
+    <%= f.submit 'Save changes' %>
+  <% end %>
+ 
+  <%= block do %>
     <% @site.photos.each do |photo| %>
       <%= photo_image(photo, rating_flags:false, link_to_owner: false) %>
     <% end %>
   <% end %>
 
-<div class='field-block'>
-  This site contains <%= @specimen_count %> <%= 'specimen'.pluralize @specimen_count %>
-</div>
+  <%= render partial: 'specimens_table', locals: {specimens: @site.specimens.limit(41), show_taxon: true} %>
 
-<div class='field-block'>
-    <%= f.submit %>
-</div>
- 
 <% end %>

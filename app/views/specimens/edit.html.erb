@@ -12,7 +12,7 @@
   <div><%= search_form(specimens_path, hidden_field_tag(:shortcut, :true)) %></div>
   <div><%= render partial: 'upload', locals: {f: f} %></div>
   <div><%= scientific_classification @specimen.taxon, true, false %></div>
-  <div><%= site_map(@specimen.site, [300, 300]) %></div>
+  <div><%= sites_map([@specimen.site], [300, 300], 17) %></div>
 <% end %>
  
 

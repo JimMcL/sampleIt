@@ -24,3 +24,7 @@ $ ->
     else
       alert("Sorry, current location is not available");
 
+$ ->
+  $("#spatial-query").click (e) ->
+    e.preventDefault()
+    window.location.href = UpdateQueryString('bounds', window.SiteMap.getBounds().toUrlValue(5))
