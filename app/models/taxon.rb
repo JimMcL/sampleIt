@@ -22,6 +22,7 @@ class Taxon < ApplicationRecord
   has_many :sub_taxa, -> { order(:scientific_name) }, class_name: "Taxon", foreign_key: "parent_taxon_id", :dependent => :restrict_with_error
   has_many :specimens, :dependent => :restrict_with_error
   has_many :photos, through: :specimens
+  has_many :sites, through: :specimens
   
   def self.common_ranks
     [:Domain, :Kingdom, :Phylum, :Class, :Order, :SuperFamily, :Family, :SubFamily, :Genus, :Species, :Subspecies]

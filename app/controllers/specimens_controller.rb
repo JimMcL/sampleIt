@@ -25,7 +25,7 @@ class SpecimensController < ApplicationController
   end
  
   def new
-    @specimen = Specimen.new
+    @specimen = Specimen.new(new_params)
   end
  
   def edit
@@ -87,6 +87,10 @@ class SpecimensController < ApplicationController
     params.require(:specimen).permit(:description, :taxon_id, :taxon_name, :site_id,
                                      :quantity, :body_length, :notes, :photo, :exif, :id_confidence,
                                      :other, :disposition)
+  end
+
+  def new_params
+    params.permit(:site_id)
   end
 
   def handle_taxon(specimen, sp_params)

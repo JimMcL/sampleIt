@@ -4,6 +4,7 @@
 
 <% content_for :sidebar do %>
   <!-- TODO <div><%#= f.submit 'Save changes', form: f.form_id %></div> -->
+  <div><%= button_to 'New specimen', new_specimen_path, :method => :get, params: {site_id: @site.id} %></div>
   <%= sites_map([@site], [300, 300], 17, 'site_location') %>
 <% end %>
   

@@ -4,6 +4,9 @@ Taxon <%= @taxon.label %>
  
 <% content_for :sidebar do %>
   <%= scientific_classification @taxon, false, true %>
+  <% if @taxon.specimens %>
+    <div><%= sites_map(@taxon.sites, [300, 300]) %></div>
+  <% end %>
 <% end %>
  
 <%= render 'form' %>

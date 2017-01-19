@@ -86,3 +86,4 @@ img.search { position: absolute; top: 4px; right: 4px }
 .page-menu form, .page-menu a { padding: 4px }
 
 .map { border: 2px solid #135; border-radius: 4px }
+.map.nowhere { background-image: url("/no-icon.png"); background-repeat: no-repeat; background-position: center center; }

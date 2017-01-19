@@ -80,6 +80,8 @@ module MapHelper
 
   class Bounds
     attr_accessor :north, :south, :east, :west
+
+    DEGREES_TO_METRES_FACTOR = 111111
     
     # Parse bounds in format "lat_lo,lng_lo,lat_hi,lng_hi"
     def initialize(str = nil)
@@ -109,6 +111,47 @@ module MapHelper
       Marker.new(@north, @east)
     end
 
+    def centre
+      Marker.new((@south + @north) / 2, (@west + @east) / 2)
+    end
+
+    # Ensures that self is at least min_metres in width or height.
+    # Returns self
+    def ensure_at_least(min_metres)
+      c = centre
+      width = deg2metres(@east - @west, c.latitude)
+      height = deg2metres(@north - @south)
+      if width < min_metres && height < min_metres
+        dx = metres2deg(min_metres.to_f / 2, c.latitude)
+        @west = c.longitude - dx
+        @east = c.longitude + dx
+        dy = metres2deg(min_metres.to_f / 2)
+        @south = c.latitude - dy
+        @north = c.latitude + dy
+      end
+      self
+    end
+
+    # Simplistic conversion of metres to decimal east/west or north/south degrees.
+    # dist_in_metres - distance to be converted
+    # at_latitude - latitude of measurement for east/west measurements,
+    #               0 (the default) for north/south measurements
+    def metres2deg(dist_in_metres, at_latitude = 0)
+        dist_in_metres.to_f / DEGREES_TO_METRES_FACTOR / Math::cos(deg2rad(at_latitude))
+    end
+    
+    # Simplistic conversion of north/south or east/west distance in decimal degrees to metres.
+    # dist_in_degrees - distance to be converted
+    # at_latitude - latitude of measurement for east/west measurements,
+    #               0 (the default) for north/south measurements
+    def deg2metres(dist_in_degrees, at_latitude = 0)
+      dist_in_degrees * DEGREES_TO_METRES_FACTOR * Math::cos(deg2rad(at_latitude))
+    end
+
+    def deg2rad(deg)
+      deg * Math::PI / 180
+    end
+  
     def to_s
       if valid?
         "new google.maps.LatLngBounds(#{sw}, #{ne})"
@@ -143,14 +186,15 @@ module MapHelper
     bounds = Bounds.new
     markers.each { |m| bounds.extend(m) }
 
+    style = "width:#{size[0]}px; height:#{size[1]}px"
     if bounds.valid?
       markers_js = markers.select(&:valid?).map {|m| m.to_javascript('map', pos_field_id)}.join("\n")
 
-      content_tag(:div, nil, {class: 'map', id: 'map', style: "width:#{size[0]}px; height:#{size[1]}px"}) +
-        javascript_tag(build_map_init_fn(bounds, 'map', zoom, markers_js)) +
+      content_tag(:div, nil, {class: 'map', id: 'map', style: style}) +
+        javascript_tag(build_map_init_fn(bounds.ensure_at_least(200), 'map', zoom, markers_js)) +
         javascript_tag(nil, {src: "#{GOOGLE_JS_URL}?#{params.to_query}".html_safe})
     else
-      content_tag(:div, nil, {class: 'map', id: 'map', style: "width:#{size[0]}px; height:#{size[1]}px; background:#ddd"})
+      content_tag(:div, nil, {class: 'map nowhere', id: 'map', style: style})
     end
     
   end
@@ -171,4 +215,5 @@ module MapHelper
 }
 }
   end
+
 end
