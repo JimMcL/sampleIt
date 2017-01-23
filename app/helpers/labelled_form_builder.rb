@@ -14,9 +14,14 @@ class LabelledFormBuilder < ActionView::Helpers::FormBuilder
 
   # Creates a labelled field with arbitrary content
   def field(label, &block)
+    if label == ' '
+      label = "&nbsp;".html_safe
+    else
+      label = label.to_s.humanize
+    end
     @template.content_tag("div",
                           @template.content_tag("label",
-                                                label.to_s.humanize,
+                                                label,
                                                 :for => "#{@object_name}_#{label}", :class => 'field-label') +
                             @template.capture(&block),
                             class: 'field')
@@ -35,13 +40,6 @@ class LabelledFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def photo_state(column = :photo_state, initial_value = nil)
-    # field 'State' do
-    #     @template.javascript_tag do
-    #       all_states = Photo.distinct.pluck(:state).reject(&:nil?)
-    #       ('window.all_photo_states = ' + all_states.to_json + ';').html_safe
-    #     end +
-    #   @template.text_field_tag(column, initial_value, { form: form_id, title: 'State of specimen in this photo' })
-    # end
     autocompleted_dbs_field('State', Photo.distinct.pluck(:state).reject(&:nil?), column,
                             title: 'State of specimen in this photo', initial_value: initial_value)
   end

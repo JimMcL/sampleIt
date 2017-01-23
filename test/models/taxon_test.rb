@@ -16,6 +16,15 @@ require 'test_helper'
 
 class TaxonTest < ActiveSupport::TestCase
 
+  test "descriptive_text" do
+    t1 = Taxon.create(:scientific_name => 'Dolichoderus clarki')
+    assert_equal 'Dolichoderus clarki', t1.descriptive_text
+    t2 = Taxon.create(:common_name => 'Golden bum')
+    assert_equal 'Golden bum', t2.descriptive_text
+    t3 = Taxon.create(:scientific_name => 'Dolichoderus clarki', :common_name => 'Golden bum')
+    assert_equal 'Golden bum (Dolichoderus clarki)', t3.descriptive_text
+  end
+  
   test "rank deduction" do
     assert_nil Taxon.deduce_scientific_name_and_rank_from_name(nil)
     assert_equal 'Genus', Taxon.deduce_scientific_name_and_rank_from_name('Genus')[0]

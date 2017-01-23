@@ -1,11 +1,15 @@
 require 'csv'
+require 'query_utils'
 
 class SpecimensController < ApplicationController
 
   include HasPhotos
   
   def index
-    @specimens = Specimen.includes(:taxon, :site).order(updated_at: :desc).search(params[:q])
+    @specimens = Specimen.includes(:taxon).left_outer_joins(:site).
+                 order(updated_at: :desc).
+                 search(params[:q]).
+                 where(QueryUtils::spatial_query(params))
 
     respond_to do |format|
       format.html do

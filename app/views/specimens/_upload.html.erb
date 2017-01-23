@@ -27,7 +27,7 @@
   <% end %>
 
   <%= block do %>
-    <%= f.photo_state %>
+    <%= f.photo_state :photo_state, @specimen.disposition %>
   <% end %>
     
   <%= block do %>

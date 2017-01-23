@@ -6,6 +6,7 @@ Specimens
   <div><%= search_form(specimens_path) %> </div>
   <div><%= link_to 'New specimen', new_specimen_path %></div>
   <div><%= link_to 'Download CSV occurrences', specimens_path(format: :csv) %></div>
+  <div><%= button_tag 'Query within map extents', type: 'button', id: 'spatial-query' %></div>
   <%= sites_map(@specimens.collect(&:site), [300, 300]) %>
 <% end %>
 

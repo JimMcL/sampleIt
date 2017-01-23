@@ -1,7 +1,12 @@
 class TaxaController < ApplicationController
 
   def index
-    @taxa = Taxon.order(:scientific_name).search(params[:q] || params[:term])
+    @taxa = Taxon.distinct.
+            left_outer_joins(:sites).
+            includes(:sites).
+            order(:scientific_name).
+            search(params[:q] || params[:term]).
+            where(QueryUtils::spatial_query(params))
     respond_to do |format|
       format.html
       format.json { render json: @taxa.to_json }

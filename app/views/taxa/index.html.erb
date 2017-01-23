@@ -2,10 +2,12 @@
 Taxa
 <%- end %>
 
-<div class='page-menu'>
-  <%= link_to 'New taxon', new_taxon_path %>
-  <%= search_form(taxa_path) %>
-</div>
+<% content_for :sidebar do %>
+<div><%= search_form(taxa_path) %></div>
+  <div><%= link_to 'New taxon', new_taxon_path %></div>
+  <div><%= button_tag 'Query within map extents', type: 'button', id: 'spatial-query' %></div>
+  <div><%= sites_map(@taxa.collect(&:sites).flatten, [300, 300]) %></div>
+<% end %>
 
 <table class='index'>
   <tr class=header>

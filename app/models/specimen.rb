@@ -38,7 +38,7 @@ class Specimen < ApplicationRecord
     else
       lk = "%#{q}%"
       left_outer_joins(:taxon).
-        where("specimens.id = ? OR site_id = ? OR lower(taxa.rank) = ? OR 
+        where("specimens.id = ? OR specimens.site_id = ? OR lower(taxa.rank) = ? OR 
                specimens.ref = ? OR specimens.description LIKE ? OR 
                specimens.notes LIKE ? OR specimens.disposition LIKE ? OR 
                taxa.scientific_name like ? OR taxa.common_name like ? OR taxa.description like ?",
@@ -46,14 +46,15 @@ class Specimen < ApplicationRecord
             lk, lk, lk,
             lk, lk, lk)
     end
-end
-  
-  def label
-    "#{site_id}-#{id}#{taxon_id ? (': ' + taxon.scientific_name) : ''}"
+  end
+
+  # Returns description if it is defined, otherwise description of taxon
+  def descriptive_text
+    description.blank? && taxon ? taxon.descriptive_text : description
   end
   
-  def human_id
-    "#{site_id}-#{id}"
+  def label
+    "#{id}#{taxon_id ? (': ' + taxon.scientific_name) : ''}"
   end
   
   def taxon_label

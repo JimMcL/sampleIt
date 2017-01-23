@@ -3,15 +3,9 @@ Sites
 <%- end %>
 
 <% content_for :sidebar do %>
-  <div>
-    <%= search_form(sites_path) %>
-  </div>
-  <p>
-    <%= button_to 'New site', new_site_path, :method => :get %>
-  </p>
-  <p>
-    <%= button_tag 'Query within map extents', type: 'button', id: 'spatial-query' %>
-  </p>
+  <div> <%= search_form(sites_path) %> </div>
+  <p> <%= link_to 'New site', new_site_path, :method => :get %> </p>
+  <p> <%= button_tag 'Query within map extents', type: 'button', id: 'spatial-query' %> </p>
   <%= sites_map(@sites, [300, 300]) %>
 <% end %>
 

@@ -12,11 +12,11 @@
         </tr>
         <% specimens.each do |sp| %>
           <tr>
-            <td><%= link_to sp.human_id, edit_specimen_path(sp) %></td>
+            <td><%= link_to sp.id, edit_specimen_path(sp) %></td>
             <% if show_taxon %>
               <td><%= sp.taxon %></td>
             <% end %>
-            <td><%= sp.description %></td>
+            <td><%= sp.descriptive_text %></td>
             <td><%= sp.photos.count %></td>
             <td><%= sp.ref %></td>
           </tr>

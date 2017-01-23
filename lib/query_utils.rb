@@ -63,4 +63,15 @@ module QueryUtils
     [where] + args
   end
 
+  # Extracts the parameters required for a spatial query from params.
+  # Returns a where clause and a set of parameters
+  # which can be passed to the where method.
+  def self.spatial_query(params, table = 'sites')
+    if params[:bounds]
+      # Assume value has format "lat_lo,lng_lo,lat_hi,lng_hi"
+      bounds = MapHelper::Bounds.new params[:bounds]
+      ["#{table}.latitude >= ? AND #{table}.latitude <= ? AND #{table}.longitude >= ? AND #{table}.longitude <= ?",
+       bounds.south, bounds.north, bounds.west, bounds.east]
+    end
+  end
 end

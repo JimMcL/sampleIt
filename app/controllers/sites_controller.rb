@@ -5,13 +5,10 @@ class SitesController < ApplicationController
   include HasPhotos
 
   def index
-    @sites = Site.includes(:project).search(params[:q])
-    if params[:bounds]
-      # Assume value has format "lat_lo,lng_lo,lat_hi,lng_hi"
-      bounds = MapHelper::Bounds.new params[:bounds]
-      @sites = @sites.where("latitude >= ? AND latitude <= ? AND longitude >= ? AND longitude <= ?",
-                            bounds.south, bounds.north, bounds.west, bounds.east)
-    end
+    @sites = Site.includes(:project).
+             order(updated_at: :desc).
+             search(params[:q]).
+             where(QueryUtils::spatial_query(params))
 
     respond_to do |format|
       format.html

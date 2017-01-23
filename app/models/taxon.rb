@@ -25,7 +25,8 @@ class Taxon < ApplicationRecord
   has_many :sites, through: :specimens
   
   def self.common_ranks
-    [:Domain, :Kingdom, :Phylum, :Class, :Order, :SuperFamily, :Family, :SubFamily, :Genus, :Species, :Subspecies]
+    # Ugly hack since there are really more ranks but no way for a user to add one
+    [:Domain, :Kingdom, :Phylum, :Class, :Order, :SuperFamily, :Family, :SubFamily, :Tribe, :Genus, :Species, :Subspecies]
   end
 
   def self.higher_rank(rank)
@@ -50,19 +51,19 @@ class Taxon < ApplicationRecord
     else
       q.strip! if q
       if lbl = parse_label(q)
-        where("scientific_name = ? AND rank = ?", lbl[0], lbl[1])
+        where("taxa.scientific_name = ? AND taxa.rank = ?", lbl[0], lbl[1])
       else
         # Accept "Ants" as a search for all sub-taxa of Formicidae
         sin = q.singularize.downcase
         plural = sin.pluralize
         if plural == q.downcase
-          ancestors = where "lower(scientific_name) = ? OR lower(scientific_name) = ? OR lower(common_name) = ?", q.downcase, sin, sin
+          ancestors = where "lower(taxa.scientific_name) = ? OR lower(taxa.scientific_name) = ? OR lower(taxa.common_name) = ?", q.downcase, sin, sin
           return ancestors.first.descendants if ancestors.count == 1
         end
 
         # Normal search across lots of fields
         lk = "%#{q}%"
-        where("scientific_name LIKE ? OR common_name LIKE ? OR rank LIKE ? OR description like ?", lk, lk, lk, lk)
+        where("taxa.scientific_name LIKE ? OR taxa.common_name LIKE ? OR taxa.rank LIKE ? OR taxa.description like ?", lk, lk, lk, lk)
       end
     end
   end
@@ -145,6 +146,26 @@ class Taxon < ApplicationRecord
     by_angle = Hash.new {|h,k| h[k]=[]}
     candidates.each { |p| by_angle[p.view_angle] << p }
     by_angle.keys.sort.map { |a| by_angle[a].first }[0..(limit-1)].presence
+  end
+
+  # Attempts to return "common name (scientific name)"
+  def descriptive_text(format = :text)
+    has_common_name = !common_name.blank?
+    has_scientific_name = !scientific_name.blank?
+
+    cn = common_name ? common_name.capitalize : ''
+    sn = scientific_name ? scientific_name.capitalize : ''
+    
+    if has_common_name && has_scientific_name
+        sprintf(format == :html ? '%s (<i>%s</i>)' : '%s (%s)', cn, sn)
+    elsif has_common_name
+      cn
+    elsif has_scientific_name
+      format == :html ? "<i>#{sn}</i>" : sn
+    else
+      # Fallback to description
+      description
+    end
   end
 
   def to_s
