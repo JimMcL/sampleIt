@@ -63,6 +63,16 @@ module QueryUtils
     [where] + args
   end
 
+  # Given a query value q, constructs a ActiveRecord.where method argument array.
+  # E.g. q_to_where("XXX", "tab", [:id, :value], [:description]) =>
+  # ['tab.id = ? OR tab.value = ? OR tab.descr LIKE ?', 'XXX', 'XXX', '%XXX%']
+  def self.q_to_where(q, table, eq_cols, like_cols)
+    [(eq_cols.map { |col| "#{table}.#{col} = ?" } +
+      like_cols.map { |col| "#{table}.#{col} LIKE ?" }).join(' OR ')] +
+      Array.new(eq_cols.length, q) +
+      Array.new(like_cols.length, "%#{q}%")
+  end
+
   # Extracts the parameters required for a spatial query from params.
   # Returns a where clause and a set of parameters
   # which can be passed to the where method.

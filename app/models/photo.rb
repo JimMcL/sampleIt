@@ -70,7 +70,7 @@ class Photo < ApplicationRecord
       rescue
       end
       lk = "%#{q}%"
-      where("id = ? OR imageable_id = ? OR imageable_type like ? OR description like ? OR state like ?", q, q, lk, lk, lk)
+      where(QueryUtils::q_to_where(q, "photos", [:id, :imageable_id, :ptype], [:imageable_type, :description, :state]))
     end
   end
 

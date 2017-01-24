@@ -17,4 +17,9 @@ class QueryUtilsTest < ActiveSupport::TestCase
     assert_equal 10, w[1]
     assert_equal 'ruby', w[2]
   end
+
+  test "q_to_where" do
+    w = QueryUtils::q_to_where("XXX", :tab, [:id, :value], [:descr])
+    assert_equal ['tab.id = ? OR tab.value = ? OR tab.descr LIKE ?', 'XXX', 'XXX', '%XXX%'], w
+  end
 end

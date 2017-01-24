@@ -6,7 +6,7 @@ Taxa
 <div><%= search_form(taxa_path) %></div>
   <div><%= link_to 'New taxon', new_taxon_path %></div>
   <div><%= button_tag 'Query within map extents', type: 'button', id: 'spatial-query' %></div>
-  <div><%= sites_map(@taxa.collect(&:sites).flatten, [300, 300]) %></div>
+  <div><%= sites_map(@taxa_sites, [300, 300]) %></div>
 <% end %>
 
 <table class='index'>
