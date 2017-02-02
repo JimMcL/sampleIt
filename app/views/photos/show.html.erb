@@ -3,6 +3,9 @@
 <%- end %>
 
 <div class='page'>
-  <div id='controls'><%= render 'form' %></div>
+  <div id='controls'>
+    <%= image_tag '/shrink.png', class: :close, 'data-toggle-id' => 'edit_photo' %>
+    <%= render 'form' %>
+  </div>
   <div id='image'><%= image_tag @photo.file(:photo).path, class: :full %></div>
 </div>

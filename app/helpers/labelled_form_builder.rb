@@ -40,23 +40,56 @@ class LabelledFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def photo_state(column = :photo_state, initial_value = nil)
-    autocompleted_dbs_field('State', Photo.distinct.pluck(:state).reject(&:nil?), column,
+    autocompleted_dbs_field_tag('State', Photo.distinct.pluck(:state).reject(&:nil?), column,
                             title: 'State of specimen in this photo', initial_value: initial_value)
   end
 
   # Creates an autocompleted field with data obtained from a database query.
   # creates a global javascript value named "all_<column>s".
+  # 
+  # Requires a javascript function to actually provide the functionality:
+  # $ ->
+  #   $('#<column>').autocomplete
+  #       source: window.all_<column>s
+  #       select: (event,ui) -> $("#<column>").val(ui.item)
+  # 
   # label - field label displayed on the form
   # data - list of possible field values
+  # column - column name, used to name javascript global variable + passed as name param to text_field_tag
   # initial_value - initial field value
   # title - field title (tooltip)
   # column - name of column that data is stored in
-  def autocompleted_dbs_field(label, data, column, title: nil, initial_value: nil)
+  def autocompleted_dbs_field_tag(label, data, column, title: nil, initial_value: nil)
     field label do
         @template.javascript_tag do
           ("window.all_#{column.to_s.parameterize.underscore}s = " + data.to_json + ';').html_safe
         end +
       @template.text_field_tag(column, initial_value, { form: form_id, title: title })
+    end
+  end
+
+  # Creates an autocompleted field with data obtained from a database query.
+  # creates a global javascript value named "all_<method>s".
+  # 
+  # Requires a javascript function to actually provide the functionality:
+  # $ ->
+  #   $('#<object_method>').autocomplete
+  #       source: window.all_<method>s
+  #       select: (event,ui) -> $("#<object_method>").val(ui.item)
+  # 
+  # method - field name
+  # data - list of possible field values
+  # title - field title (tooltip)
+  def autocompleted_dbs_field(method, data, options = {})
+    options = objectify_options(options)
+    options[:form] = form_id
+
+    custom_label = options[:label] || label.to_s.humanize
+    field custom_label do
+        @template.javascript_tag do
+          ("window.all_#{method.to_s.parameterize.underscore}s = " + data.to_json + ';').html_safe
+        end +
+      @template.text_field(@object_name, method, options)
     end
   end
 

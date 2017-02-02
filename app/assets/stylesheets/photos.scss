@@ -5,7 +5,10 @@
 body.photos div.content { padding: 0; background: #222 }
 
 body.photos div.page { position: relative }
-body.photos #controls { border: solid black 1px; position: absolute; display: inline-block; color: #fee; background: rgba(0, 0, 0, .7) }
+body.photos #controls { position: absolute; display: inline-block;
+                        border: solid black 1px;
+                        color: #fee; background: rgba(0, 0, 0, .7);
+                        min-width: 22px; min-height: 24px }
 body.photos #image { }
 img.full { width: 100%; image-orientation: from-image }
 
@@ -34,7 +37,7 @@ body.photos div.sidebar #search { margin:6px }
 
 div#exif { display: none; position: absolute; left: 1em; top: 5em; border: 2px solid black; border-radius: 6px; padding: 6px; color: black; background: #e8e8e8 }
 
-div#exif .close { position: absolute; top: 2px; right: 2px; z-index: 100 }
+body.photos .close { position: absolute; top: 2px; right: 2px; z-index: 100; cursor: pointer }
 
 /* The table stuff is a hack to make the caption wrap */
 .photo-wrapper { display:inline-table; width: 10px }

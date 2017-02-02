@@ -16,6 +16,13 @@ class QueryUtilsTest < ActiveSupport::TestCase
     assert_equal 'id = ? AND name = ?', w[0]
     assert_equal 10, w[1]
     assert_equal 'ruby', w[2]
+
+    w = QueryUtils::params_to_where({id: '[10,12,13]', other: '[10,12,13]', name: 'ruby'}, {id: true})
+    assert_equal 4, w.length
+    assert_equal 'id IN (?) AND other = ? AND name = ?', w[0]
+    assert_equal ['10', '12', '13'], w[1]
+    assert_equal '[10,12,13]', w[2]
+    assert_equal 'ruby', w[3]
   end
 
   test "q_to_where" do

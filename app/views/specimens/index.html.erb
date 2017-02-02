@@ -18,15 +18,19 @@ Specimens
     <th>Species</th>
     <th>Description</th>
     <th>Reference</th>
+    <th>Disposition</th>
+    <th>Site</th>
     <th></th>
   </tr>
 
    <% @specimens.each do |specimen| %>
     <tr>
-      <td><%= link_to "#{specimen.site_id}-#{specimen.id}", edit_specimen_path(specimen) %></td>
+      <td><%= link_to specimen.id, edit_specimen_path(specimen) %></td>
       <td><%= specimen.taxon_label %></td>
       <td><%= specimen.description %></td>
       <td><%= specimen.ref %></td>
+      <td><%= specimen.disposition %></td>
+      <td><%= specimen.site_id %></td>
       <td><%= link_to image_tag('/delete18.png', size: 18),
 	      specimen_path(specimen),
               method: :delete,

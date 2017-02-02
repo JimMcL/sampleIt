@@ -6,10 +6,19 @@ class SpecimensController < ApplicationController
   include HasPhotos
   
   def index
-    @specimens = Specimen.includes(:taxon).left_outer_joins(:site).
-                 order(updated_at: :desc).
-                 search(params[:q]).
-                 where(QueryUtils::spatial_query(params))
+    # Allow either a single q param or specific column values to be specified
+    if params[:q].present?
+      # Single parameter - intended for interactive use
+      @specimens = Specimen.includes(:taxon).left_outer_joins(:site).
+                   order(updated_at: :desc).
+                   search(params[:q]).
+                   where(QueryUtils::spatial_query(params))
+    else
+      # Each (whitelisted) parameter is treated as a column name and
+      # value.  The query requires rows which satisfy all conditions.
+      qry = QueryUtils::params_to_where(query_params, {id: true})
+      @specimens = Specimen.includes(:taxon).where(*qry)
+    end
 
     respond_to do |format|
       format.html do
@@ -95,6 +104,13 @@ class SpecimensController < ApplicationController
 
   def new_params
     params.permit(:site_id)
+  end
+
+  def query_params
+    params.permit(:id, :description, :site_id, :quantity, :body_length, :notes,
+                  :created_at, :updated_at, :taxon_id, :id_confidence,
+                  :other, :ref, :disposition)
+
   end
 
   def handle_taxon(specimen, sp_params)

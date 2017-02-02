@@ -46,8 +46,8 @@ module QueryUtils
 
   # Given parameters, returns a where clause and a set of parameters
   # which can be passed to the where method. E.g
-  # params_to_where{id: 10, name: 'ruby'} => ['id = ? AND name = ?', 10, 'ruby']
-  def self.params_to_where(params)
+  # params_to_where{id: '[10,12,13]', name: 'ruby'}, {id: true} => ['id = ? AND name = ?', 10, 'ruby']
+  def self.params_to_where(params, allow_array = {})
     where = ''
     sep = ''
     args = []
@@ -55,8 +55,14 @@ module QueryUtils
       if value.blank? 
         where << "#{sep}#{key} IS NULL"
       else
-        where << "#{sep}#{key} = ?"
-        args << value
+        if allow_array[key.to_sym] && value.is_a?(String) && /^\[.*\]$/.match(value)
+          where << "#{sep}#{key} IN (?)"
+          # Remove first and last characters then split on comma
+          args << value[1..-2].split(',')
+        else             
+          where << "#{sep}#{key} = ?"
+          args << value
+        end
       end
       sep = ' AND '
     end

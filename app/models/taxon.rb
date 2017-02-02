@@ -19,14 +19,15 @@
 
 class Taxon < ApplicationRecord
   belongs_to :parent_taxon, class_name: "Taxon", optional: true
-  has_many :sub_taxa, -> { order(:scientific_name) }, class_name: "Taxon", foreign_key: "parent_taxon_id", :dependent => :restrict_with_error
+  has_many :sub_taxa, -> { order(:scientific_name) }, class_name: "Taxon", foreign_key: "parent_taxon_id",
+           :dependent => :restrict_with_error
   has_many :specimens, :dependent => :restrict_with_error
   has_many :photos, through: :specimens
   has_many :sites, through: :specimens
   
   def self.common_ranks
     # Ugly hack since there are really more ranks but no way for a user to add one
-    [:Domain, :Kingdom, :Phylum, :Class, :Order, :SuperFamily, :Family, :SubFamily, :Tribe, :Genus, :Species, :Subspecies]
+    [:Domain, :Kingdom, :Phylum, :Class, :Subclass, :Order, :SuperFamily, :Family, :SubFamily, :Tribe, :Genus, :Species, :Subspecies]
   end
 
   def self.higher_rank(rank)
@@ -46,26 +47,34 @@ class Taxon < ApplicationRecord
   end
   
   def self.search(q)
+    result = false
     if q.blank?
-      all
+      result = all
     else
       q.strip! if q
       if lbl = parse_label(q)
-        where("taxa.scientific_name = ? AND taxa.rank = ?", lbl[0], lbl[1])
+        result = where("taxa.scientific_name = ? AND taxa.rank = ?", lbl[0], lbl[1])
       else
         # Accept "Ants" as a search for all sub-taxa of Formicidae
         sin = q.singularize.downcase
         plural = sin.pluralize
         if plural == q.downcase
-          ancestors = where "lower(taxa.scientific_name) = ? OR lower(taxa.scientific_name) = ? OR lower(taxa.common_name) = ?", q.downcase, sin, sin
-          return ancestors.first.descendants if ancestors.count == 1
+          ancestors = Taxon.where("lower(taxa.scientific_name) = ? OR lower(taxa.scientific_name) = ? OR lower(taxa.common_name) = ?", q.downcase, sin, sin)
+          if ancestors.count == 1
+            root = Taxon.find(ancestors.first.id)
+            result = Taxon.where("taxa.id in (?)", root.descendants.collect(&:id))
+          end
         end
 
         # Normal search across lots of fields
-        lk = "%#{q}%"
-        where("taxa.scientific_name LIKE ? OR taxa.common_name LIKE ? OR taxa.rank LIKE ? OR taxa.description like ?", lk, lk, lk, lk)
+        if !result
+          # lk = "%#{q}%"
+          # where("taxa.scientific_name LIKE ? OR taxa.common_name LIKE ? OR taxa.rank LIKE ? OR taxa.description like ?", lk, lk, lk, lk)
+          result = where(QueryUtils::q_to_where(q, 'taxa', [], [:scientific_name, :common_name, :rank, :description]))
+        end
       end
     end
+    result                     
   end
 
   # Strictly parses a string in the format of #label.

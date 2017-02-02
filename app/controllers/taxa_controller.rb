@@ -3,14 +3,14 @@ class TaxaController < ApplicationController
   def index
     @taxa = Taxon.distinct.
             left_outer_joins(:sites).
-            includes(:sites).
+            #includes(:sites).
             order(:scientific_name).
             search(params[:q] || params[:term]).
             where(QueryUtils::spatial_query(params))
 
     # This is a bit tricky. If there was a spatial query, limit mapped sites to those within the spatial query bounds.
     # If we just collect all sites for specimens in @taxa, we end up with sites that are outside the bounds.
-    # It could be argued that this behaviour is correct, but it is unexpected.
+    # It could be argued that the unrestricted behaviour is correct, but it is unexpected.
     @taxa_sites = @taxa.collect { |t| t.sites.where(QueryUtils::spatial_query(params)) }.flatten
     
     respond_to do |format|

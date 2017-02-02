@@ -38,7 +38,8 @@
  
   <%= labelled_block 'Notes' do %>
     <%= f.text_field :disposition, title: 'The current state of the specimen, e.g. "in collection", "missing"' %>
-    <%= f.text_field :other, label: 'Other information', title: 'May be used for project specific information, e.g. "Ant mimic"' %>
+    <!-- <%= f.text_field :other, label: 'Other information', title: 'May be used for project specific information, e.g. "Ant mimic"' %> -->
+    <%= f.autocompleted_dbs_field :other, col_values(Specimen, :other), :label => 'Other information', title: 'May be used for project specific information, e.g. "Ant mimic"' %>
   <% end %>
   <%= block do %>
     <%= f.text_area :notes, cols: 57, title: 'Any other information about the specimen such as where it was found, ID, notes etc.' %>

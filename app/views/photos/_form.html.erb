@@ -13,14 +13,14 @@
 
 
 <%# I have no idea why multipart has to be explicit here and not elsewhere! %>
-<%= labelled_form_for(@photo, :html => { multipart: true }) do |f| %>
+<%= labelled_form_for(@photo, :html => { multipart: true, :id => :edit_photo }) do |f| %>
 
   <%= f.field @photo.imageable_type do %>
     <%= link_to @photo.imageable, url_for(@photo.imageable) %>
   <% end %>
   
   <%= f.view_angle("photo[view_angle]", @photo.view_angle) %>
-  <%= f.autocompleted_dbs_field 'Type', col_values(Photo, :ptype), 'photo[ptype]', title: 'E.g. photo or drawing', initial_value:@photo.ptype %>
+  <%= f.autocompleted_dbs_field_tag 'Type', col_values(Photo, :ptype), 'photo[ptype]', title: 'E.g. photo or drawing', initial_value:@photo.ptype %>
   <%= f.photo_state "photo[state]", @photo.state %>
   <%= f.text_field :source, title: 'Source of this photo' %>
   <%= f.text_field :description, title: 'Description of this photo' %>

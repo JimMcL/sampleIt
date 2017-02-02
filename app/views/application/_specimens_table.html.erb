@@ -8,7 +8,7 @@
           <% end %>
           <th>Description</th>
           <th>Photos</th>
-          <th>Reference</th>
+          <th>Disposition</th>
         </tr>
         <% specimens.each do |sp| %>
           <tr>
@@ -18,7 +18,7 @@
             <% end %>
             <td><%= sp.descriptive_text %></td>
             <td><%= sp.photos.count %></td>
-            <td><%= sp.ref %></td>
+            <td><%= sp.disposition %></td>
           </tr>
         <% end %>
       </table>
