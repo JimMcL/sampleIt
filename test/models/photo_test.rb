@@ -70,12 +70,12 @@ class PhotoTest < ActiveSupport::TestCase
 
   test "label" do
     p1 = create_test_photo('ant-head.jpg', 'image/jpeg')
-    assert_equal "Photo", p1.label   # Label is ptype[, description][, angle]
+    assert_equal "#{p1.id}: photo", p1.label
     p1.description = 'Ant head'
     assert_equal "Ant head", p1.description
-    assert_equal "Ant head", p1.label
+    assert_equal "#{p1.id}: photo, ant head", p1.label
     p1.view_angle = ViewAngle.new('lateral')
-    assert_equal "Ant head, lateral view", p1.label
+    assert_equal "#{p1.id}: photo, ant head, lateral view", p1.label
   end
 
   test "camera from exif" do
