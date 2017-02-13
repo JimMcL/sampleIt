@@ -70,7 +70,7 @@ class Photo < ApplicationRecord
       rescue
       end
       lk = "%#{q}%"
-      where(QueryUtils::q_to_where(q, "photos", [:id, :imageable_id, :ptype, :source], [:imageable_type, :description, :state, :source]))
+      where(QueryUtils::q_to_where(q, "photos", [:id, :imageable_id, :ptype, :source], [:imageable_type, :description, :state, :source, :camera]))
     end
   end
 

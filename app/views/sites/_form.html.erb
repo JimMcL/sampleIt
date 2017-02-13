@@ -61,6 +61,6 @@
     <% end %>
   <% end %>
 
-  <%= render partial: 'specimens_table', locals: {specimens: @site.specimens.limit(41), show_taxon: true} %>
+  <%= render partial: 'specimens_table', locals: {specimens: @site.specimens.limit(41), show_taxon: true, show_site: false} %>
 
 <% end %>

@@ -7,7 +7,7 @@ class SpecimensController < ApplicationController
   
   def index
     # Allow either a single q param or specific column values to be specified
-    if params[:q].present?
+    if params.key?(:q)
       # Single parameter - intended for interactive use
       @specimens = Specimen.includes(:taxon).left_outer_joins(:site).
                    order(updated_at: :desc).

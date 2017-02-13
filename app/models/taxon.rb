@@ -87,7 +87,7 @@ class Taxon < ApplicationRecord
          \s*
          $}x
     if m = re.match(label)
-      [m[:sci].capitalize, m[:rank].capitalize.to_sym]
+      [m[:sci].capitalize, m[:rank].strip.capitalize.to_sym]
     end
   end
 
@@ -97,6 +97,7 @@ class Taxon < ApplicationRecord
   def self.find_or_create_with_name(name, suggested_rank = nil)
     #puts "find_or_create_with_name(#{name}, #{suggested_rank})"
     if deduced = deduce_scientific_name_and_rank_from_name(name)
+      #puts "deduced: #{deduced}"
       find_or_create deduced[0], deduced[1], suggested_rank
     end
   end
@@ -201,7 +202,14 @@ class Taxon < ApplicationRecord
       if rank.blank?
         t = lax_find_or_create(scientific_name, suggested_rank)
       else
-        t = Taxon.where(scientific_name: scientific_name, rank: rank).first_or_create
+        # Use "like" rather than "=" because it is case-insensitive
+        t = Taxon.where("scientific_name = ? AND rank like ?", scientific_name, rank).first_or_create do |t|
+          # Have to explicitly set these values since first_or_create has no values to
+          # work with when a where clause is used to find the record (rather than the
+          # form ... rank: rank ...)
+          t.scientific_name = scientific_name
+          t.rank = rank
+        end
       end
       if t.parent_taxon_id.nil? && [:Subspecies, :Species].include?(t.rank) && (m = /(.*)\s+\w+/.match(scientific_name))
         t.parent_taxon = find_or_create(m[1], nil, higher_rank(t.rank))

@@ -32,3 +32,8 @@ three:
   authority: L. Koch, 1879
   common_name: Two-coloured Ant Mimic
   parent_taxon: one
+
+three:
+  description: Wasps and ants
+  scientific_name: Vespoida
+  rank: SuperFamily

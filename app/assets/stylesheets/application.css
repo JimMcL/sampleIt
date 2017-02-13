@@ -39,6 +39,7 @@ div.field { padding: .2em .5em; vertical-align: top }
 input, label.field-label { display: block }
 div.field label.field-label { font-weight: bold; padding-top: .5em; padding-bottom: .2em }
 div.field div.field { display: inline-block; padding: .1em 0 }
+div.field input { display: inline-block; padding: .1em 0 }
 div.field div.field label.field-label { font-weight: normal; opacity: .5; font-size:80%; padding-top: 0; padding-bottom: .2em }
 /* Input inside a label should not be a block */
 label input { display: inline }

@@ -6,7 +6,7 @@ class SitesController < ApplicationController
 
   def index
     @sites = Site.includes(:project).
-             order(updated_at: :desc).
+             order(id: :desc).
              search(params[:q]).
              where(QueryUtils::spatial_query(params))
 

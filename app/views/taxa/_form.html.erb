@@ -31,6 +31,12 @@
  
   <%= block do %>
     <%= f.submit 'Save' %>
+    &nbsp;
+    <%= link_to 'Delete taxon',
+              taxon_path(@taxon),
+              type: :button,
+              method: :delete,
+              data: { confirm: 'Are you sure?' } %>
   <% end %>
 
   <% photos = @taxon.choose_photos(20) %>
@@ -42,6 +48,13 @@
     <% end %>
   <% end %>
 
-  <%= render partial: 'specimens_table', locals: {specimens: @taxon.specimens.limit(41), show_taxon: false} %>
+  <% specimens = @taxon.specimens.limit(41) %>
+  <% if specimens.empty? %>
+    <%= block do %>
+      <div>No specimens</div>
+    <% end %>
+  <% else %>
+    <%= render partial: 'specimens_table', locals: {specimens: @taxon.specimens.limit(41), show_taxon: false, show_site: true} %>
+  <% end %>
 
 <% end %>

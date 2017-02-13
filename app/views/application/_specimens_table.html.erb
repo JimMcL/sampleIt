@@ -7,8 +7,11 @@
             <th>Taxon</th>
           <% end %>
           <th>Description</th>
-          <th>Photos</th>
+          <th>Images</th>
           <th>Disposition</th>
+          <% if show_site %>
+            <th>Site</th>
+          <% end %>
         </tr>
         <% specimens.each do |sp| %>
           <tr>
@@ -17,8 +20,12 @@
               <td><%= sp.taxon %></td>
             <% end %>
             <td><%= sp.descriptive_text %></td>
-            <td><%= sp.photos.count %></td>
+            <td><%= sp.summarise_photos %></td>
             <td><%= sp.disposition %></td>
+            <% if show_site %>
+              <td><%= link_to sp.site_id, edit_site_path(sp.site_id) %></td>
+              <!-- <td><%# = sp.site_id %></td> -->
+            <% end %>
           </tr>
         <% end %>
       </table>

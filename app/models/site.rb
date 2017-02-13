@@ -50,7 +50,7 @@ class Site < ApplicationRecord
   end
 
   def label
-    "#{id}"
+    "#{id}: #{description}"
   end
 
   def location

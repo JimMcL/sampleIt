@@ -72,8 +72,13 @@ class TaxaController < ApplicationController
 
     alert = @taxon.errors.full_messages.join(', ')
     alert = nil if alert.blank?
-    notice = alert ? nil : "#{@taxon.label} deleted"
-    redirect_to taxa_path, alert: alert, notice: notice
+    if alert
+      # Redirect back to wherever we came from
+      redirect_to URI(request.referer).path, alert: alert
+    else
+      # Referring page won't exist if it was displaying the now-deleted record
+      redirect_to taxa_path, notice:  "#{@taxon.label} deleted"
+    end
   end
  
   def edit_parent_taxon

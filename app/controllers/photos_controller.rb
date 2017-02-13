@@ -4,9 +4,9 @@ class PhotosController < ApplicationController
 
   def index
     # Allow either a single q param or specific column values to be specified
-    if params[:q].present?
+    if params.key?(:q) || params.length < 3 # always get controller and actino params
       # Single parameter - intended for interactive use
-      @photos = Photo.search(params[:q])
+      @photos = Photo.order(rating: :desc).search(params[:q])
     else
       # Each (whitelisted) parameter is treated as a column name and
       # value.  The query requires rows which satisfy all conditions.

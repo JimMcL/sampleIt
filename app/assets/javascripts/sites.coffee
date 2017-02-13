@@ -27,4 +27,8 @@ $ ->
 $ ->
   $("#spatial-query").click (e) ->
     e.preventDefault()
-    window.location.href = UpdateQueryString('bounds', window.SiteMap.getBounds().toUrlValue(5))
+    # The "5" passed to toUrlValue is precision of lat/lng values
+    uri = UpdateQueryString('bounds', window.SiteMap.getBounds().toUrlValue(5))
+    # Include the user's search criterion in the query string 
+    uri = UpdateQueryString('q', $("#q").val(), uri)
+    window.location.href = uri

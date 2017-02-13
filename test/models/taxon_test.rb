@@ -16,6 +16,12 @@ require 'test_helper'
 
 class TaxonTest < ActiveSupport::TestCase
 
+  test "case sensitive rank" do
+    assert_equal 1, Taxon.where(scientific_name: 'Vespoida').length
+    nr = Taxon.find_or_create_with_name('Vespoida (SuperFamily)')
+    assert_equal 1, Taxon.where(scientific_name: 'Vespoida').length
+  end
+  
   test "descriptive_text" do
     t1 = Taxon.create(:scientific_name => 'Dolichoderus clarki')
     assert_equal 'Dolichoderus clarki', t1.descriptive_text

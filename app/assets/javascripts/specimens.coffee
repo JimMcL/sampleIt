@@ -2,15 +2,16 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-# Clicking on the Choose file button displays the upload photo sub-form
+# Clicking on (or changing) the Choose file button displays the upload photo sub-form
 $ ->
   $("#specimen_photo").click (e) ->
     $(".detail").show('fast')
 
 # Application specific functionality.
-# If the uploade file looks like <number>.jpg, set the source to be "Photo <number>"
+# If the uploaded file looks like <number>.jpg, set the source to be "Photo <number>" (this is a hack for my needs)
 $ ->
   $("#specimen_photo").change (e) ->
+    $(".detail").show('fast')
     fn = $(e.target).val().split(/[\\/]/).pop()
     src = $('#photo_source')
     if (m = /^(?:.*[\\/])?(\d+)\.[^.]+/.exec(fn)) && src.val() == ''

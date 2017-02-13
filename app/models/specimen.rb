@@ -52,6 +52,13 @@ class Specimen < ApplicationRecord
   def descriptive_text
     description.blank? && taxon ? taxon.descriptive_text : description
   end
+
+  # Returns a string describing how many image of each type exist for this specimen
+  def summarise_photos
+    s = photos.group(:ptype).count.map do |k, v| ActionController::Base.helpers.pluralize(v, (k.blank? ? 'photo' : k).downcase)
+    end.join(', ')
+    s.blank? ? '0 photos' : s
+  end
   
   def label
     "#{id}#{taxon_id ? (': ' + taxon.scientific_name) : ''}"
