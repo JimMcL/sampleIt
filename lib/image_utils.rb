@@ -1,6 +1,6 @@
 module ImageUtils
   # External utilities
-  # For now, just assume that convert.exe from ImageMagick is in the path.
+  # For now, just assume that ImageMagick is in the path.
   IMAGEMAGICK_CONVERT = "convert"
   IMAGEMAGICK_MOGRIFY = "mogrify"
   IMAGEMAGICK_IDENTIFY = "identify"

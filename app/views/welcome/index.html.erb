@@ -7,25 +7,21 @@ Welcome
 <p>Sites are collected into <em>projects</em>.</p>
 <p>
 <%= link_to 'Projects', controller: 'projects' %>
-<%= link_to 'New project', new_project_path %>
 </p>
 
 <p><em>Sites</em> identify a time and a place where specimens were collected.</p>
 <p>
 <%= link_to 'Sites', controller: 'sites' %>
-<%= link_to 'New site', new_site_path %>
 </p>
 
 <p>A <em>specimen</em> is an individual which has been collected at a site. It usually belongs to a taxon (such as a species), and may have associated photos</p>
 <p>
 <%= link_to 'Specimens', controller: 'specimens' %>
-<%= link_to 'New specimen', new_specimen_path %>
 </p>
 
 <p>A <em>taxon</em> may be well defined, such as an agreed upon genus, or it may be an ad-hoc category such as a morphospecies.</p>
 <p>
 <%= link_to 'Taxa', controller: 'taxa' %>
-<%= link_to 'New taxon', new_taxon_path %>
 </p>
 
 <p><em>Photos</em> can only be added to <em>specimens</em> or used to identfy a <em>site</em>, but for convenience they may be viewed here.

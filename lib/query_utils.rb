@@ -46,7 +46,7 @@ module QueryUtils
 
   # Given parameters, returns a where clause and a set of parameters
   # which can be passed to the where method. E.g
-  # params_to_where{id: '[10,12,13]', name: 'ruby'}, {id: true} => ['id = ? AND name = ?', 10, 'ruby']
+  # params_to_where{id: '[10,12,13]', name: 'ruby'}  => ['id IN ? AND name = ?', [10, 12, 13], 'ruby']
   def self.params_to_where(params, allow_array = {})
     where = ''
     sep = ''

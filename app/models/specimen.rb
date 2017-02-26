@@ -28,7 +28,7 @@ class Specimen < ApplicationRecord
   has_many :photos, as: :imageable, :dependent => :destroy
 
   def self.search(q)
-    if id_m = /(?<site>\d*)[-:\/](?<sp>\d*)/.match(q)
+    if id_m = /^(?<site>\d*)[-:\/](?<sp>\d*)$/.match(q)
       r = all
       r = r.where("specimens.site_id = ?", id_m['site']) unless id_m['site'].blank?
       r = r.where("specimens.id = ?", id_m['sp']) unless id_m['sp'].blank?
