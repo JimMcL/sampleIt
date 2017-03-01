@@ -4,7 +4,7 @@ class PhotosController < ApplicationController
 
   def index
     # Allow either a single q param or specific column values to be specified
-    if params.key?(:q) || params.length < 3 # always get controller and actino params
+    if params.key?(:q) || params.keys.length < 3 # always get controller and action params
       # Single parameter - intended for interactive use
       @photos = Photo.order(rating: :desc).search(params[:q])
     else
@@ -13,7 +13,8 @@ class PhotosController < ApplicationController
       # In csv, a single photo url is returned. By default it is the
       # :photo file url, but the file type can be specified with the
       # parameter :ftype. Only photos which have a file with that
-      # ftype will be returned
+      # ftype will be returned. Special parameter 'sql' just gets
+      # embedded into the where clause
       has_ftype = !!params[:ftype]
       qry = QueryUtils::params_to_where(adjust_query_params(ViewAngle.expand_query_params(query_params)))
       @photos = has_ftype ? Photo.joins(:photo_files).where(*qry) : Photo.where(*qry)
@@ -67,7 +68,7 @@ class PhotosController < ApplicationController
   end
 
   def query_params
-    params.permit(:id, :rating, :imageable_type, :imageable_id, :view_phi, :view_lambda, :description, :view_angle, :state, :ptype, :source, :ftype, :camera)
+    params.permit(:id, :rating, :imageable_type, :imageable_id, :view_phi, :view_lambda, :description, :view_angle, :state, :ptype, :source, :ftype, :camera, :sql)
   end
 
   def extract_photo_file(photo, params)

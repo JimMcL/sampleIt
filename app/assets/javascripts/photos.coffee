@@ -22,15 +22,17 @@ $ ->
             error: (jqXHR, textStatus, errorThrown) ->
                 alert("Ratings change failed: #{textStatus}:\n#{errorThrown}")
 
-# Autocomplete on photo state
-$ ->
-    $('#photo_state').autocomplete
+  # Autocomplete on photo state
+  $('#photo_state').autocomplete
         source: window.all_photo_states
         select: (event,ui) -> $("#photo_state").val(ui.item)
 
-# Autocomplete on photo ptype
-$ ->
-    $('#photo_ptype').autocomplete
+  # Autocomplete on photo ptype
+  $('#photo_ptype').autocomplete
         source: window.all_photo_ptypes
         select: (event,ui) -> $("#photo_ptype").val(ui.item)
 
+  # Setup lazy image loading
+  $("img").lazyload({
+    threshold : 500
+ });

@@ -15,6 +15,7 @@
 //= require jquery-ui
 // Cause problems with paging loading scripts = require turbolinks
 //= require_tree .
+// = require jquery.lazyload.js
 
 function UpdateQueryString(key, value, url) {
     if (!url) url = window.location.href;

@@ -46,7 +46,12 @@ module QueryUtils
 
   # Given parameters, returns a where clause and a set of parameters
   # which can be passed to the where method. E.g
-  # params_to_where{id: '[10,12,13]', name: 'ruby'}  => ['id IN ? AND name = ?', [10, 12, 13], 'ruby']
+  # params_to_where({id: '[10,12,13]', name: 'ruby'}, {id: true})  => ['id IN ? AND name = ?', [10, 12, 13], 'ruby']
+  #
+  # Special parameter 'sql' is just embeded as is.
+  #
+  # params - hash of parameters
+  # allow_array - hash where key is name of parameters which may be processed as an array, value is bool
   def self.params_to_where(params, allow_array = {})
     where = ''
     sep = ''
@@ -55,7 +60,9 @@ module QueryUtils
       if value.blank? 
         where << "#{sep}#{key} IS NULL"
       else
-        if allow_array[key.to_sym] && value.is_a?(String) && /^\[.*\]$/.match(value)
+        if key.to_sym == :sql
+          where << "#{sep}#{value}"
+        elsif allow_array[key.to_sym] && value.is_a?(String) && /^\[.*\]$/.match(value)
           where << "#{sep}#{key} IN (?)"
           # Remove first and last characters then split on comma
           args << value[1..-2].split(',')

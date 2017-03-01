@@ -40,7 +40,8 @@ module ApplicationHelper
   # type - which photo representation should be displayed, e.g. :thumb, :photo
   # link_to_owner - if true, clicking on the photo will go to the owner page (e.g. specimen or site),
   #                 otherwise it will go to the photo page
-  def photo_image(photo, delete_button: true, rating_flags: true, scale: 1, type: :thumb, link_to_owner: true)
+  # lazy - if true, the image will be loaded lazily
+  def photo_image(photo, delete_button: true, rating_flags: true, scale: 1, type: :thumb, link_to_owner: true, lazy: true)
     file = photo.file(type)
     delete_btn = delete_button ?
                    link_to(image_tag('/delete.png', class: :delete), [photo], method: :delete, data: { confirm: 'Are you sure?' }) :
@@ -49,7 +50,7 @@ module ApplicationHelper
     content_tag('div',
                 delete_btn +
                 rating +
-                link_to(image_tag(file.path, size: file.size_s(scale)), link_to_owner ? photo.imageable : photo),
+                link_to(image_tag(file.path, size: file.size_s(scale), lazy: lazy), link_to_owner ? photo.imageable : photo),
                 class: 'photo-container')
   end
 
