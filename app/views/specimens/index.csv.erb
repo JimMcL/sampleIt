@@ -1,9 +1,10 @@
 <%- headers = ['id', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'taxonrank', 'scientificname',
     	       'decimallatitude', 'decimallongitude', 'coordinateuncertaintyinmeters', 'elevation', 'time', 'day', 'month', 'year',
-               'description', 'quantity', 'bodylength', 'notes', 'idconfidence', 'other', 'ref', 'disposition', 'numphotos'] -%>
+               'description', 'quantity', 'bodylength', 'sex', 'form', 'notes', 'idconfidence', 'other', 'ref', 'disposition',
+               'numphotos'] -%>
 <%= CSV.generate_line headers -%>
 <%- @specimens.each do | specimen | -%>
-  <%- txn = specimen.taxon -%>
+  <%- txn = specimen.taxon || NullTaxon.new -%>
   <%- site = specimen.site -%>
   <%- loc = site.location -%>
   <% for i in 1..(specimen.quantity || 1) %>
@@ -28,6 +29,8 @@
         specimen.description,
         specimen.quantity,
         specimen.body_length,
+        specimen.sex,
+        specimen.form,
         specimen.notes,
         specimen.id_confidence,
         specimen.other,

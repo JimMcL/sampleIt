@@ -27,7 +27,7 @@ class Taxon < ApplicationRecord
   
   def self.common_ranks
     # Ugly hack since there are really more ranks but no way for a user to add one
-    [:Domain, :Kingdom, :Phylum, :Class, :Subclass, :Order, :SuperFamily, :Family, :SubFamily, :Tribe, :Genus, :Species, :Subspecies]
+    [:Domain, :Kingdom, :Phylum, :Class, :Subclass, :Order, :Suborder, :SuperFamily, :Family, :SubFamily, :Tribe, :Genus, :Species, :Subspecies]
   end
 
   def self.higher_rank(rank)
@@ -176,6 +176,46 @@ class Taxon < ApplicationRecord
       # Fallback to description
       description
     end
+  end
+
+  # Creates a new taxon with rank :Species and which belongs to this taxon
+  def generate_morphospecies
+    # Sanity check
+    raise "Unable to create a morphospecies within a #{rank}" if Taxon::rank_index(:Species) <= Taxon::rank_index(rank)
+
+    # A few specific rules to make a sensible species name
+    if rank == :Genus
+      fmt = "#{scientific_name} sp%d"
+    else
+        genus = scientific_name
+      if rank == :Family
+        # Convert family Salticidae to genus Salticid1.
+        # Not sure if this is just a convention for animals.
+        # Also don't know if there are other applicable conventions
+        genus = "#{scientific_name.sub(/idae$/, 'id')}%d"
+        fmt = "#{genus} sp1"
+      end
+    end
+
+    # Now ensure the species name doesn't already exist
+    counter = 0
+    new_name = ''
+    loop do
+      counter += 1
+      new_name = sprintf(fmt, counter)
+      break if !Taxon.exists?(scientific_name: new_name)
+    end
+
+    # Create the new species and  possibly genus
+    t = Taxon::find_or_create(new_name, :Species, nil)
+    # If the genus doesn;t have a parent...
+    unless t.parent_taxon.parent_taxon
+      # set it to this
+      t.parent_taxon.parent_taxon_id = id
+      t.parent_taxon.save!
+    end
+
+    t
   end
 
   def to_s

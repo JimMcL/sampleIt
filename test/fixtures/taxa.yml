@@ -14,16 +14,25 @@
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+zero:
+  description: Jumping spider
+  scientific_name: Salticidae
+  common_name: Jumping spider
+  rank: Family
+  parent_taxon: nil
+
 one:
   description: Ant mimic spiders
   scientific_name: Myrmarachne
-  common_name: 
-  parent_taxon: nil
+  common_name:
+  rank: Genus
+  parent_taxon: zero
 
 two:
   description: Golden bum mimic
   scientific_name: Myrmarachne luctuosa
   common_name: Mournful ant mimic
+  rank: Species
   parent_taxon: one
 
 three:
@@ -31,9 +40,14 @@ three:
   scientific_name: Myrmarachne bicolor
   authority: L. Koch, 1879
   common_name: Two-coloured Ant Mimic
+  rank: Species
   parent_taxon: one
 
-three:
+four:
   description: Wasps and ants
   scientific_name: Vespoida
   rank: SuperFamily
+
+five:
+  scientific_name: Metacyrba taeniola similis
+  rank: Subspecies

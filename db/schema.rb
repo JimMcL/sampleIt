@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170110005904) do
+ActiveRecord::Schema.define(version: 20170326233208) do
 
   create_table "photo_files", force: :cascade do |t|
     t.string   "ftype",      null: false
@@ -82,6 +82,8 @@ ActiveRecord::Schema.define(version: 20170110005904) do
     t.string   "other"
     t.string   "ref"
     t.string   "disposition"
+    t.string   "form"
+    t.string   "sex"
     t.index ["site_id"], name: "index_specimens_on_site_id"
     t.index ["taxon_id"], name: "index_specimens_on_taxon_id"
   end

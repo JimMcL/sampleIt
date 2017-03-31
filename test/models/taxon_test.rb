@@ -16,6 +16,31 @@ require 'test_helper'
 
 class TaxonTest < ActiveSupport::TestCase
 
+  test "generate morphospecies" do
+    # Can't generate a morphospecies within species or subspecies
+    ss = Taxon.where(scientific_name: 'Metacyrba taeniola similis').first
+    assert_equal :Subspecies, ss.rank
+    assert_raise { ss.generate_morphospecies }
+
+    s = Taxon.where(scientific_name: 'Myrmarachne luctuosa').first
+    assert_equal :Species, s.rank
+    assert_raise { s.generate_morphospecies }
+
+    # Can generate for genus or above
+    g = Taxon.where(scientific_name: 'Myrmarachne').first
+    assert_equal :Genus, g.rank
+    check_morphospecies(g, 'Myrmarachne sp1', true)
+    check_morphospecies(g, 'Myrmarachne sp2', true)
+    check_morphospecies(g, 'Myrmarachne sp3', true)
+
+    f = Taxon.where(scientific_name: 'Salticidae').first
+    assert_equal :Family, f.rank
+    check_morphospecies(f, 'Salticid1 sp1', false)
+    check_morphospecies(f, 'Salticid2 sp1', false)
+    check_morphospecies(f, 'Salticid3 sp1', false)
+    
+  end
+
   test "case sensitive rank" do
     assert_equal 1, Taxon.where(scientific_name: 'Vespoida').length
     nr = Taxon.find_or_create_with_name('Vespoida (SuperFamily)')
@@ -176,4 +201,17 @@ class TaxonTest < ActiveSupport::TestCase
       indent + 1
     end
   end
+
+  def check_morphospecies(parent, expected_name, parent_is_genus)
+    ms = parent.generate_morphospecies
+    assert_equal :Species, ms.rank
+    assert_equal expected_name, ms.scientific_name
+    assert_equal :Genus, ms.parent_taxon.rank
+    if parent_is_genus
+      assert_equal parent.id, ms.parent_taxon_id, "Incorrect genus for generated morphospecies"
+    else
+      assert_equal parent.id, ms.parent_taxon.parent_taxon_id, "Incorrect parent for genus of generated morphospecies"
+    end
+  end
+  
 end

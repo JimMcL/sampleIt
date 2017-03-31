@@ -73,7 +73,7 @@ class SitesController < ApplicationController
   private
 
   def site_params
-    params.require(:site).permit(:notes, :location, :photo, :altitude,
+    params.require(:site).permit(:notes, :location, :photo, :altitude, :ref,
                                  :temperature, :weather, :collector, :sample_type, :transect,
                                  :duration, :duration_s, :started_at, :description, :project_id)
   end

@@ -15,6 +15,8 @@
 #  other         :string
 #  ref           :string
 #  disposition   :string
+#  form          :string
+#  sex           :string
 #
 # Indexes
 #
@@ -22,6 +24,10 @@
 #  index_specimens_on_taxon_id  (taxon_id)
 #
 
+# Column definitions
+# disposition, http://rs.tdwg.org/dwc/terms/disposition
+# sex, http://rs.tdwg.org/dwc/terms/sex
+# form, http://rs.tdwg.org/dwc/terms/lifeStage or form name for polymorphic species
 class Specimen < ApplicationRecord
   belongs_to :site
   belongs_to :taxon, optional: true
@@ -37,14 +43,16 @@ class Specimen < ApplicationRecord
       r
     else
       lk = "%#{q}%"
+      # Note that LIKE with no wildcards in the pattern provides a case insensitive = (at least in Sqlite)
       left_outer_joins(:taxon).
-        where("specimens.id = ? OR specimens.site_id = ? OR lower(taxa.rank) = ? OR 
-               specimens.ref = ? OR specimens.description LIKE ? OR 
-               specimens.notes LIKE ? OR specimens.disposition LIKE ? OR 
+        where("specimens.id = ? OR specimens.site_id = ? OR taxa.rank = ? OR 
+               specimens.ref LIKE ? OR specimens.description LIKE ? OR 
+               specimens.notes LIKE ? OR specimens.disposition LIKE ? OR specimens.form LIKE ? OR specimens.sex LIKE ? OR 
                taxa.scientific_name like ? OR taxa.common_name like ? OR taxa.description like ?",
-            q, q, q ? q.downcase : nil, q,
-            lk, lk, lk,
-            lk, lk, lk)
+              q, q, q,
+              lk, lk,
+              lk, lk, lk, lk,
+              lk, lk, lk)
     end
   end
 

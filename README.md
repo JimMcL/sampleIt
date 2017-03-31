@@ -1,19 +1,21 @@
 # README
 
-A simple Ruby on Rails application to manage biology specimens. A
-specimen belongs to a site, which is the time and place that the
-specimen was collected. Sites belong to a project. Multiple
-specimens may have been collected at a single site. A specimen may be
-identified as having a taxon (e.g. a species). Specimens can have
-photos.
+A simple Ruby on Rails application to manage biology specimens. The
+goal of this app is to make it simple to maintain accurate, complete
+and error-free specimen data.
 
-Everything is designed to make it easy to access the data. There are
-no access restrictions. Photos are stored in the public/images folder
-so they are served directly by the web server for maximum speed. This
-means that anyone with access to the server can see **and edit** all of the data
-and photos.
+A specimen belongs to a site, which is the time and place that the
+specimen was collected. Sites belong to a project. Multiple specimens
+may have been collected at a single site. A specimen may be identified
+as having a taxon (e.g. a species). Specimens can have photos.
 
-It is a vanilla RoR setup.
+A design goal is to make it as easy as possible to access the
+data. There are no access restrictions. Photos are stored in the
+public/images folder so they are served directly by the web server for
+maximum speed. This means that anyone with access to the server can
+see **and edit** all of the data and photos.
+
+It uses a vanilla RoR setup.
 
 * Ruby version:
 ruby 2.2.4p230 (2015-12-16 revision 53155) [i386-mingw32]

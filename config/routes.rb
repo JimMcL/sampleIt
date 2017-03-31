@@ -14,15 +14,18 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :sites, :specimens, :taxa, :photos
-
   resources :specimens do
     resources :photos
     member do
       get 'edit_site'
       get 'copy'
     end
+    collection do
+      get 'summary'
+    end
   end
+
+  resources :sites, :specimens, :taxa, :photos
 
   resources :sites do
     resources :photos

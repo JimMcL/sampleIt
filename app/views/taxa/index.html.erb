@@ -9,6 +9,9 @@ Taxa
   <div><%= sites_map(@taxa_sites, [300, 300]) %></div>
 <% end %>
 
+<p><%= pluralize(@taxa.count, 'taxon') -%></p>
+
+
 <table class='index'>
   <tr class=header>
     <th>Id</th>

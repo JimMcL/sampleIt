@@ -45,12 +45,12 @@ class Site < ApplicationRecord
     left_outer_joins(:project).
       where("sites.id = ? OR temperature = ? OR transect = ? OR 
               notes LIKE ? OR weather like ? OR collector like ? OR sample_type like ? OR sites.description like ? OR 
-              projects.title like ?",
-            q, q, q, lk, lk, lk, lk, lk, lk) 
+              sites.ref like ? OR projects.title like ?",
+            q, q, q, lk, lk, lk, lk, lk, lk, lk) 
   end
 
   def label
-    "#{id}: #{description}"
+    "Site #{id}: #{description}#{started_at ? started_at.strftime(" - %Y-%m-%d") : ''}"
   end
 
   def location

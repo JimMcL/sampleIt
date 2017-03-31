@@ -31,12 +31,14 @@
  
   <%= block do %>
     <%= f.submit 'Save' %>
-    &nbsp;
-    <%= link_to 'Delete taxon',
-              taxon_path(@taxon),
-              type: :button,
-              method: :delete,
-              data: { confirm: 'Are you sure?' } %>
+    <% if @taxon.id %>
+      &nbsp;
+      <%= link_to 'Delete taxon',
+                taxon_path(@taxon),
+                type: :button,
+                method: :delete,
+                data: { confirm: 'Are you sure?' } %>
+    <% end %>
   <% end %>
 
   <% photos = @taxon.choose_photos(20) %>
