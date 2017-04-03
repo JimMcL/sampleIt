@@ -61,3 +61,7 @@ seven:
   scientific_name: Metacyrba taeniola similis
   rank: Subspecies
   parent_taxon: six
+
+eight:
+  scientific_name: Hymenoptera
+  rank: Order

@@ -187,14 +187,14 @@ class Taxon < ApplicationRecord
     if rank == :Genus
       fmt = "#{scientific_name} sp%d"
     else
-        genus = scientific_name
+      genus = "#{scientific_name}%d"
       if rank == :Family
         # Convert family Salticidae to genus Salticid1.
         # Not sure if this is just a convention for animals.
         # Also don't know if there are other applicable conventions
         genus = "#{scientific_name.sub(/idae$/, 'id')}%d"
-        fmt = "#{genus} sp1"
       end
+      fmt = "#{genus} sp1"
     end
 
     # Now ensure the species name doesn't already exist

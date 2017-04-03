@@ -44,6 +44,12 @@ class TaxonTest < ActiveSupport::TestCase
     assert_equal :Genus, g.rank
     check_morphospecies(g, 'Metacyrba sp1', true)
     check_morphospecies(g, 'Metacyrba sp2', true)
+
+    # Order genus
+    o = Taxon.where(scientific_name: 'Hymenoptera').first
+    assert_equal :Order, o.rank
+    check_morphospecies(o, 'Hymenoptera1 sp1', false)
+    check_morphospecies(o, 'Hymenoptera2 sp1', false)
   end
 
   test "case sensitive rank" do
@@ -231,6 +237,8 @@ class TaxonTest < ActiveSupport::TestCase
       t = t.parent_taxon
       assert depth < infinity - 1
     end
+
+    ms
   end
   
 end
