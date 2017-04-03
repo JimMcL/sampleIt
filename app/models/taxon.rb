@@ -208,11 +208,12 @@ class Taxon < ApplicationRecord
 
     # Create the new species and  possibly genus
     t = Taxon::find_or_create(new_name, :Species, nil)
-    # If the genus doesn;t have a parent...
-    unless t.parent_taxon.parent_taxon
+    # If the genus doesn't have a parent...
+    par = t.parent_taxon || NullTaxon.new
+    unless par.parent_taxon || par.id == id # Avoid creating infinite loop in taxon hierarchy
       # set it to this
-      t.parent_taxon.parent_taxon_id = id
-      t.parent_taxon.save!
+      par.parent_taxon_id = id
+      par.save!
     end
 
     t
@@ -226,7 +227,7 @@ class Taxon < ApplicationRecord
     [:Genus, :Species, :Subspecies].include?(rank) ? "<i>#{scientific_name}</i>" : scientific_name
   end
   
-  #######
+  #################################################################################
   private
 
   # Attempts to find or create a taxon with the specified scientific name and taxon.

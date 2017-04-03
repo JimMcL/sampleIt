@@ -48,11 +48,12 @@ class Specimen < ApplicationRecord
         where("specimens.id = ? OR specimens.site_id = ? OR taxa.rank = ? OR 
                specimens.ref LIKE ? OR specimens.description LIKE ? OR 
                specimens.notes LIKE ? OR specimens.disposition LIKE ? OR specimens.form LIKE ? OR specimens.sex LIKE ? OR 
+               specimens.other like ? OR
                taxa.scientific_name like ? OR taxa.common_name like ? OR taxa.description like ?",
               q, q, q,
               lk, lk,
               lk, lk, lk, lk,
-              lk, lk, lk)
+              lk, lk, lk, lk)
     end
   end
 

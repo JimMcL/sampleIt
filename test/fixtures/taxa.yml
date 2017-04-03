@@ -49,5 +49,15 @@ four:
   rank: SuperFamily
 
 five:
+  scientific_name: Metacyrba
+  rank: Genus
+
+six:
+  scientific_name: Metacyrba taeniola
+  rank: Species
+  parent_taxon: five
+
+seven:
   scientific_name: Metacyrba taeniola similis
   rank: Subspecies
+  parent_taxon: six

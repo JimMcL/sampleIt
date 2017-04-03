@@ -8,6 +8,10 @@ class NullTaxon
     nil
   end
 
+  def parent_taxon
+    this
+  end
+  
   def parent_description
     nil
   end

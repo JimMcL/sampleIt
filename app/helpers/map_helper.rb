@@ -164,13 +164,13 @@ module MapHelper
   end
 
   # Constructs HTML and javascript for a google map with markers. Map
-  # will centred on the markers.  Assumes single map per page.
+  # will be centred on the markers.  Assumes single map per page.
   # 
   # markers - array of Marker objects
   # zoom - google maps zoom level. If zoom is nil and >1 markers, map will be zoomed to cover all markers.
   # size - size in pixels of the map
-  # pos_field_is - if not nil, specifies the ID of a field containing
-  #     a location. If a mrker is dragged, the field will be updated with
+  # pos_field_id - if not nil, specifies the ID of a field containing
+  #     a location. If a marker is dragged, the field will be updated with
   #     the new location of the marker. Intention is that the map
   #     represents a single marker, so moving the marker updates its position
   def map(markers, zoom: nil, size: [300, 300], pos_field_id: nil)
@@ -199,6 +199,7 @@ module MapHelper
     
   end
 
+  ################################################################################
   private
 
   def build_map_init_fn(bounds, map_ele_id, zoom, markers_js)

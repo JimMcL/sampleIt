@@ -38,7 +38,12 @@ class TaxonTest < ActiveSupport::TestCase
     check_morphospecies(f, 'Salticid1 sp1', false)
     check_morphospecies(f, 'Salticid2 sp1', false)
     check_morphospecies(f, 'Salticid3 sp1', false)
-    
+
+    # Parent-less genus
+    g = Taxon.where(scientific_name: 'Metacyrba').first
+    assert_equal :Genus, g.rank
+    check_morphospecies(g, 'Metacyrba sp1', true)
+    check_morphospecies(g, 'Metacyrba sp2', true)
   end
 
   test "case sensitive rank" do
@@ -208,9 +213,23 @@ class TaxonTest < ActiveSupport::TestCase
     assert_equal expected_name, ms.scientific_name
     assert_equal :Genus, ms.parent_taxon.rank
     if parent_is_genus
-      assert_equal parent.id, ms.parent_taxon_id, "Incorrect genus for generated morphospecies"
+      assert_equal parent.id, ms.parent_taxon_id, "Incorrect genus for generated morphospecies #{ms.scientific_name}"
+      if parent.parent_taxon_id.nil?
+        assert_nil ms.parent_taxon.parent_taxon_id, "Incorrect grandparent for generated morphospecies #{ms.scientific_name}"
+      else
+        assert_equal parent.parent_taxon_id, ms.parent_taxon.parent_taxon_id, "Incorrect grandparent for generated morphospecies #{ms.scientific_name}"
+      end
     else
-      assert_equal parent.id, ms.parent_taxon.parent_taxon_id, "Incorrect parent for genus of generated morphospecies"
+      assert_equal parent.id, ms.parent_taxon.parent_taxon_id, "Incorrect parent for genus of generated morphospecies #{ms.scientific_name}"
+    end
+
+    # Check for infinite loop
+    t = ms
+    infinity = 10
+    for depth in 1..infinity do
+      break if t.nil?
+      t = t.parent_taxon
+      assert depth < infinity - 1
     end
   end
   
