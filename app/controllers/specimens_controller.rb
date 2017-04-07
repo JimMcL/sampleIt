@@ -158,7 +158,7 @@ class SpecimensController < ApplicationController
     else
       # Each (whitelisted) parameter is treated as a column name and
       # value.  The query requires rows which satisfy all conditions.
-      qry = QueryUtils::params_to_where(query_params, {id: true, disposition: true})
+      qry = QueryUtils::params_to_where(query_params, {id: true, disposition: true}, 'specimens')
       Specimen.includes(:taxon).left_outer_joins(:site).
         where(*qry).
         where(QueryUtils::spatial_query(params))

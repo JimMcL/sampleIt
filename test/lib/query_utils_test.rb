@@ -25,7 +25,6 @@ class QueryUtilsTest < ActiveSupport::TestCase
     assert_equal 'ruby', w[3]
 
     w = QueryUtils::params_to_where({id: '[10,12,13]', sql: 'imageable_id in (select specimens.id from specimens join taxa on taxon_id = taxa.id where scientific_name like \'Myrmarachne%\')'}, id: true)
-    p w
     assert_equal 2, w.length
     assert_equal 'id IN (?) AND imageable_id in (select specimens.id from specimens join taxa on taxon_id = taxa.id where scientific_name like \'Myrmarachne%\')', w[0]
     assert_equal ['10', '12', '13'], w[1]

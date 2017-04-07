@@ -52,22 +52,24 @@ module QueryUtils
   #
   # params - hash of parameters
   # allow_array - hash where key is name of parameters which may be processed as an array, value is bool
-  def self.params_to_where(params, allow_array = {})
+  # table - optional table name used to qualify unqualified column names
+  def self.params_to_where(params, allow_array = {}, table = nil)
     where = ''
     sep = ''
     args = []
     params.each_pair do |key, value|
+      colname = table && !key.include?('.') ? "#{table}.#{key}" : key
       if value.blank? 
-        where << "#{sep}#{key} IS NULL"
+        where << "#{sep}#{colname} IS NULL"
       else
         if key.to_sym == :sql
           where << "#{sep}#{value}"
         elsif allow_array[key.to_sym] && value.is_a?(String) && /^\[.*\]$/.match(value)
-          where << "#{sep}#{key} IN (?)"
+          where << "#{sep}#{colname} IN (?)"
           # Remove first and last characters then split on comma
           args << value[1..-2].split(',')
         else             
-          where << "#{sep}#{key} = ?"
+          where << "#{sep}#{colname} = ?"
           args << value
         end
       end

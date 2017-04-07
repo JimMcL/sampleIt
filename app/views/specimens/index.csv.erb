@@ -1,43 +1,63 @@
-<%- headers = ['id', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'taxonrank', 'scientificname',
-    	       'decimallatitude', 'decimallongitude', 'coordinateuncertaintyinmeters', 'elevation', 'time', 'day', 'month', 'year',
-               'description', 'quantity', 'bodylength', 'sex', 'form', 'notes', 'idconfidence', 'other', 'ref', 'disposition',
-               'numphotos'] -%>
+<%# Columns:
+id - id within sampleIt database
+kingdom - scientific name of taxon's kingdom; http://rs.tdwg.org/dwc/terms/kingdom
+
+taxonRank - the taxonomic rank of the most specific name in the scientificName; http://rs.tdwg.org/dwc/terms/taxonRank
+scientificName - scientific name, excluding authorship and date (note this differs from Darwin core http://rs.tdwg.org/dwc/terms/scientificName)
+
+decimalLatitude - The geographic latitude (in decimal degrees) of the geographic center of a Location; http://rs.tdwg.org/dwc/terms/decimalLatitude
+decimalLongitude - The geographic longitude (in decimal degrees) of the geographic center of a Location; http://rs.tdwg.org/dwc/terms/decimalLongitude
+
+day - integer day of the month on which the the specimen was collected/observed; http://rs.tdwg.org/dwc/terms/day
+month - ordinal month in which the Event occurred; http://rs.tdwg.org/dwc/terms/month
+year - four-digit year in which the Event occurred, according to the Common Era Calendar; http://rs.tdwg.org/dwc/terms/year
+
+recordedBy - A list (concatenated and separated) of names of people, groups, or organizations responsible for recording the original Occurrence; http://rs.tdwg.org/dwc/terms/recordedBy
+
+%>
+<%- headers = ['id', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'taxonRank', 'scientificName',
+    	       'decimalLatitude', 'decimalLongitude', 'coordinateUncertaintyInMeters', 'elevation', 'time', 'day', 'month', 'year',
+               'recordedBy', 'description', 'quantity', 'bodylength', 'sex', 'form', 'notes', 'idconfidence', 'other', 'ref',
+               'disposition', 'numphotos'] -%>
 <%= CSV.generate_line headers -%>
 <%- @specimens.each do | specimen | -%>
   <%- txn = specimen.taxon || NullTaxon.new -%>
   <%- site = specimen.site -%>
   <%- loc = site.location -%>
+  <%# Duplicate the row for each specimen %>
   <% for i in 1..(specimen.quantity || 1) %>
-<%= CSV.generate_line([specimen.id,
-        txn.ancestor_with_rank(:Kingdom).scientific_name,
-        txn.ancestor_with_rank(:Phylum).scientific_name,
-        txn.ancestor_with_rank(:Class).scientific_name,
-        txn.ancestor_with_rank(:Order).scientific_name,
-        txn.ancestor_with_rank(:Family).scientific_name,
-        txn.ancestor_with_rank(:Genus).scientific_name,
-        txn.ancestor_with_rank(:Species).scientific_name,
-        txn.rank,
-        txn.scientific_name,
-        loc.latitude,
-        loc.longitude,
-        loc.error,
-        loc.altitude,
-        site.started_at.to_s(:time),
-        site.started_at.day,
-        site.started_at.month,
-        site.started_at.year,
-        specimen.description,
-        specimen.quantity,
-        specimen.body_length,
-        specimen.sex,
-        specimen.form,
-        specimen.notes,
-        specimen.id_confidence,
-        specimen.other,
-        specimen.ref,
-        specimen.disposition,
-        specimen.photos.length
-        ]
-        ).html_safe -%>
+    <% values = [
+              specimen.id,
+              txn.ancestor_with_rank(:Kingdom).scientific_name,
+              txn.ancestor_with_rank(:Phylum).scientific_name,
+              txn.ancestor_with_rank(:Class).scientific_name,
+              txn.ancestor_with_rank(:Order).scientific_name,
+              txn.ancestor_with_rank(:Family).scientific_name,
+              txn.ancestor_with_rank(:Genus).scientific_name,
+              txn.ancestor_with_rank(:Species).scientific_name,
+              txn.rank,
+              txn.scientific_name,
+              loc.latitude,
+              loc.longitude,
+              loc.error,
+              loc.altitude,
+              site.started_at ? site.started_at.to_s(:time) : '',
+              site.started_at ? site.started_at.day : '',
+              site.started_at ? site.started_at.month : '',
+              site.started_at ? site.started_at.year : '',
+              site.collector,
+              specimen.description,
+              specimen.quantity,
+              specimen.body_length,
+              specimen.sex,
+              specimen.form,
+              specimen.notes,
+              specimen.id_confidence,
+              specimen.other,
+              specimen.ref,
+              specimen.disposition,
+              specimen.photos.length
+        ] %>
+    <%= CSV.generate_line(values).html_safe -%>
   <%- end -%>
 <%- end -%>
