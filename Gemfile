@@ -47,4 +47,6 @@ gem 'annotate'
 
 gem 'jquery-ui-rails'
 
-gem "lazyload-rails"
+gem 'lazyload-rails'
+
+gem 'will_paginate', '~> 3.1.1'

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require 'test_helper'
 
 class LocationTest < ActiveSupport::TestCase
@@ -13,21 +15,38 @@ class LocationTest < ActiveSupport::TestCase
     assert_in_delta l1.longitude, l2.longitude, td, "Two string creation longitude value wrong"
 
     # Single string
-    l3 = Location.new("33 12 1.1 S 155 43 54.33 E +-15 m")
-    assert l3.valid?, "Location creation with one string failed" 
-    assert_in_delta l1.latitude, l3.latitude, td, "One string creation latitude value wrong"
-    assert_in_delta l1.longitude, l3.longitude, td, "One string creation latitude value wrong"
-    assert_in_delta 15, l3.error, td, "One string creation error value wrong"
+    l1.error = 15
+    check_valid_location("33 12 1.1 S 155 43 54.33 E +-15 m", l1, td)
+    check_valid_location("33 12 1.1S 155 43 54.33E +-15.0m", l1, td)
+    check_valid_location("33 12 1.1 S, 155 43 54.33 E +-15 m", l1, td)
+    check_valid_location("33 12 1.1S, 155 43 54.33E +-15m", l1, td)
+    check_valid_location("33° 12′ 1.1″ S 155° 43′ 54.33″ E +-15 m", l1, td)
+    # Decimal minutes
+    check_valid_location("33° 12.018333333333544′ S 155° 43.90550000000076′ E +-15 m", l1, td)
+    check_valid_location("33° 12.018333333333544′ S, 155° 43.90550000000076′ E +-15 m", l1, td)
+    check_valid_location("33 12.018333333333544S 155 43.90550000000076E +-15 m", l1, td)
+    check_valid_location("33 12.018333333333544S, 155 43.90550000000076E +-15 m", l1, td)
+    check_valid_location("33.20030555555556 S 155.73175833333335 E +-15 m", l1, td)
+    check_valid_location("33.20030555555556 S, 155.73175833333335 E +-15 m", l1, td)
+    check_valid_location("33.20030555555556S 155.73175833333335E +-15 m", l1, td)
+    check_valid_location("33.20030555555556S, 155.73175833333335E +-15 m", l1, td)
+    check_valid_location("-33.20030555555556, 155.73175833333335 +-15 m", l1, td)
+
+    expect = Location.new(37.8651, -119.5383)
+    check_valid_location("37.8651° N, 119.5383° W", expect, td)
+
+    expect = Location.new(37, -119)
+    check_valid_location("37 N, 119 W", expect, td)
+    check_valid_location("37N, 119W", expect, td)
+    check_valid_location("37.0 N, 119.0 W", expect, td)
+    check_valid_location("37 0N, 119 0W", expect, td)
+    check_valid_location("37 0 0 N, 119 0 0 W", expect, td)
+    check_valid_location("37 0 0N, 119 0 0W", expect, td)
 
     # Create an invalid location
     assert_not Location.new(nil).valid?, "Nil arguments creation valid but shouldn't be"
     assert_not Location.new("").valid?, "Blank arguments creation valid but shouldn't be"
     assert_not Location.new(200, 200).valid?, "Invalid position creation valid but shouldn't be"
-
-    l4 = Location.new("33 12 1.1 S, 155 43 54.33 E")
-    assert l4.valid?, "Location creation with one string and comma failed"
-    assert_in_delta l1.latitude, l4.latitude, td, "One string/comma creation latitude value wrong"
-    assert_in_delta l1.longitude, l4.longitude, td, "One string/comma creation longitude value wrong"
 
     # Location with decimal lat long string, e.g. from google maps
     l5 = Location.new('-33.798440, 151.135202')
@@ -72,5 +91,23 @@ class LocationTest < ActiveSupport::TestCase
     assert_not l1.smaller_error?(l2), "Error 10 smaller than 5"
     assert l2.smaller_error?(l1), "Error 10 smaller than 5"
   end
-  
+
+  ################################################################################
+
+  def check_valid_location(str, expected, td)
+    l = Location.new(str)
+    assert l.valid?, "Location creation with one string (#{str}) failed (result is not valid)" 
+    assert_in_delta expected.latitude, l.latitude, td, "One string creation latitude value wrong (#{str})"
+    assert_in_delta expected.longitude, l.longitude, td, "One string creation latitude value wrong (#{str})"
+    if expected.error.nil?
+      assert_nil l.error, "One string creation error value wrong (#{str})"
+    else
+      assert_in_delta expected.error, l.error, td, "One string creation error value wrong (#{str})"
+    end
+    if expected.altitude.nil?
+      assert_nil l.altitude, "One string creation altitude value wrong (#{str})"
+    else
+      assert_in_delta expected.altitude, l.altitude, td, "One string creation altitude value wrong (#{str})"
+    end
+  end
 end

@@ -29,6 +29,8 @@ $ ->
     e.preventDefault()
     # The "5" passed to toUrlValue is precision of lat/lng values
     uri = UpdateQueryString('bounds', window.SiteMap.getBounds().toUrlValue(5))
+    # Get rid of current page, i.e. go back to first page
+    uri = UpdateQueryString('page', null, uri)
     # Include the user's search criterion in the query string 
     uri = UpdateQueryString('q', $("#q").val(), uri)
     window.location.href = uri

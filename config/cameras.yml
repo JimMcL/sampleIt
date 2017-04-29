@@ -1,0 +1,18 @@
+# Define known camera and lens parameters (see lib/camera_utils.rb)
+# Unspecified distance units are mm
+
+default: &default
+  camera:
+    Canon EOS 7D: {sensor width: 22.3, sensor height: 14.9, width in pixels: 5184, height in pixels: 3456, flange focal distance: 44}
+  lens:
+    EF100mm f/2.8 Macro USM: {length: 119}      # Documented in Wikipedia as 119
+    MP-E65mm f/2.8 1-5x Macro Photo: {length: 98}
+
+production:
+  <<: *default
+
+test:
+  <<: *default
+
+development:
+  <<: *default

@@ -43,7 +43,7 @@
   <% end %>
 
   <%= block do %>
-      <%= f.datetime_select :started_at, label: 'Sampling started at', include_blank: true %>
+      <%= f.datetime_select :started_at, label: 'Sampling started at', include_blank: true, start_year: 2024, end_year: 1900 %>
       <%= f.text_field :duration_s, label: 'Duration', title: 'Collecting duration' %>
   <% end %>
 

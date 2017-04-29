@@ -108,7 +108,7 @@ class Photo < ApplicationRecord
   end
 
   def generate_thumbnail(src, thumb)
-    ImageUtils::generate_thumbnail(src.abs_path, thumb.abs_path, 300)
+    ImageUtils::resize(src.abs_path, thumb.abs_path, 300)
     thumb.update_size!
   end
 

@@ -11,6 +11,7 @@ Specimens
   <%= sites_map(@specimens.collect(&:site), [300, 300]) %>
 <% end %>
 
-<p><%= pluralize(@specimens.count, 'specimen') -%></p>
+  <%= render partial: 'specimens_table', locals: {specimens: @specimens, show_taxon: true, show_site: true} %>
 
-<%= render partial: 'specimens_table', locals: {specimens: @specimens, show_taxon: true, show_site: true} %>
+  <%= render partial: 'paginate', locals: {records: @specimens} %>
+

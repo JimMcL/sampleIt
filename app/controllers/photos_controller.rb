@@ -6,7 +6,7 @@ class PhotosController < ApplicationController
     # Allow either a single q param or specific column values to be specified
     if params.key?(:q) || params.keys.length < 3 # always get controller and action params
       # Single parameter - intended for interactive use
-      @photos = Photo.order(rating: :desc).search(params[:q])
+      @photos = Photo.search(params[:q])
     else
       # Each (whitelisted) parameter is treated as a column name and
       # value.  The query requires rows which satisfy all conditions.
@@ -22,7 +22,10 @@ class PhotosController < ApplicationController
     
     @base_url = request.base_url
     respond_to do |format|
-      format.html
+      format.html do
+        # Paginate
+        @photos = @photos.page(params[:page]).per_page(11).order('rating DESC')
+      end
       format.csv do
         @ftype = params[:ftype] || :photo
         headers['Content-Disposition'] = "attachment; filename=\"photos.csv\""

@@ -10,3 +10,5 @@ Photos
   <%# Link to photo rather than owner -%>
   <%= photo_image(photo, link_to_owner: false) %>
 <% end %>
+
+  <%= render partial: 'paginate', locals: {records: @photos} %>

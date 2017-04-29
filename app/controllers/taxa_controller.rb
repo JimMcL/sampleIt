@@ -4,7 +4,6 @@ class TaxaController < ApplicationController
     @taxa = Taxon.distinct.
             left_outer_joins(:sites).
             #includes(:sites).
-            order(:scientific_name).
             search(params[:q] || params[:term]).
             where(QueryUtils::spatial_query(params))
 
@@ -14,7 +13,10 @@ class TaxaController < ApplicationController
     @taxa_sites = @taxa.collect { |t| t.sites.where(QueryUtils::spatial_query(params)) }.flatten
     
     respond_to do |format|
-      format.html
+      format.html do
+        @taxa = @taxa.page(params[:page]).per_page(10).order(:scientific_name)
+
+      end
       format.json { render json: @taxa.to_json }
     end
   end

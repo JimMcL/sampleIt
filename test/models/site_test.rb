@@ -59,4 +59,22 @@ class SiteTest < ActiveSupport::TestCase
     s.duration_s = "4 days"
     assert_equal 4 * 24 * 60 * 60, s.duration
   end
+
+  # Can;t work out how to specify date but no other fields, perhaps not possible
+  # test "started at" do
+  #   s = Site.first
+  #   check_started_at(s, "2017", "3", "12", "11", "30")
+  #   #check_started_at(s, "2017", nil, nil, nil, nil)
+  #   #p s.started_at
+  #   check_started_at(s, "2017", " ", " ", " ", " ")
+  #   #check_started_at(s, "2017", "", "", "", "")
+  #   p s.started_at
+  # end
+
+  #-------------------------------
+  private
+
+  def check_started_at(s, y, mo, d, h, mi)
+    s.update({"started_at(1i)" => y, "started_at(2i)" => mo, "started_at(3i)" => d, "started_at(4i)" => h, "started_at(5i)" => mi})
+  end
 end

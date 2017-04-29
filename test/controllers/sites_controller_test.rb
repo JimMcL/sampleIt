@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SitesControllerTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
+  test 'site photos' do
+    
+  end
 end

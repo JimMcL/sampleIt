@@ -4,19 +4,59 @@ module MapHelper
   GOOGLE_API_URL = "https://maps.googleapis.com/maps/api"
   GOOGLE_STATIC_URL = "#{GOOGLE_API_URL}/staticmap"
   GOOGLE_JS_URL = "#{GOOGLE_API_URL}/js"
+  DEGREES_TO_METRES_FACTOR = 111111
+
+
+  # Simplistic conversion of metres to decimal east/west or north/south degrees.
+  # dist_in_metres - distance to be converted
+  # at_latitude - latitude of measurement for east/west measurements,
+  #               0 (the default) for north/south measurements
+  def self.metres2deg(dist_in_metres, at_latitude = 0)
+    dist_in_metres.to_f / DEGREES_TO_METRES_FACTOR / Math::cos(deg2rad(at_latitude))
+  end
+    
+  # Simplistic conversion of north/south or east/west distance in decimal degrees to metres.
+  # dist_in_degrees - distance to be converted
+  # at_latitude - latitude of measurement for east/west measurements,
+  #               0 (the default) for north/south measurements
+  def self.deg2metres(dist_in_degrees, at_latitude = 0)
+    dist_in_degrees * DEGREES_TO_METRES_FACTOR * Math::cos(deg2rad(at_latitude))
+  end
+
+  def self.deg2rad(deg)
+    deg * Math::PI / 180
+  end
+
 
   class Marker
-    attr_accessor :colour, :latitude, :longitude, :title
+    attr_accessor :colour, :latitude, :longitude, :title, :horizontal_error
 
-    def initialize(latitude, longitude, title = nil, colour = '0xff483f')
+    def initialize(latitude, longitude, title = nil, horizontal_error = 0, colour = '0xff483f')
       self.latitude = latitude
       self.longitude = longitude
       self.title = title
+      self.horizontal_error = horizontal_error
       self.colour = colour
     end
 
     def valid?
       latitude && longitude
+    end
+
+    def north
+      latitude + MapHelper::metres2deg(horizontal_error) if latitude
+    end
+    
+    def south
+      latitude - MapHelper::metres2deg(horizontal_error) if latitude
+    end
+
+    def east
+      longitude + MapHelper::metres2deg(horizontal_error, latitude) if longitude
+    end
+    
+    def west
+      longitude - MapHelper::metres2deg(horizontal_error, latitude) if longitude
     end
     
     # Invidual marker params don't include style
@@ -81,8 +121,6 @@ module MapHelper
   class Bounds
     attr_accessor :north, :south, :east, :west
 
-    DEGREES_TO_METRES_FACTOR = 111111
-    
     # Parse bounds in format "lat_lo,lng_lo,lat_hi,lng_hi"
     def initialize(str = nil)
       if str.is_a? String
@@ -96,10 +134,10 @@ module MapHelper
     
     def extend(marker)
       if marker.valid?
-        @north = marker.latitude if @north.nil? || marker.latitude > @north
-        @south = marker.latitude if @south.nil? || marker.latitude < @south
-        @east = marker.longitude if @east.nil? || marker.longitude > @east
-        @west = marker.longitude if @west.nil? || marker.longitude < @west
+        @north = marker.north if @north.nil? || marker.north > @north
+        @south = marker.south if @south.nil? || marker.south < @south
+        @east = marker.east if @east.nil? || marker.east > @east
+        @west = marker.west if @west.nil? || marker.west < @west
       end
     end
 
@@ -119,39 +157,19 @@ module MapHelper
     # Returns self
     def ensure_at_least(min_metres)
       c = centre
-      width = deg2metres(@east - @west, c.latitude)
-      height = deg2metres(@north - @south)
+      width = MapHelper::deg2metres(@east - @west, c.latitude)
+      height = MapHelper::deg2metres(@north - @south)
       if width < min_metres && height < min_metres
-        dx = metres2deg(min_metres.to_f / 2, c.latitude)
+        dx = MapHelper::metres2deg(min_metres.to_f / 2, c.latitude)
         @west = c.longitude - dx
         @east = c.longitude + dx
-        dy = metres2deg(min_metres.to_f / 2)
+        dy = MapHelper::metres2deg(min_metres.to_f / 2)
         @south = c.latitude - dy
         @north = c.latitude + dy
       end
       self
     end
 
-    # Simplistic conversion of metres to decimal east/west or north/south degrees.
-    # dist_in_metres - distance to be converted
-    # at_latitude - latitude of measurement for east/west measurements,
-    #               0 (the default) for north/south measurements
-    def metres2deg(dist_in_metres, at_latitude = 0)
-        dist_in_metres.to_f / DEGREES_TO_METRES_FACTOR / Math::cos(deg2rad(at_latitude))
-    end
-    
-    # Simplistic conversion of north/south or east/west distance in decimal degrees to metres.
-    # dist_in_degrees - distance to be converted
-    # at_latitude - latitude of measurement for east/west measurements,
-    #               0 (the default) for north/south measurements
-    def deg2metres(dist_in_degrees, at_latitude = 0)
-      dist_in_degrees * DEGREES_TO_METRES_FACTOR * Math::cos(deg2rad(at_latitude))
-    end
-
-    def deg2rad(deg)
-      deg * Math::PI / 180
-    end
-  
     def to_s
       if valid?
         "new google.maps.LatLngBounds(#{sw}, #{ne})"

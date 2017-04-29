@@ -38,13 +38,26 @@ class PhotoTest < ActiveSupport::TestCase
     assert File.exists?(p1.file(:photo).abs_path), "Photo file doesn't exist: #{p1.file(:photo).abs_path}"
     assert File.exists?(p1.file(:thumb).abs_path), "Photo thumb doesn't exist: #{p1.file(:thumb).abs_path}"
 
-    path = file_path('location.jpg')
-    p2 = Photo.create_from_io(File.open(path, 'rb'), 'location.jpg', 'image/jpeg', nil, false)
+    fn = 'location.jpg'
+    path = file_path(fn)
+    p2 = Photo.create_from_io(File.open(path, 'rb'), fn, 'image/jpeg', nil, false)
     fp = p2.file(:photo).abs_path
     tp = p2.file(:thumb).abs_path
     assert File.exists?(fp), "Photo file doesn't exist: #{fp}"
     assert File.exists?(tp), "Photo thumb doesn't exist: #{tp}"
     p2.destroy
+    assert_not File.exists?(fp), "Photo file wasn't deleted: #{fp}"
+    assert_not File.exists?(tp), "Photo thumb wasn't deleted: #{tp}"
+
+    fn = 'no-location.jpg'
+    path = file_path(fn)
+    p3 = Photo.create_from_io(File.open(path, 'rb'), fn, 'image/jpeg', nil, false)
+    fp = p3.file(:photo).abs_path
+    tp = p3.file(:thumb).abs_path
+    assert File.exists?(fp), "Photo file doesn't exist: #{fp}"
+    assert File.exists?(tp), "Photo thumb doesn't exist: #{tp}"
+    assert_nil p3.time
+    p3.destroy
     assert_not File.exists?(fp), "Photo file wasn't deleted: #{fp}"
     assert_not File.exists?(tp), "Photo thumb wasn't deleted: #{tp}"
   end
@@ -82,6 +95,32 @@ class PhotoTest < ActiveSupport::TestCase
     p1 = create_test_photo('ant-head.jpg', 'image/jpeg')
     assert_equal "Canon EOS 7D", p1.camera
   end
+
+  # This is an attempt to automate scale bars in photos taken with 100mm macro, but it doesn't work
+  # test "photo scale" do
+  #   pbig = create_test_photo('magbig.jpg', 'image/jpeg', nil, true)
+  #   # mag is length of subject on sensor / length of subject
+  #   camera = ExifTags::camera_info!(pbig.exif)
+  #   mag = ExifTags::magnification!(pbig.exif)
+  #   exp = camera.pixel_width * 67.6
+  #   puts "Expected #{exp}, got #{mag}"
+  #   p camera
+  #   assert_in_delta exp, mag, exp * 0.05, "Expect magnification approx 1:2"
+
+  #   #p1 = create_test_photo('ruler.jpg', 'image/jpeg', nil, true)
+  #   p1 = create_test_photo('mag1.jpg', 'image/jpeg', nil, true)
+  #   # mag is length of subject on sensor / length of subject
+  #   camera = ExifTags::camera_info!(p1.exif)
+  #   mag = ExifTags::magnification!(p1.exif)
+  #   assert_in_delta 1, mag, 0.05, "Expect magnification approx 1:1"
+
+  #   p2 = create_test_photo('mag2.jpg', 'image/jpeg', nil, true)
+  #   # mag is length of subject on sensor / length of subject
+  #   camera = ExifTags::camera_info!(p2.exif)
+  #   mag = ExifTags::magnification!(p2.exif)
+  #   assert_in_delta 0.5, mag, 0.5 * 0.05, "Expect magnification approx 1:2"
+
+  # end
 
   ################################################################################
 

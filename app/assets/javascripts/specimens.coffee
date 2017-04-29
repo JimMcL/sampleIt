@@ -8,8 +8,8 @@ $ ->
     $(".detail").show('fast')
 
 # Application specific functionality.
-# If the uploaded file looks like <number>.jpg, set the source to be "Photo <number>"
-# and clear the scalebar checkbox (this is a hack for my needs)
+# If the uploaded file looks like <number>.jpg, set the source to be "Photo <number>",
+# type to be "Outline", and clear the scalebar checkbox (this is a hack for my needs)
 $ ->
   $("#specimen_photo").change (e) ->
     $(".detail").show('fast')
@@ -18,6 +18,7 @@ $ ->
     if (m = /^(?:.*[\\/])?(\d+)\.[^.]+/.exec(fn)) && src.val() == ''
       src.val("Photo #{m[1]}")
       $('#scalebar').removeAttr('checked')
+      $('#photo_ptype').val('Outline')
 # Autocomplete on taxon name
 $ ->
     $('#specimen_taxon_name').autocomplete

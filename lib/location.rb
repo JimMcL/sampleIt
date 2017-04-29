@@ -15,7 +15,7 @@ class Location
       @altitude = altitude
     else
       @latitude, @longitude, @error = parse(lat.to_s + ' ' + lon.to_s + ' ' + err.to_s)
-      @altitude = altitude.to_f
+      @altitude = altitude.to_f unless altitude.nil?
     end
   end
 
@@ -50,12 +50,12 @@ class Location
     # Try to guess what sort of format. This is all a bit of a hack
 
     # First check if there's a horizontal error at the end of the string
-    if g = /\+-(?<err>[\.\d]+)/.match(lat_lon_str)
+    if g = /\+-\s*(?<err>[\.\d]+)/.match(lat_lon_str)
       err = g['err'].to_f
     end
 
     # Try to parse it strictly first
-    result = parse_strict(lat_lon_str)
+    result = parse_lat_lon(lat_lon_str)
 
     # If there's a comma, assume it separates lat and lon
     parts = lat_lon_str.split(',')
@@ -69,23 +69,23 @@ class Location
     result
   end
 
-  def parse_strict(lat_lon_str)
+  def parse_lat_lon(lat_lon_str)
     regex = %r{
-        (?<lat_deg>\d{1,2})\D+
-        (?<lat_min>\d{1,2})\D+
-        (?<lat_sec>\d{1,2}(\.\d+))\D+
-        (?<lat_hemi>[NS])
+        (?<lat_deg>-?\d{1,2}(\.\d+)?)
+        (\D+(?<lat_min>\d{1,2}(\.\d+)?))?
+        (\D+(?<lat_sec>\d{1,2}(\.\d+)?))?
+        \D*(?<lat_hemi>[NS])
         [\s,]+
-        (?<lng_deg>\d{1,3})\D+
-        (?<lng_min>\d{1,2})\D+
-        (?<lng_sec>\d{1,2}(\.\d+))\D+
-        (?<lng_hemi>[EW])
+        (?<lng_deg>-?\d{1,3}(\.\d+)?)
+        (\D+(?<lng_min>\d{1,2}(\.\d+)?))?
+        (\D+(?<lng_sec>\d{1,2}(\.\d+)?))?
+        \D*(?<lng_hemi>[EW])
     }x
 
     if g = regex.match(lat_lon_str)
-      lat = g['lat_deg'].to_i + g['lat_min'].to_f/60 + g['lat_sec'].to_f/3600
+      lat = g['lat_deg'].to_f + g['lat_min'].to_f/60 + g['lat_sec'].to_f/3600
       lat = -lat if g['lat_hemi'] == 'S'
-      lng = g['lng_deg'].to_i + g['lng_min'].to_f/60 + g['lng_sec'].to_f/3600
+      lng = g['lng_deg'].to_f + g['lng_min'].to_f/60 + g['lng_sec'].to_f/3600
       lng = -lng if g['lng_hemi'] == 'W'
       [lat, lng]
     end

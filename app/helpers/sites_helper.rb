@@ -1,6 +1,6 @@
 module SitesHelper
   def sites_to_markers(sites)
-    sites.reject(&:nil?).map {|site| MapHelper::Marker.new(site.latitude, site.longitude, site.to_s) }
+    sites.reject(&:nil?).map {|site| MapHelper::Marker.new(site.latitude, site.longitude, site.to_s, site.horizontal_error) }
   end
 
   def sites_map(sites, size, zoom = nil, pos_field_id = nil)

@@ -10,6 +10,9 @@ class SpecimensController < ApplicationController
 
     respond_to do |format|
       format.html do
+        # Paginate
+        @specimens = @specimens.page(params[:page]).per_page(12)
+        
         @summary_query = params.permit(:q, :bounds)
         redirect_to edit_specimen_path(@specimens.first) if params[:shortcut] && @specimens.count == 1
       end

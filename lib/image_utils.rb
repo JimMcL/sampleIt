@@ -8,10 +8,10 @@ module ImageUtils
   IMAGEJ = 'C:/Jim/products/Fiji.app/ImageJ-win64.exe'
   
 
-  # Converts source image src_path into a file in thumb_path with the specified maximum width/height.
-  def self.generate_thumbnail(src_path, thumb_path, size)
+  # Converts source image src_path into a file in dest_path with the specified maximum width/height.
+  def self.resize(src_path, dest_path, size)
     # -auto-orient adjusts the image based on exif orientation, then removes exif orientation.
-    system(IMAGEMAGICK_CONVERT, src_path.to_s, "-resize", "#{size}x#{size}", '-auto-orient', thumb_path.to_s)
+    system(IMAGEMAGICK_CONVERT, src_path.to_s, "-resize", "#{size}x#{size}", '-auto-orient', dest_path.to_s)
   end
 
   # Some images have orientation specified in exif data, but browsers don't respect it (except when opened directly as a file!)
@@ -39,7 +39,7 @@ module ImageUtils
     pixel_ar = camera_info.pixel_aspect_ratio.round(3)
     sb_width ||= choose_scalebar_width(mm_in_pixels)
     # Build an imagej macro file
-    macro_file = build_imagej_macro(src, dest_tif, dest_jpg, mm_in_pixels, camera_info.pixel_aspect_ratio.round(3), sb_width)
+    macro_file = build_imagej_macro(src, dest_tif, dest_jpg, mm_in_pixels, pixel_ar, sb_width)
     # Ensure output directories exist
     FileUtils::mkdir_p File.dirname(dest_tif)
     FileUtils::mkdir_p File.dirname(dest_jpg)
