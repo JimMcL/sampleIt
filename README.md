@@ -49,6 +49,7 @@ ruby 2.2.4p230 (2015-12-16 revision 53155) [i386-mingw32]
   * jquery-rails (4.2.1)
   * jquery-ui-rails (6.0.1)
   * json (2.0.2, 1.8.1)
+  * lazyload-rails (0.3.1)
   * loofah (2.0.3)
   * mail (2.6.4)
   * method_source (0.8.2)
@@ -87,6 +88,7 @@ ruby 2.2.4p230 (2015-12-16 revision 53155) [i386-mingw32]
   * web-console (3.4.0)
   * websocket-driver (0.6.4)
   * websocket-extensions (0.1.2)
+  * will_paginate (3.1.5)
 
 * System dependencies
 
