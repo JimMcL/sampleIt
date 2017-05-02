@@ -98,6 +98,22 @@ class PhotoTest < ActiveSupport::TestCase
 
   # This is an attempt to automate scale bars in photos taken with 100mm macro, but it doesn't work
   # test "photo scale" do
+  #   D7 sensor has 232.4664 pixels/mm
+  #   p1 = create_test_photo('mag1.jpg', 'image/jpeg', nil, true)
+  #   # Manually measured image scale is 237 pixels/mm
+  #   # Scale is 0.98
+  #   # mag is length of subject on sensor / length of subject
+  #   camera = ExifTags::camera_info!(p1.exif)
+  #   mag = ExifTags::magnification!(p1.exif)
+  #   assert_in_delta .98, mag, 0.05, "Expect magnification approx 1:1"
+
+  #   p2 = create_test_photo('mag2.jpg', 'image/jpeg', nil, true)
+  #   # Manually measured image scale is 110 pixels/mm
+  #   # mag is length of subject on sensor / length of subject
+  #   camera = ExifTags::camera_info!(p2.exif)
+  #   mag = ExifTags::magnification!(p2.exif)
+  #   assert_in_delta 0.5, mag, 0.5 * 0.05, "Expect magnification approx 1:2"
+
   #   pbig = create_test_photo('magbig.jpg', 'image/jpeg', nil, true)
   #   # mag is length of subject on sensor / length of subject
   #   camera = ExifTags::camera_info!(pbig.exif)
@@ -106,20 +122,6 @@ class PhotoTest < ActiveSupport::TestCase
   #   puts "Expected #{exp}, got #{mag}"
   #   p camera
   #   assert_in_delta exp, mag, exp * 0.05, "Expect magnification approx 1:2"
-
-  #   #p1 = create_test_photo('ruler.jpg', 'image/jpeg', nil, true)
-  #   p1 = create_test_photo('mag1.jpg', 'image/jpeg', nil, true)
-  #   # mag is length of subject on sensor / length of subject
-  #   camera = ExifTags::camera_info!(p1.exif)
-  #   mag = ExifTags::magnification!(p1.exif)
-  #   assert_in_delta 1, mag, 0.05, "Expect magnification approx 1:1"
-
-  #   p2 = create_test_photo('mag2.jpg', 'image/jpeg', nil, true)
-  #   # mag is length of subject on sensor / length of subject
-  #   camera = ExifTags::camera_info!(p2.exif)
-  #   mag = ExifTags::magnification!(p2.exif)
-  #   assert_in_delta 0.5, mag, 0.5 * 0.05, "Expect magnification approx 1:2"
-
   # end
 
   ################################################################################

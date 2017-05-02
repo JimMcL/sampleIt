@@ -86,7 +86,8 @@ module ExifTags
   # Reported focus distance does not seem related to the theoretical object distance in a simple way
   def self.derive_magnification(exif_hash)
     f = focal_length(exif_hash)
-    d_o = focus_distance(exif_hash)
+    #d_o = focus_distance(exif_hash)
+    d_o = exif_hash[ExifTags::FOCUS_DIST_LOWER]
     # See https://en.wikipedia.org/wiki/Magnification
     # From http://www.physicsclassroom.com/class/refrn/Lesson-5/The-Mathematics-of-Lenses
     # Magnification equation:
@@ -109,10 +110,11 @@ module ExifTags
       
       # Subtract lens length (converted to metres) from focus distance.
       # I think this is required because focus distance is measured from camera body or sensor, but optics formula measures from the lens
-      d_o -= (lens_info!(exif_hash).length - c.flange_focal_distance) / 1000.0
+      #d_o -= (lens_info!(exif_hash).length - c.flange_focal_distance) / 1000.0
 
-      puts "Focal length #{f}, lens length #{lens_info!(exif_hash).length / 1000}, adjusted focus dist #{d_o} -> mag #{(f / (f - d_o)).abs}"
-      f / (d_o - f)
+      puts "Focal length #{f}, lens length #{lens_info!(exif_hash).length / 1000}, adjusted focus dist #{d_o} -> mag #{(f / (f - d_o)).abs} or #{f / (d_o - 2 * f)}"
+      # From experimentation, this seems to be the correct formula, but the result is too inaccurate to be useful
+      f / (d_o - 2 * f)
     end
   end
   

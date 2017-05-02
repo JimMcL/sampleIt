@@ -73,9 +73,10 @@ class SitesController < ApplicationController
   private
 
   def site_params
-    params.require(:site).permit(:notes, :location, :photo, :altitude, :ref,
+    params.require(:site).permit(:notes, :location, :altitude, :ref,
                                  :temperature, :weather, :collector, :sample_type, :transect,
-                                 :duration, :duration_s, :started_at, :description, :project_id)
+                                 :duration, :duration_s, :started_at, :description, :project_id,
+                                 :photo => [])
   end
 
   def maybe_set_started_at_from_photo(site, params = {})

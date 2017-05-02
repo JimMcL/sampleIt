@@ -117,8 +117,8 @@ class SpecimensController < ApplicationController
 
   def specimen_params
     params.require(:specimen).permit(:description, :taxon_id, :taxon_name, :site_id,
-                                     :quantity, :body_length, :notes, :photo, :exif, :id_confidence,
-                                     :other, :ref, :disposition, :form, :sex)
+                                     :quantity, :body_length, :notes, :exif, :id_confidence,
+                                     :other, :ref, :disposition, :form, :sex, :photo => [])
   end
 
   def new_params
