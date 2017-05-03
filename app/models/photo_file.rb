@@ -16,8 +16,10 @@
 #  index_photo_files_on_photo_id_and_ftype  (photo_id,ftype) UNIQUE
 #
 
-# Path is a relative path - relative to IMAGES_ROOT which means
-# it can be used as the source for a call to image_tag
+# Path is a relative path - relative to a file-type-specific root
+# which means it can be used as the source for a call to image_tag or
+# video_tag as appropriate.
+# ftype is file type, eg :thumb, :photo, :video.
 class PhotoFile < ApplicationRecord
   belongs_to :photo
   validates :ftype, presence: true;
@@ -27,16 +29,18 @@ class PhotoFile < ApplicationRecord
   after_commit :delete_file_from_disk, on: [:destroy]
 
 
-  IMAGES_ROOT = Rails.root.join('public', 'images')
-
   # Override ftype getter to return a symbol
-   def ftype
-     ft = self.attributes['ftype']
-     ft ? ft.to_sym : ft
-   end
+  def ftype
+    ft = self.attributes['ftype']
+    ft ? ft.to_sym : ft
+  end
+
+  def file_type
+    AttachmentFileType.get(ftype)
+  end
 
   def abs_path
-    IMAGES_ROOT.join(path)
+    file_type.root.join(path)
   end
 
   def copy_content(io)

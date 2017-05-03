@@ -36,6 +36,11 @@ class PhotosController < ApplicationController
  
   def show
     @photo = Photo.find(params[:id])
+
+    # If it's a video, just play it
+    if @photo.file(:video)
+      render 'play', :layout => false
+    end
   end
 
   def edit
@@ -81,10 +86,6 @@ class PhotosController < ApplicationController
         ext = File.extname(upload_io.original_filename)
         ftype = params[:ftype]
         photo.add_file(ftype, ext, upload_io)
-        # pf = PhotoFileType.get(ftype).build_photo_file(photo.id, ext)
-        # pf.copy_content(upload_io)
-        # photo.photo_files << pf
-        # pf.update_size!
 
       rescue => err
         puts "### Error extracting uploaded photo file:\n#{err}\n"

@@ -8,11 +8,23 @@ module ImageUtils
   IMAGEJ = 'C:/Jim/products/Fiji.app/ImageJ-win64.exe'
   
 
+  # Rune the ImageMagick convert process with the specified arguments
+  def self.convert(*args)
+    system(IMAGEMAGICK_CONVERT, *args)
+  end
+  
+  def self.resize_and_compose(src_path, dest_path, size, overlay_path)
+  convert("#{src_path}[0]", "-resize", "#{size}x#{size}", '-auto-orient', overlay_path.to_s, '-gravity', 'center', '-composite', dest_path.to_s)
+  end
+  
   # Converts source image src_path into a file in dest_path with the specified maximum width/height.
   def self.resize(src_path, dest_path, size)
     # -auto-orient adjusts the image based on exif orientation, then removes exif orientation.
-    system(IMAGEMAGICK_CONVERT, src_path.to_s, "-resize", "#{size}x#{size}", '-auto-orient', dest_path.to_s)
+    # Note that if the source is a video, the syntax "file[0]" selects the first frame. This syntax happens to also work on photos
+    convert("#{src_path}[0]", "-resize", "#{size}x#{size}", '-auto-orient', dest_path.to_s)
+    #system(IMAGEMAGICK_CONVERT, "#{src_path}[0]", "-resize", "#{size}x#{size}", '-auto-orient', dest_path.to_s)
   end
+
 
   # Some images have orientation specified in exif data, but browsers don't respect it (except when opened directly as a file!)
   # Adjust the image orientation so it displays correctly

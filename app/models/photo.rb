@@ -24,20 +24,16 @@
 
 require 'image_utils'
 require 'view_angle'
- 
+
+# Photo is gradually morphing into an arbitrary attachment
 class Photo < ApplicationRecord
   include ImageUtils
   
   has_many :photo_files, :dependent => :destroy
   belongs_to :imageable, polymorphic: true, optional: true
 
-  # Known file types, {:type => FileType}
-  FILE_TYPES = [PhotoFileType.new(:photo, 'photos'),
-                PhotoFileType.new(:thumb, 'thumbs'),
-                PhotoFileType.new(:tiff, 'tiffs'),
-               ].map { |ft| [ft.type, ft] }.to_h
-
   NON_USER_DELETABLE = [:photo, :thumb]
+
   
   # Creates a new photo instance, saving the image file to the assets directory
   # exif_path - optional name of file containing exif data to be applied to this photo
@@ -46,12 +42,12 @@ class Photo < ApplicationRecord
   #                then a jpeg is created to replace the original
   # atts - hash of attributes for the photo, eg rating, description. If there is a view_angle value,
   #                it is converted to view_phi and view_lambda
-  def self.create_from_io(io, original_name, mime_type, exif_path, add_scalebar, atts = {})
+  def self.create_from_io(io, original_name, content_type, exif_path, add_scalebar, atts = {})
     # Get a rowid
     photo = Photo.create(convert_view_angle(atts))
 
     begin
-      photo.build_from_io(io, original_name, mime_type, exif_path, add_scalebar)
+      photo.build_from_io(io, original_name, content_type, exif_path, add_scalebar)
     rescue => err
       photo.destroy
       raise err
@@ -75,9 +71,9 @@ class Photo < ApplicationRecord
   end
 
   # Called from create_from_io
-  def build_from_io(io, original_name, mime_type, exif_path, add_scalebar)
+  def build_from_io(io, original_name, content_type, exif_path, add_scalebar)
     # Work out where the file will be
-    photo_file = build_photo_file(:photo, File.extname(original_name))
+    photo_file = build_photo_file(AttachmentFileType.choose(content_type).type, File.extname(original_name))
     photo_files << photo_file
     
     # Always use jpg for thumbnails
@@ -91,10 +87,10 @@ class Photo < ApplicationRecord
     # Maybe add a scalebar
     scalebar_file = nil
     if add_scalebar
-      scalebar_file = add_scalebar(photo_file)
+      scalebar_file = add_scalebar(photo_file) if photo_file.file_type.allow_scalebar?
     else
       # Rotate the image if necessary (already handled if scalebar was added)
-      ImageUtils::auto_rotate_image(photo_file.abs_path)
+      ImageUtils::auto_rotate_image(photo_file.abs_path) if photo_file.file_type.allow_auto_rotate?
     end
     
     # Generate thumbnail
@@ -108,7 +104,12 @@ class Photo < ApplicationRecord
   end
 
   def generate_thumbnail(src, thumb)
-    ImageUtils::resize(src.abs_path, thumb.abs_path, 300)
+    src.file_type.generate_thumbnail(src.abs_path, thumb.abs_path, 300)
+    # if video?(content_type)
+    #   ImageUtils::resize_and_compose(src.abs_path, thumb.abs_path, thumb_size, VIDEO_PLAY_STAMP)
+    # elsif image?(content_type)
+    #   ImageUtils::resize(src.abs_path, thumb.abs_path, thumb_size)
+    # end
     thumb.update_size!
   end
 
@@ -122,13 +123,14 @@ class Photo < ApplicationRecord
     tiff_file.update_size!
   end
 
+  # Returns the first attachment file for this photo/attachment with the specified file type
   def file(type)
-    photo_files.where(ftype: type).first || PhotoFile.new
+    photo_files.where(ftype: type).first # Useful?|| PhotoFile.new
   end
 
   # Adds a new file representation to this photo
   def add_file(ftype, extension, content)
-    pf = PhotoFileType.get(ftype).build_photo_file(id, extension)
+    pf = AttachmentFileType.get(ftype).build_photo_file(id, extension)
     pf.copy_content(content)
     pf.update_size!
     photo_files << pf
@@ -200,7 +202,7 @@ class Photo < ApplicationRecord
   
   # Given a named type (eg. :photo, :thumb), returns the PhotoFile instance describing the file
   def build_photo_file(type, extension)
-    FILE_TYPES[type].build_photo_file(id, extension)
+    AttachmentFileType.get(type).build_photo_file(id, extension)
   end
 
   def atts_from_exif

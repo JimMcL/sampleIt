@@ -21,7 +21,7 @@ class PhotoTest < ActiveSupport::TestCase
     assert_equal 5184, p1.file(:photo).width
     assert_equal 3456, p1.file(:photo).height
     assert_equal [5184, 3456], p1.file(:photo).size, "Wrong jpeg file size"
-    assert_nil p1.file(:tiff).size, "wrong tiff file size"
+    assert_nil p1.file(:tiff), "Tiff representation should be nil since scalebar not added"
     assert_equal [300,200], p1.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
 
     p2 = create_test_photo('ant-head.jpg', 'image/jpeg', nil, true)
@@ -96,7 +96,7 @@ class PhotoTest < ActiveSupport::TestCase
     assert_equal "Canon EOS 7D", p1.camera
   end
 
-  # This is an attempt to automate scale bars in photos taken with 100mm macro, but it doesn't work
+  # This is an attempt to automate adding scale bars in photos taken with 100mm macro, but it doesn't work
   # test "photo scale" do
   #   D7 sensor has 232.4664 pixels/mm
   #   p1 = create_test_photo('mag1.jpg', 'image/jpeg', nil, true)
