@@ -20,7 +20,7 @@ Welcome
 <%= link_to 'Summary of specimens', controller: 'specimens', action: :summary %>
 </p>
 
-<p>A <em>taxon</em> may be well defined, such as an agreed upon genus, or it may be an ad-hoc category such as a morphospecies.</p>
+<p>A <em>taxon</em> may be well defined, such as an agreed upon species or genus, or it may be an ad-hoc category such as a morphospecies.</p>
 <p>
 <%= link_to 'Taxa', controller: 'taxa' %>
 </p>
@@ -29,3 +29,7 @@ Welcome
 <p>
 <%= link_to 'Photos', controller: 'photos' %>
 </p>
+
+<div style='padding-top: 2em; font-size:80%; font-style: italic'>Server IP addresses:
+  <%= @ip_addr.join(', ') %>
+</div>

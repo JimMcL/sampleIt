@@ -62,6 +62,9 @@ class AttachmentFileType
     false
   end
 
+  def extract_dimensions(path)
+  end
+
   def to_s
     "#{self.class.name} #{type}"
   end
@@ -114,6 +117,10 @@ end
       ImageUtils::resize(src_path, thumb_path, thumb_size)
     end
 
+    def extract_dimensions(path)
+      ImageUtils::get_image_dimensions(path)
+    end
+
     def can_handle?(content_type)
       content_type.starts_with?('image')
     end
@@ -142,7 +149,11 @@ end
     AttachmentFileType.register(VideoFileType.new(:video))
 
     def generate_thumbnail(src_path, thumb_path, thumb_size)
-      ImageUtils::resize_and_compose(src_path, thumb_path, thumb_size, VIDEO_PLAY_STAMP)
+      ImageUtils::video_thumbnail(src_path, thumb_path, thumb_size, VIDEO_PLAY_STAMP)
+    end
+
+    def extract_dimensions(path)
+      ImageUtils::get_video_dimensions(path)
     end
 
     def can_handle?(content_type)

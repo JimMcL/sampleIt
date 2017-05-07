@@ -20,6 +20,7 @@ test:
   <<: *default
   database: db/test.sqlite3
 
+# Sqlite should be adequate for my modest requirements
 production:
   <<: *default
   database: db/production.sqlite3

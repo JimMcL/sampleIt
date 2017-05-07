@@ -1,28 +1,29 @@
+require 'open3'
+
 module ImageUtils
   # External utilities
   # For now, just assume that ImageMagick is in the path.
   IMAGEMAGICK_CONVERT = "convert"
   IMAGEMAGICK_MOGRIFY = "mogrify"
   IMAGEMAGICK_IDENTIFY = "identify"
+  FFMPEG = 'ffmpeg'             # Installed with ImageMagick
   EXIFTOOL = 'C:/Jim/bin/exiftool.exe'
   IMAGEJ = 'C:/Jim/products/Fiji.app/ImageJ-win64.exe'
   
 
-  # Rune the ImageMagick convert process with the specified arguments
-  def self.convert(*args)
-    system(IMAGEMAGICK_CONVERT, *args)
-  end
-  
-  def self.resize_and_compose(src_path, dest_path, size, overlay_path)
-  convert("#{src_path}[0]", "-resize", "#{size}x#{size}", '-auto-orient', overlay_path.to_s, '-gravity', 'center', '-composite', dest_path.to_s)
+  def self.video_thumbnail(src_path, dest_path, size, overlay_path)
+    Rails.logger.debug "Generating video thumbnail for #{src_path}"
+    # Create thumbnail from a frame half a second in
+    system(FFMPEG, '-ss', '00:00:00.5', '-i', src_path.to_s, '-vframes', '1', dest_path.to_s)
+    # Overlay the overlay image
+    system(IMAGEMAGICK_MOGRIFY, '-resize', "#{size}x#{size}", '-draw', "gravity center image Over 0,0 0,0 '#{overlay_path}'", dest_path.to_s)
   end
   
   # Converts source image src_path into a file in dest_path with the specified maximum width/height.
   def self.resize(src_path, dest_path, size)
+    Rails.logger.debug "Resizing image #{src_path}"
     # -auto-orient adjusts the image based on exif orientation, then removes exif orientation.
-    # Note that if the source is a video, the syntax "file[0]" selects the first frame. This syntax happens to also work on photos
-    convert("#{src_path}[0]", "-resize", "#{size}x#{size}", '-auto-orient', dest_path.to_s)
-    #system(IMAGEMAGICK_CONVERT, "#{src_path}[0]", "-resize", "#{size}x#{size}", '-auto-orient', dest_path.to_s)
+    system(IMAGEMAGICK_CONVERT, "#{src_path}", "-resize", "#{size}x#{size}", '-auto-orient', dest_path.to_s)
   end
 
 
@@ -32,7 +33,19 @@ module ImageUtils
     system(IMAGEMAGICK_MOGRIFY, '-auto-orient', path.to_s)
   end
 
-  def self.get_dimensions(file)
+  def self.get_video_dimensions(file)
+    # Note: shellwords works for bash, not windows shell
+    # have to read stderr, not stdout
+    Open3.popen3(FFMPEG, '-i', file.to_s, '-hide_banner') do |stdin, stdout, stderr, thread|
+      # This is not a great way to do it - it relies on the output format from ffmpeg not changing
+      info = stderr.read
+      s = info[/[1-9]\d+x\d+/,0]
+      s.split('x') if s
+    end
+  end
+  
+  def self.get_image_dimensions(file)
+    # Works for videos, but _extremely_ slow
     # Note: shellwords works for bash, not windows shell
     %x(#{Shellwords::escape(IMAGEMAGICK_IDENTIFY)} -ping -format "%w %h" "#{file}").split(' ')
   end

@@ -5,7 +5,7 @@
 # facing towards the left. Longitude (lamba) is 0 at the middle of the
 # face. Units are (integral) degrees.
 
-# Hence, a frontal view is (0, 0), a lateral view (taken from the
+# Hence, an anterior (frontal) view is (0, 0), a lateral view (taken from the
 # specimen's left side) is (0, 90), and a dorsal view is (90, 0).
 #
 # See also http://insects.oeb.harvard.edu/etypes/specificimages.htm
@@ -16,11 +16,11 @@ class ViewAngle
   NAMED_ANGLES = {lateral: [0, 90],
                   dorsal: [90, 0],
                   ventral: [-90, 0],
-                  frontal: [0, 0],
+                  anterior: [0, 0],
                   posterior: [0, 180],
                   lateral_right_side: [0, -90]
                  }
-  SYNONYMS = {anterior: [0, 0],
+  SYNONYMS = {frontal: [0, 0],
               face: [0, 0],
               underside: [-90, 0]}
 

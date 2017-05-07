@@ -119,6 +119,8 @@ ruby 2.2.4p230 (2015-12-16 revision 53155) [i386-mingw32]
  where `<secret>` can be generated with the command:  
  `bundle exec rake secret`
 
+For managing secret keys etc. on Ubuntu, refer to [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-rails-app-with-unicorn-and-nginx-on-ubuntu-14-04).
+
 Various external image utilities are used to construct thumbnails and so on.
 Currently the executable names (and sometimes paths) are simply hard-wired.
 See lib/image_utils.rb.

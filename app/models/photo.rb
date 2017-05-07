@@ -100,17 +100,12 @@ class Photo < ApplicationRecord
     atts_from_exif
     
     save!
-    photo_file.update_size!
+    photo_file.update_dimensions!
   end
 
   def generate_thumbnail(src, thumb)
     src.file_type.generate_thumbnail(src.abs_path, thumb.abs_path, 300)
-    # if video?(content_type)
-    #   ImageUtils::resize_and_compose(src.abs_path, thumb.abs_path, thumb_size, VIDEO_PLAY_STAMP)
-    # elsif image?(content_type)
-    #   ImageUtils::resize(src.abs_path, thumb.abs_path, thumb_size)
-    # end
-    thumb.update_size!
+    thumb.update_dimensions!
   end
 
   # Creates a :tiff file with a scalebar, and overwrites the original file with a jpeg with a scalebar
@@ -120,7 +115,7 @@ class Photo < ApplicationRecord
     camera = ExifTags::camera_info!(self.exif)
     ImageUtils::add_scalebar(photo_file.abs_path, tiff_file.abs_path, photo_file.abs_path, camera, magnification)
     photo_files << tiff_file
-    tiff_file.update_size!
+    tiff_file.update_dimensions!
   end
 
   # Returns the first attachment file for this photo/attachment with the specified file type
@@ -132,7 +127,7 @@ class Photo < ApplicationRecord
   def add_file(ftype, extension, content)
     pf = AttachmentFileType.get(ftype).build_photo_file(id, extension)
     pf.copy_content(content)
-    pf.update_size!
+    pf.update_dimensions!
     photo_files << pf
   end
   

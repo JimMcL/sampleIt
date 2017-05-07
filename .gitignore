@@ -25,5 +25,6 @@ SECRET_KEY_BASE.bat
 
 # Assets are precompiled before deployment
 /public/assets/
-# Images are user data
+# Images and videos are user data
 /public/images/
+/public/videos/

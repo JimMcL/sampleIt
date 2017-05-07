@@ -51,14 +51,14 @@ class PhotoFile < ApplicationRecord
     File.delete(abs_path) if File.exist?(abs_path)
   end
 
-  def update_size
-    sz = ImageUtils::get_dimensions(abs_path)
+  def update_dimensions
+    sz = file_type.extract_dimensions(abs_path)
     self.width = sz[0]
     self.height = sz[1]
   end
 
-  def update_size!
-    update_size
+  def update_dimensions!
+    update_dimensions
     save!
   end
 
