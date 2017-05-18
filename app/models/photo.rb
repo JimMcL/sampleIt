@@ -118,9 +118,10 @@ class Photo < ApplicationRecord
     tiff_file.update_dimensions!
   end
 
-  # Returns the first attachment file for this photo/attachment with the specified file type
+  # Returns the first attachment file for this photo/attachment with the specified file type.
+  # Returns nil of there are no such files
   def file(type)
-    photo_files.where(ftype: type).first # Useful?|| PhotoFile.new
+    photo_files.where(ftype: type).first
   end
 
   # Adds a new file representation to this photo

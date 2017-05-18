@@ -155,7 +155,7 @@ class SpecimensController < ApplicationController
     if params.key?(:q)
       # Single parameter - intended for interactive use
       Specimen.includes(:taxon).left_outer_joins(:site).
-                   order(updated_at: :desc).
+                   order(:id).
                    search(params[:q]).
                    where(QueryUtils::spatial_query(params))
     else

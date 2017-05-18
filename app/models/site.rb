@@ -37,7 +37,7 @@ class Site < ApplicationRecord
   include ActionView::Helpers
 
   belongs_to :project
-  has_many :specimens, :dependent => :restrict_with_exception
+  has_many :specimens, -> { order(:taxon_id) }, :dependent => :restrict_with_exception
   has_many :photos, as: :imageable
   
   def self.search(q)
