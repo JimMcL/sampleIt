@@ -69,7 +69,7 @@ module ImageUtils
     FileUtils::mkdir_p File.dirname(dest_tif)
     FileUtils::mkdir_p File.dirname(dest_jpg)
     # Run it
-    %x(#{IMAGEJ} --headless -macro \"#{macro_file}\")
+    %x(#{IMAGEJ} --allow-multiple --headless -macro \"#{macro_file}\")
   end
 
   ################################################################################
