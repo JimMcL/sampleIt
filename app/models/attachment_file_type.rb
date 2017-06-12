@@ -40,7 +40,8 @@ class AttachmentFileType
     @type = type
     @dir = type.to_s.pluralize
     @asset_type = asset_type
-    @root = root || ActionView::Helpers::AssetUrlHelper::ASSET_PUBLIC_DIRECTORIES[asset_type]
+    # Use ASSET_PUBLIC_DIRECTORIES to get root dir, but remove leading "/"
+    @root = root || ActionView::Helpers::AssetUrlHelper::ASSET_PUBLIC_DIRECTORIES[asset_type][1..-1]
   end
 
   # Factory method - builds a photo_file

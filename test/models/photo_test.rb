@@ -16,22 +16,6 @@
 require 'test_helper'
 
 class PhotoTest < ActiveSupport::TestCase
-  test "size" do
-    p1 = create_test_photo('ant1.jpg', 'image/jpeg')
-    assert_equal 5184, p1.file(:photo).width
-    assert_equal 3456, p1.file(:photo).height
-    assert_equal [5184, 3456], p1.file(:photo).size, "Wrong jpeg file size"
-    assert_nil p1.file(:tiff), "Tiff representation should be nil since scalebar not added"
-    assert_equal [300,200], p1.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
-
-    p2 = create_test_photo('ant-head.jpg', 'image/jpeg', nil, true)
-    assert_equal 5184, p2.file(:photo).width
-    assert_equal 3456, p2.file(:photo).height
-    assert_equal [5184,3456], p2.file(:photo).size, "Wrong jpeg file size"
-    assert_equal [5184,3456], p2.file(:tiff).size, "wrong tiff file size"
-    assert_equal [300,200], p2.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
-  end
-  
   test "create" do
     path = file_path('ant1.jpg')
     p1 = Photo.create_from_io(File.open(path, 'rb'), 'ant1.jpg', 'image/jpeg', nil, false)
@@ -77,8 +61,27 @@ class PhotoTest < ActiveSupport::TestCase
     assert_equal 'Description two', p2.description, "Photo description from attributes is wrong"
   end
 
+  test "size" do
+    p1 = create_test_photo('ant1.jpg', 'image/jpeg')
+    assert_equal 5184, p1.file(:photo).width
+    assert_equal 3456, p1.file(:photo).height
+    assert_equal [5184, 3456], p1.file(:photo).size, "Wrong jpeg file size"
+    assert_nil p1.file(:tiff), "Tiff representation should be nil since scalebar not added"
+    assert_equal [300,200], p1.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
+
+    p2 = create_test_photo('ant-head.jpg', 'image/jpeg', nil, true)
+    assert_equal 5184, p2.file(:photo).width
+    assert_equal 3456, p2.file(:photo).height
+    assert_equal [5184,3456], p2.file(:photo).size, "Wrong jpeg file size"
+    assert_equal [5184,3456], p2.file(:tiff).size, "Wrong tiff file size (#{p2.file(:thumb).abs_path})"
+    assert_equal [300,200], p2.file(:thumb).size, "Wrong thumbnail size"  # This test is brittle since it assumes thumbnail size
+  end
+  
   test "scalebar" do
     p1 = create_test_photo('ant-head.jpg', 'image/jpeg', nil, true)
+    assert File.exists?(p1.file(:photo).abs_path), "Photo file doesn't exist: #{p1.file(:photo).abs_path}"
+    assert File.exists?(p1.file(:tiff).abs_path), "Photo file doesn't exist: #{p1.file(:tiff).abs_path}"
+    assert File.exists?(p1.file(:thumb).abs_path), "Photo file doesn't exist: #{p1.file(:thumb).abs_path}"
   end
 
   test "label" do
