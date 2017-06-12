@@ -37,8 +37,8 @@ class PhotosController < ApplicationController
   def show
     @photo = Photo.find(params[:id])
 
-    # If it's a video, just play it
-    if @photo.file(:video)
+    # If it's a video, optionally just play it
+    if @photo.file(:video) && params[:auto_play]
       render 'play', :layout => false
     end
   end

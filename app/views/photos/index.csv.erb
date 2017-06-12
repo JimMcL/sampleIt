@@ -2,7 +2,7 @@
 <%= CSV.generate_line headers -%>
 <%- @photos.each do | photo | -%>
   <% pfile = photo.file(@ftype) %>
-  <% purl = pfile ? image_url(pfile.path) : '' %>
+  <% purl = pfile ? asset_url(pfile.path, {type: pfile.file_type.asset_type}) : '' %>
   <%= CSV.generate_line([
        photo.id,
        photo.ptype,

@@ -47,12 +47,14 @@ module ApplicationHelper
                    link_to(image_tag('/delete.png', class: :delete), [photo], method: :delete, data: { confirm: 'Are you sure?' }) :
                    ''.html_safe
     rating = rating_flags ? rating_block(photo) : nil
+    # When linking to a photo, just play it if it is a video (parameter auto_play = "true")
     content_tag('div',
                 delete_btn +
                 rating +
-                link_to(image_tag(file.path, size: file.size_s(scale), lazy: lazy), link_to_owner ? photo.imageable : photo),
+                link_to(image_tag(file.path, size: file.size_s(scale), lazy: lazy), link_to_owner ? photo.imageable : photo_path(photo, auto_play: 'true')),
                 class: 'photo-container')
   end
+#                link_to(image_tag(file.path, size: file.size_s(scale), lazy: lazy), link_to_owner ? photo.imageable : photos_path(photo, auto_play: "true")),
 
   # Outputs a help button and popup
   # TODO generate unique ID

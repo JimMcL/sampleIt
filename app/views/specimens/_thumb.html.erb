@@ -1,6 +1,6 @@
 <div class='photo-wrapper'>
   <%= photo_image(photo, link_to_owner: false) %>
   <div class='photo-caption'>
-    <span class='photo-descr'><%= photo.label %>&nbsp;</span>
+    <span class='photo-descr'><%= link_to photo.label, photo %>&nbsp;</span>
   </div>
 </div>

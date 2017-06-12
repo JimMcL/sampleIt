@@ -169,7 +169,7 @@ class Photo < ApplicationRecord
   end
 
   def label
-    l = [ptype, description, view_angle.description, state].reject(&:blank?).join(', ')
+    l = [ptype, description, view_angle.description, state, (source.blank? ? '' : "source: #{source}")].reject(&:blank?).join(', ')
     if l.blank?
       l = "Photo #{id}"
     else

@@ -8,6 +8,10 @@ class NullTaxon
     nil
   end
 
+  def common_name
+    nil
+  end
+
   def parent_taxon
     this
   end

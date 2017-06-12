@@ -11,7 +11,7 @@
 </tr>
 <tr>
   <td colspan=2>
-    <% url = "/images/#{file.path}" %>
+    <% url = asset_url(file.path, {type: file.file_type.asset_type}) %>
     <%= link_to url, url -%>
   </td>
 </tr>

@@ -1,14 +1,15 @@
 require 'fileutils'
 
 # Meta information about a class of photo files - responsible for the type and directory of PhotoFiles
-# Root directories are defined by rails conventions, images are under /public/images, videos under /public/images.
+# Root directories are defined by rails conventions, images are under /public/images, videos under /public/videos.
+# The root field only stores the last path component.
 class AttachmentFileType
 
   # Known file types, {:type => FileType}
   @@file_types = {}
   @@fallback = nil
 
-  attr_accessor :type, :dir, :root
+  attr_accessor :type, :dir, :asset_type, :root
 
   # Register a file type
   def self.register(*file_types)
@@ -33,11 +34,13 @@ class AttachmentFileType
   end
   
   # To get a predefined type, call #get
-  def initialize(type, root)
+  # asset_type is a rails asset type, see ActionView::Helpers::AssetUrlHelper::ASSET_PUBLIC_DIRECTORIES
+  def initialize(type, asset_type, root = nil)
     raise "representation type cannot be left blank" if type.blank?
     @type = type
     @dir = type.to_s.pluralize
-    @root = root
+    @asset_type = asset_type
+    @root = root || ActionView::Helpers::AssetUrlHelper::ASSET_PUBLIC_DIRECTORIES[asset_type]
   end
 
   # Factory method - builds a photo_file
@@ -45,7 +48,7 @@ class AttachmentFileType
     # Get directory and ensure it exists
     abs = id_to_absolute_dir photo_id
     # Convert to relative path including file name
-    rel = abs.relative_path_from(root).join(id_to_filename(photo_id, extension))
+    rel = abs.relative_path_from(root_path).join(id_to_filename(photo_id, extension))
 
     PhotoFile.new(photo_id: photo_id, ftype: self.type, path: rel)
   end
@@ -65,6 +68,11 @@ class AttachmentFileType
   def extract_dimensions(path)
   end
 
+  # Returns the root as an absolute directory
+  def root_path
+    Rails.root.join('public', root)
+  end
+
   def to_s
     "#{self.class.name} #{type}"
   end
@@ -79,7 +87,7 @@ class AttachmentFileType
   # The directory will be created if it does not exist.
   def id_to_absolute_dir(photo_id)
     env_dir = case Rails.env when 'test'; 'test' when 'development'; 'dev' else ''; end
-    abs = root.join(env_dir, dir, id_to_dirname(photo_id))
+    abs = root_path.join(env_dir, dir, id_to_dirname(photo_id))
     # Ensure directory exists
     FileUtils::mkdir_p(abs)
     abs
@@ -105,7 +113,7 @@ end
   class ImageFileType < AttachmentFileType
 
     def initialize(type)
-      super(type, Rails.root.join('public', 'images'))
+      super(type, :image)
     end
 
     AttachmentFileType.register(ImageFileType.new(:photo),
@@ -143,7 +151,7 @@ end
     VIDEO_PLAY_STAMP = Rails.root.join('app', 'assets', 'images', 'play.png')
 
     def initialize(type)
-      super(type, Rails.root.join('public', 'videos'))
+      super(type, :video)
     end
 
     AttachmentFileType.register(VideoFileType.new(:video))
@@ -166,7 +174,7 @@ end
   # Audio attachments
   class AudioFileType < AttachmentFileType
     def initialize(type)
-      super(type, Rails.root.join('public', 'audio'))
+      super(type, :audio)
     end
 
     AttachmentFileType.register(AudioFileType.new(:audio))
@@ -181,7 +189,7 @@ end
   # Arbitrary attachments
   class DataFileType < AttachmentFileType
     def initialize(type)
-      super(type, Rails.root.join('public', 'attachments'))
+      super(type, :attachment, 'attachments')
     end
 
     AttachmentFileType.register_fallback(DataFileType.new(:attachment))

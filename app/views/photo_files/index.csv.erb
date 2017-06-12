@@ -4,7 +4,7 @@
 <%= CSV.generate_line([photo_file.id,
         photo_file.photo_id,
         photo_file.ftype,
-        image_url(photo_file.path),
+        photo_file.full_path,
         photo_file.width,
         photo_file.height
         ]

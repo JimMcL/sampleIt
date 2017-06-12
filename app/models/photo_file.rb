@@ -40,7 +40,19 @@ class PhotoFile < ApplicationRecord
   end
 
   def abs_path
-    file_type.root.join(path)
+    file_type.root_path.join(path)
+  end
+
+  # Returns path including the asset root. E.g.
+  # image path = "photos/0/1.jpg" => full_path = "images/photos/0/1.jpg"
+  # video path = "videos/6/1622.mp4" => full_path = "videos/videos/6/1622.mp4"
+  # 
+  # Normally not needed when accessing using rails, since the helpers
+  # image_url and video_url already take care of it.
+  #
+  # To obtain a URL, call asset_url(file.path, {type: file.file_type.asset_type})
+  def full_path
+    File.join(file_type.root, path)
   end
 
   def copy_content(io)

@@ -71,7 +71,7 @@ class Site < ApplicationRecord
   end
 
   def duration_s
-      distance_of_time_in_words(duration) unless duration.blank?
+      distance_of_time_in_words(duration) unless (duration.blank? || duration == 0)
   end
 
   def duration_s=(s)

@@ -7,5 +7,8 @@
     <%= image_tag '/shrink.png', class: :close, 'data-toggle-id' => 'edit_photo' %>
     <%= render 'form' %>
   </div>
-  <div id='image'><%= image_tag @photo.file(:photo).path, class: :full %></div>
+  <div id='image'>
+    <% img = @photo.file(:photo) || @photo.file(:thumb) %>
+    <%= image_tag img.path, class: :full %>
+  </div>
 </div>
