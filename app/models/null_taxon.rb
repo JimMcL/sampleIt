@@ -1,6 +1,7 @@
 # Class which can be used instead of nil to represent an undefined taxon
 class NullTaxon
-  def rank
+
+  def description
     nil
   end
 
@@ -20,6 +21,14 @@ class NullTaxon
     nil
   end
     
+  def rank
+    nil
+  end
+
+  def authority
+    nil
+  end
+
   def ancestor_with_rank(rank)
     NullTaxon.new
   end

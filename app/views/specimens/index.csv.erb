@@ -3,7 +3,8 @@ id - id within sampleIt database
 kingdom - scientific name of taxon's kingdom; http://rs.tdwg.org/dwc/terms/kingdom
 
 taxonRank - the taxonomic rank of the most specific name in the scientificName; http://rs.tdwg.org/dwc/terms/taxonRank
-scientificName - scientific name, excluding authorship and date (note this differs from Darwin core http://rs.tdwg.org/dwc/terms/scientificName)
+scientificName - scientific name, excluding authorship and date (note this differs from Darwin core http://rs.tdwg.org/dwc/terms/scientificName as it excludes authorship)
+scientificNameAuthorship - the authorship information for the scientificName formatted according to the conventions of the applicable nomenclaturalCode (http://rs.tdwg.org/dwc/terms/scientificNameAuthorship).
 vernacularName - common name (http://rs.tdwg.org/dwc/terms/vernacularName)
 
 decimalLatitude - The geographic latitude (in decimal degrees) of the geographic center of a Location; http://rs.tdwg.org/dwc/terms/decimalLatitude
@@ -16,7 +17,7 @@ year - four-digit year in which the Event occurred, according to the Common Era 
 recordedBy - A list (concatenated and separated) of names of people, groups, or organizations responsible for recording the original Occurrence; http://rs.tdwg.org/dwc/terms/recordedBy
 
 %>
-<%- headers = ['id', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'taxonRank', 'scientificName', 'vernacularName',
+<%- headers = ['id', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'taxonRank', 'scientificName', 'scientificNameAuthorship', 'vernacularName',
     	       'decimalLatitude', 'decimalLongitude', 'coordinateUncertaintyInMeters', 'elevation', 'locationRemarks',
                'time', 'day', 'month', 'year',
                'recordedBy', 'description', 'quantity', 'bodylength', 'sex', 'form', 'notes', 'idconfidence', 'other', 'ref',
@@ -39,6 +40,7 @@ recordedBy - A list (concatenated and separated) of names of people, groups, or 
               txn.ancestor_with_rank(:Species).scientific_name,
               txn.rank,
               txn.scientific_name,
+              txn.authority,
               txn.common_name,
               loc.latitude,
               loc.longitude,
