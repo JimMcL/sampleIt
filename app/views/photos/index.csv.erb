@@ -1,9 +1,9 @@
 <%- headers = ['id', 'ptype', 'angle', 'state', 'source', 'description', 'camera', 'rating', 'ftype', "#{@ftype}_url", 'imageabletype', 'imageableid', 'created_at', 'updated_at'] -%>
-<%= CSV.generate_line headers -%>
+<%= CSV.generate_line(headers) -%>
 <%- @photos.each do | photo | -%>
   <% pfile = photo.file(@ftype) %>
   <% purl = pfile ? asset_url(pfile.path, {type: pfile.file_type.asset_type}) : '' %>
-  <%= CSV.generate_line([
+<%= CSV.generate_line([
        photo.id,
        photo.ptype,
        photo.view_angle,
