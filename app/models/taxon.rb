@@ -115,6 +115,26 @@ class Taxon < ApplicationRecord
     end
   end
 
+  # Deletes any unused morpho-taxa.
+  # Morpho-taxa names are assumed to end in digits
+  def self.cleanup_morphotaxa
+    loop do 
+      q = Taxon.where("(scientific_name LIKE '%0' 
+                        OR scientific_name LIKE '%1' 
+                        OR scientific_name LIKE '%2' 
+                        OR scientific_name LIKE '%3' 
+                        OR scientific_name LIKE '%4' 
+                        OR scientific_name LIKE '%5' 
+                        OR scientific_name LIKE '%6' 
+                        OR scientific_name LIKE '%7' 
+                        OR scientific_name LIKE '%8' 
+                        OR scientific_name LIKE '%9') 
+                       AND NOT EXISTS (SELECT * FROM taxa AS t2 WHERE t2.parent_taxon_id = taxa.id) 
+                       AND NOT EXISTS (SELECT * FROM specimens WHERE taxon_id = taxa.id)").destroy_all
+      break if q.empty?
+    end
+  end
+
   # Override rank getter to return a symbol
    def rank
      r = self.attributes['rank']
@@ -135,12 +155,13 @@ class Taxon < ApplicationRecord
     end
   end
 
-  def descendants(leaves_only = true)
+  def descendants(leaves_only = true, with_specimens_only = false)
     children = sub_taxa
+    include_self = !with_specimens_only || specimens.any?
     if children.empty?
-      [self]
+      include_self ? [self] : []
     else
-      (leaves_only ? [] : [self]) + children.map { |st| st.descendants(leaves_only) }.flatten
+      (leaves_only || !include_self ? [] : [self]) + children.map { |st| st.descendants(leaves_only, with_specimens_only) }.flatten
     end
   end
 

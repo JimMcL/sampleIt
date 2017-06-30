@@ -33,7 +33,7 @@ class NullTaxon
     NullTaxon.new
   end
 
-  def descendants(leaves_only = true)
+  def descendants(leaves_only = true, with_specimens_only = false)
     []
   end
 

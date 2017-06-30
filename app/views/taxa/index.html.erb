@@ -7,6 +7,8 @@ Taxa
   <div><%= link_to 'New taxon', new_taxon_path %></div>
   <div><%= button_tag 'Query within map extents', type: 'button', id: 'spatial-query' %></div>
   <div><%= sites_map(@taxa_sites, [300, 300]) %></div>
+  <div><%= button_to 'Delete unused morpho-taxa', cleanup_taxa_path,
+           data: { confirm: 'Are you sure you want to delete unused morpho-taxa?' } %></div>
 <% end %>
 
 <table class='index'>

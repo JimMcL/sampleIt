@@ -32,6 +32,12 @@ class TaxaController < ApplicationController
       end
     end
   end
+
+  # Deletes all unused morpho-taxa
+  def cleanup
+    Taxon.cleanup_morphotaxa
+    redirect_to taxa_path
+  end
  
   def show
     @taxon = Taxon.find(params[:id])

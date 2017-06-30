@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     end
     collection do
       get 'autocomplete'
+      post 'cleanup'
     end
   end
 
