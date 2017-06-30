@@ -50,3 +50,5 @@ gem 'jquery-ui-rails'
 gem 'lazyload-rails'
 
 gem 'will_paginate', '~> 3.1.1'
+
+gem 'rails_autolink'

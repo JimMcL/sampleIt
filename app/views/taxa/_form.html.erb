@@ -1,4 +1,4 @@
-<% # Note use of resoure-oriented form_for %>
+<% # Note use of resource-oriented form_for %>
 <%= labelled_form_for @taxon do |f| %>
  
   <% if @taxon.errors.any? %>
@@ -20,6 +20,9 @@
     <%= f.text_field :scientific_name %>
     <%= f.text_field :authority %>
     <%= f.text_field :common_name %>
+    <%= labelled_block '&nbsp;'.html_safe do %>
+      <%= link_to 'Google it', "http://www.google.com/search?q=#{@taxon.scientific_name}" %>
+    <% end %>
   <% end %>
  
   <%= labelled_block 'Parent taxon' do %>
@@ -37,7 +40,7 @@
                 taxon_path(@taxon),
                 type: :button,
                 method: :delete,
-                data: { confirm: 'Are you sure?' } %>
+                data: { confirm: 'Are you sure you want to delete this taxon?' } %>
     <% end %>
   <% end %>
 
@@ -53,7 +56,8 @@
   <% specimens = @taxon.specimens.limit(41) %>
   <% if specimens.empty? %>
     <%= block do %>
-      <div>No specimens</div>
+      <!-- <div>No specimens</div> -->
+      <%= render partial: "guide", collection: get_interesting_descendants(@taxon) %>
     <% end %>
   <% else %>
     <%= render partial: 'specimens_table', locals: {specimens: @taxon.specimens.limit(41), show_taxon: false, show_site: true} %>
