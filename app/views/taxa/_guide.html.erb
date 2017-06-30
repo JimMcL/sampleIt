@@ -1,0 +1,21 @@
+<% # An attempt to display taxa as a sort of field guide %>
+<div class='guide'>
+  Taxon <%= link_to guide.id, edit_taxon_path(guide) %>:
+  <%= guide.rank %>
+  <span class="scientific_name"><%= link_to guide.scientific_name, edit_taxon_path(guide) %></span>
+  <% if !guide.common_name.blank? %>
+    "<%= guide.common_name %>"
+  <% end %>
+    (<%= pluralize(guide.specimens.count, "specimen") %>)
+  <% if !guide.description.blank? %>
+    <p><%= auto_link(guide.description) %></p>
+  <% end %>
+
+  <% if photos = guide.choose_photos(4) %>
+    <div class="photos">
+      <% photos.each do |photo| %>
+        <%= photo_image photo, delete_button: false, rating_flags: false, scale: 1 %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
