@@ -172,11 +172,20 @@ class Taxon < ApplicationRecord
   end
 
   def choose_photos(limit = 10)
+    # Start with extras to make it more likely we get the best of all angles
     candidates = photos.order(rating: :desc).limit(limit * 2)
-    # Try to get a selection of angles
-    by_angle = Hash.new {|h,k| h[k]=[]}
-    candidates.each { |p| by_angle[p.view_angle] << p }
-    by_angle.keys.sort.map { |a| by_angle[a].first }[0..(limit-1)].presence
+    if candidates.length > 0
+      # Try to get a selection of good shots of different angles
+      by_angle = Hash.new {|h,k| h[k]=[]}
+      candidates.each { |p| by_angle[p.view_angle] << p }
+      good = by_angle.keys.sort.map { |a| by_angle[a].first }[0..(limit-1)].presence
+      # Now get desired number of photos by randomly selecting from the remainder
+      others = []
+      if good.length < limit && good.length < candidates.length
+        others = (candidates - good).sample(limit - good.length)
+      end
+      good + others
+    end
   end
 
   # Attempts to return "common name (scientific name)"

@@ -44,7 +44,7 @@
     <% end %>
   <% end %>
 
-  <% photos = @taxon.choose_photos(20) %>
+  <% photos = @taxon.choose_photos(12) %>
   <% if photos %>
     <%= block do %>
           <% photos.each do |photo| %>
