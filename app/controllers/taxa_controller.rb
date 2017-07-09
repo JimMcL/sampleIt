@@ -35,7 +35,8 @@ class TaxaController < ApplicationController
 
   # Deletes all unused morpho-taxa
   def cleanup
-    Taxon.cleanup_morphotaxa
+    deleted = Taxon.cleanup_morphotaxa
+    flash[:alert] = "#{view_context.pluralize(deleted, 'morpho-taxon')} deleted"
     redirect_to taxa_path
   end
  

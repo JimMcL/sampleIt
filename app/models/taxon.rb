@@ -118,6 +118,7 @@ class Taxon < ApplicationRecord
   # Deletes any unused morpho-taxa.
   # Morpho-taxa names are assumed to end in digits
   def self.cleanup_morphotaxa
+    count = 0
     loop do 
       q = Taxon.where("(scientific_name LIKE '%0' 
                         OR scientific_name LIKE '%1' 
@@ -132,7 +133,9 @@ class Taxon < ApplicationRecord
                        AND NOT EXISTS (SELECT * FROM taxa AS t2 WHERE t2.parent_taxon_id = taxa.id) 
                        AND NOT EXISTS (SELECT * FROM specimens WHERE taxon_id = taxa.id)").destroy_all
       break if q.empty?
+      count += q.count
     end
+    count
   end
 
   # Override rank getter to return a symbol

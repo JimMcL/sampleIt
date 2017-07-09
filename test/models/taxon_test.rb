@@ -18,12 +18,12 @@ class TaxonTest < ActiveSupport::TestCase
 
   test "cleanup morphospecies" do
     all = Taxon.all.count
-    puts "Before: #{all} taxa"
     f = Taxon.where(scientific_name: 'Salticidae').first
     ms = f.generate_morphospecies
-    puts "With morphospecies: #{Taxon.all.count}"
-    assert_equal 1, Taxon.where(scientific_name: ms.scientific_name).count, "Unique morpospecies not generated correctly"
-    Taxon.cleanup_morphotaxa
+    with_ms = Taxon.all.count
+    assert_equal 1, Taxon.where(scientific_name: ms.scientific_name).count, "Unique morphospecies not generated correctly"
+    count = Taxon.cleanup_morphotaxa
+    assert_equal with_ms - all, count, "Incorrect value returned by Taxon.cleanup_morphotaxa"
     assert_equal 0, Taxon.where(scientific_name: ms.scientific_name).count, "Morphospecies not removed correctly"
     assert_equal all, Taxon.all.count, "Morphospecies not cleaned up correctly"
   end

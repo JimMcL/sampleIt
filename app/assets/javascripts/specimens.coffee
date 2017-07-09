@@ -15,7 +15,8 @@ $ ->
     $(".detail").show('fast')
     fn = $(e.target).val().split(/[\\/]/).pop()
     src = $('#photo_source')
-    if (m = /^(?:.*[\\/])?(\d+)\.[^.]+/.exec(fn)) && src.val() == ''
+    outlineRe =  new RegExp('^(?:.*[\\\\/])?(\\d+)\\.[jp][^.]+', 'i'); 
+    if (m = outlineRe.exec(fn)) && src.val() == ''
       src.val("Photo #{m[1]}")
       $('#scalebar').removeAttr('checked')
       $('#photo_ptype').val('Outline')

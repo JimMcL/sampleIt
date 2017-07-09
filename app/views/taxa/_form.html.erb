@@ -56,8 +56,11 @@
   <% specimens = @taxon.specimens.limit(41) %>
   <% if specimens.empty? %>
     <%= block do %>
-      <!-- <div>No specimens</div> -->
-      <%= render partial: "guide", collection: get_interesting_descendants(@taxon) %>
+    <!-- No specimens -->
+      <% limit = 40 %>
+      <% count, desc = get_interesting_descendants(@taxon, limit) %>
+      <div class='count-descr'><%= "Showing #{desc.count} of #{count} descendant taxa" %></div>
+      <%= render partial: "guide", collection: desc %>
     <% end %>
   <% else %>
     <%= render partial: 'specimens_table', locals: {specimens: @taxon.specimens.limit(41), show_taxon: false, show_site: true} %>
