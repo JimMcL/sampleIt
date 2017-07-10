@@ -34,6 +34,10 @@ class PhotosController < ApplicationController
     end
   end
  
+  def summary
+    @summary = summarise_photos(Photo.all)
+  end
+  
   def show
     @photo = Photo.find(params[:id])
 
@@ -102,6 +106,10 @@ class PhotosController < ApplicationController
       params = params.merge({'photo_files.ftype' => params[:ftype]})
     end
     params.except(:ftype)
+  end
+
+  def summarise_photos(photos)
+    photos.group(:ptype).count
   end
 
 end

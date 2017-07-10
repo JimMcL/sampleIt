@@ -25,15 +25,6 @@ class SpecimensController < ApplicationController
 
   def summary
     @summary = summarise_specimens(query_for_specimens)
-
-    respond_to do |format|
-      format.html do
-        redirect_to edit_specimen_path(@specimens.first) if params[:shortcut] && @specimens.count == 1
-      end
-      format.json do
-
-      end
-    end
   end
   
   def show

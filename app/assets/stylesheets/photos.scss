@@ -44,3 +44,5 @@ body.photos .close { position: absolute; top: 2px; right: 2px; z-index: 100; cur
 .photo-caption { display:table-caption; caption-side:bottom }
 
 .detail { display: none }
+
+body.photos.summary div.content { margin: 1em; background: #fff }

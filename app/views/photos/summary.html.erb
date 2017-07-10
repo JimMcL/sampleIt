@@ -1,0 +1,14 @@
+<table>
+  <tr class='header'>
+    <th>Photo type (ptype)</th>
+    <th>Count</th>
+  </tr>
+  
+  <% @summary.each do |key, value| %>
+    <tr>
+      <th><%= key %></th>
+      <td><%= value %></td>
+    </tr>
+  <% end %>
+
+</table>
