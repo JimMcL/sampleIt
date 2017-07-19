@@ -23,7 +23,7 @@ em, i { font-style: italic }
 
 .home { float: left; padding-right: 1em }
 .home img { width: 64px; height: 64px }
-div.banner { background: #b0483f; padding: 1ex }
+div.banner { background: #b0483f; padding: 0 1em }
 div.banner { color: #d0e0f0 }
 div.banner h1 { padding: .5em }
 
