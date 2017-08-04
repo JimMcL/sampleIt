@@ -27,7 +27,7 @@ class Taxon < ApplicationRecord
   
   def self.common_ranks
     # Ugly hack since there are really more ranks but no way for a user to add one
-    [:Domain, :Kingdom, :Phylum, :Class, :Subclass, :Order, :Suborder, :SuperFamily, :Family, :SubFamily, :Tribe, :Genus, :Species, :Subspecies]
+    [:Domain, :Kingdom, :Phylum, :Subphylum, :Class, :Subclass, :Order, :Suborder, :SuperFamily, :Family, :SubFamily, :Tribe, :Genus, :Species, :Subspecies]
   end
 
   def self.higher_rank(rank)
