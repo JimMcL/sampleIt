@@ -10,6 +10,7 @@
           <th>Images</th>
           <th>Disposition</th>
           <th>Body length</th>
+          <th>Form</th>
           <% if show_site %>
             <th>Site</th>
           <% end %>
@@ -24,6 +25,7 @@
             <td><%= sp.summarise_photos %></td>
             <td><%= sp.disposition %></td>
             <td><%= sp.body_length %></td>
+            <td><%= sp.form %></td>
             <% if show_site %>
               <td><%= link_to sp.site_id, edit_site_path(sp.site_id) %></td>
               <!-- <td><%# = sp.site_id %></td> -->
