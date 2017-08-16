@@ -1,36 +1,74 @@
-<p>
-  <strong>Site:</strong>
-  <%= @specimen.site.label %>
-</p>
-<p>
-  <strong>Species:</strong>
-  <%= @specimen.taxon_description %>
-</p>
-<p>
-  <strong>Quantity:</strong>
-  <%= @specimen.quantity %>
-</p>
-<p>
-  <strong>Body length:</strong>
-  <%= @specimen.body_length %>
-</p>
-<p>
-  <strong>Description:</strong>
-  <%= @specimen.description %>
-</p>
-<p>
-  <strong>Notes:</strong>
-  <%= @specimen.notes %>
-</p>
-<p>
-  <% @specimen.photos.each do |photo| %>
-    <% if !photo.filename.nil? %>
-      <%= image_tag(photo.thumb_path) %>
-    <% else %>
-      Missing image <%= photo.id %>
+<% # Hide the menu and disable all links %>
+<style>
+  a { pointer-events: none; cursor: default; }
+  ol.menu { display: none }
+  #search { display: inline-block }
+  .bordered { background: #eee; border: 2px solid #135; border-radius: 5px }
+  div.query { display: inline-block; font-size: larger; padding: 1em .6em }
+  div.answer { margin: 1em 0; display: inline-block; font-size: larger; padding: 1em .6em }
+</style>
+<% content_for :title do -%>
+  <%= @specimen.to_s %>
+<%- end %>
+
+<% if @specimen %>
+<% content_for :sidebar do %>
+  <div><%= scientific_classification @specimen.taxon, true, false %></div>
+  <div><%= sites_map([@specimen.site], [400, 400]) %></div>
+<% end %>
+<% end %>
+
+<div class='bordered query'>
+  Enter a specimen number: 
+  <%= form_tag(specimen_path, method: :get, id: :search) do
+      content_tag('div',
+                  # Note onfocus callback positions caret at end of the field
+                  text_field_tag(:q, nil, autofocus: true, onfocus: "this.value = this.value;", size: 20, class: :search) +
+                  image_tag('/search.png', class: :search),
+                  class: :search)
+    end
+    %>
+</div>
+
+<br/>
+<% if @specimen %>
+  <% ######################################## %>
+  <div class='bordered answer'>
+    <%= if @specimen.taxon.ancestor_with_rank(:Family).scientific_name == 'Formicidae'
+               'It\'s an Ant'
+             elsif @specimen.taxon.ancestor_with_rank(:Order).scientific_name == 'Araneae'
+               'It\'s a Spider'
+             else
+               on = @specimen.taxon.ancestor_with_rank(:Order).descriptive_text(:html)
+               if on.blank?
+                 "I don't know what it is!"
+               else
+                 "It's not an ant or a spider, it's #{on}"
+               end
+             end
+           %>
+
+    <% taxon = @specimen.taxon.lowest_non_morpho_taxon %>
+    <%= labelled_block taxon.rank do %>
+      <%= taxon.descriptive_text(:html).html_safe %>
+    <% end %>
+    <%= labelled_block 'From' do %>
+      <%= @specimen.site.description %>
+    <% end %>
+  </div>
+
+    <% photos = @specimen.photos %>
+  <% unless photos.empty? %>
+    <%= labelled_block 'Photos' do %>
+      <%= render partial: 'thumb', collection: @specimen.photos, as: :photo, locals: {parents: [@specimen]} %>
     <% end %>
   <% end %>
-</p>
 
-<%= link_to 'Edit', edit_specimen_path(@specimen) %> |
-<%= link_to 'Back', specimens_path %>
+
+<% else %>
+  <% ######################################## %>
+  <div class='answer'>
+    There's no specimen with number <%= params[:q] %>, why don't you try again?
+  </div>
+
+<% end %>

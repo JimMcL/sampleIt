@@ -259,6 +259,16 @@ class Taxon < ApplicationRecord
   def scientific_name_to_html
     [:Genus, :Species, :Subspecies].include?(rank) ? "<i>#{scientific_name}</i>" : scientific_name
   end
+
+  # Returns true if this is a morpho-taxon
+  def morphotaxon?
+    scientific_name =~ /[[:digit:]]+$/
+  end
+  
+  # Returns the closest ancestor of this (or self) which is not a morpho-taxon
+  def lowest_non_morpho_taxon
+    morphotaxon? && parent_taxon ? parent_taxon.lowest_non_morpho_taxon : self
+  end
   
   #################################################################################
   private

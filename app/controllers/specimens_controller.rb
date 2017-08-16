@@ -28,9 +28,11 @@ class SpecimensController < ApplicationController
   end
   
   def show
-    # Don't want this to exist, but too lazy to scrap it properly
-    @specimen = Specimen.find(params[:id])
-    render 'edit'
+    #@specimen = Specimen.where('id = ?"' => params[:id]).first if params[:id]
+    if Specimen.exists?(params[:q])
+      @specimen = Specimen.find(params[:q])
+    end
+    #render 'edit'
   end
  
   def new

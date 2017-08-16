@@ -16,6 +16,21 @@ require 'test_helper'
 
 class TaxonTest < ActiveSupport::TestCase
 
+  test "morpho manips" do
+    f = Taxon.where(scientific_name: 'Salticidae').first
+    ms = f.generate_morphospecies
+    assert ms.morphotaxon?, "generated morphospecies is not a morpho-taxon"
+    assert ms.parent_taxon.morphotaxon?, "generated morphospecies genus is not a morpho-taxon"
+    assert !ms.parent_taxon.parent_taxon.morphotaxon?, "generated morphospecies genus parent is a morpho-taxon"
+    assert_equal 'Salticidae', ms.lowest_non_morpho_taxon.scientific_name, 'lowest non-morpho taxon'
+
+    g = Taxon.where(scientific_name: 'Myrmarachne').first
+    ms = g.generate_morphospecies
+    assert ms.morphotaxon?, "generated morphospecies is not a morpho-taxon"
+    assert !ms.parent_taxon.morphotaxon?, "generated morphospecies genus #{ms.parent_taxon} is a morpho-taxon"
+    assert_equal 'Myrmarachne', ms.lowest_non_morpho_taxon.scientific_name, 'lowest non-morpho taxon'
+  end
+  
   test "cleanup morphospecies" do
     all = Taxon.all.count
     f = Taxon.where(scientific_name: 'Salticidae').first
