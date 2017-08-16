@@ -25,14 +25,15 @@ Welcome
 <%= link_to 'Taxa', controller: 'taxa' %>
 </p>
 
-<p><em>Photos</em> can only be added to <em>specimens</em> or used to identfy a <em>site</em>, but for convenience they may be viewed here.
+<p><em>Photos</em> can only be added to <em>specimens</em> or used to identify a <em>site</em>, but for convenience they may be viewed here.
 <p>
 <%= link_to 'Photos', controller: 'photos' %>
 <%= link_to 'Summary of photos', controller: 'photos', action: :summary %>
 </p>
 
 <div style='border-top:1px solid #def; border-bottom:1px solid #def; margin: 1.5em 0; padding: 1ex 0'>
-  <a href="ac/index.html">Supplementary Data</a>
+  <a href="ac/index.html">Supplementary Data</a>, 
+  <a href="specimens/show">Kiosk mode</a>
 </div>
 
 <div style='padding-top: 2em; font-size:80%; font-style: italic'>Server IP addresses:
