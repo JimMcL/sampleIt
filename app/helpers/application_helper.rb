@@ -118,38 +118,42 @@ module ApplicationHelper
     content_tag(:li, node.content)
   end
 
-  def taxon_to_ul(taxon, link = false, show_children = true, taxon_class = nil)
+  def taxon_to_ul(taxon, link = false, show_children = true, taxon_class = nil, show_common_names = false)
     if !taxon.nil?
-      tree_to_ul TaxonTreeNode.new(taxon, link, show_children), taxon_class
+      tree_to_ul TaxonTreeNode.new(taxon, link, show_children, show_common_names), taxon_class
     end
   end
 
-  def scientific_classification(taxon, link = false, show_children = true, taxon_class = 'focal-taxon')
+  def scientific_classification(taxon, link = false, show_children = true, taxon_class = 'focal-taxon', show_common_names = false)
     if taxon
       textbox('Scientific classification', content_class: :txtr) do
-        taxon_to_ul(taxon, link, show_children, taxon_class)
+        taxon_to_ul(taxon, link, show_children, taxon_class, show_common_names)
       end
     end
   end
 
   class TaxonTreeNode
-    def initialize(taxon, link, show_children)
+    def initialize(taxon, link, show_children, show_common_names = false)
       @taxon = taxon
       @link = link
       @show_children = show_children
+      @show_common_names = show_common_names
     end
     def parent
-      @taxon.parent_taxon ? TaxonTreeNode.new(@taxon.parent_taxon, true, false) : nil
+      @taxon.parent_taxon ? TaxonTreeNode.new(@taxon.parent_taxon, true, false, @show_common_names) : nil
     end
     def children
       if @show_children
-        @taxon.sub_taxa.map { |c| TaxonTreeNode.new(c, true, false) }
+        @taxon.sub_taxa.map { |c| TaxonTreeNode.new(c, true, false, @show_common_names) }
       else
         []
       end
     end
     def content
       html = @taxon.scientific_name_to_html.html_safe
+      if @show_common_names && !@taxon.common_name.blank?
+        html = "#{html} (#{@taxon.common_name})".html_safe
+      end
       @link ? ActionController::Base.helpers.link_to(html, "/taxa/#{@taxon.id}/edit") : html
     end
   end

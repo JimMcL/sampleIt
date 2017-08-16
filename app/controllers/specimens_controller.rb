@@ -27,12 +27,16 @@ class SpecimensController < ApplicationController
     @summary = summarise_specimens(query_for_specimens)
   end
   
-  def show
-    #@specimen = Specimen.where('id = ?"' => params[:id]).first if params[:id]
+  def kiosk
     if Specimen.exists?(params[:q])
       @specimen = Specimen.find(params[:q])
     end
-    #render 'edit'
+  end
+ 
+  def show
+    # Not supposed to be used - should get rid of this properly
+    @specimen = Specimen.find(params[:id])
+    render 'edit'
   end
  
   def new
