@@ -41,7 +41,8 @@
   <% end %>
   <%= block do %>
       <%= f.text_field :sex, size: 8, title: 'Sex, e.g. "female", "hermaphrodite"' %>
-      <%= f.text_field :form, size: 8, title: 'Form or stage, e.g. "adult", "2nd instar"' %>
+      <%= f.text_field :life_stage, size: 8, title: 'The age class or life stage, e.g. "adult", "2nd instar"' %>
+      <%= f.text_field :form, size: 8, title: 'Form, e.g. "forma robinsi"' %>
   <% end %>
  
   <%= labelled_block 'Notes' do %>

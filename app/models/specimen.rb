@@ -17,6 +17,7 @@
 #  disposition   :string
 #  form          :string
 #  sex           :string
+#  life_stage    :string
 #
 # Indexes
 #
@@ -47,13 +48,13 @@ class Specimen < ApplicationRecord
       left_outer_joins(:taxon).
         where("specimens.id = ? OR specimens.site_id = ? OR taxa.rank = ? OR 
                specimens.ref LIKE ? OR specimens.description LIKE ? OR 
-               specimens.notes LIKE ? OR specimens.disposition LIKE ? OR specimens.form LIKE ? OR specimens.sex LIKE ? OR 
-               specimens.other like ? OR
-               taxa.scientific_name like ? OR taxa.common_name like ? OR taxa.description like ?",
+               specimens.notes LIKE ? OR specimens.disposition LIKE ? OR specimens.life_stage LIKE ? OR 
+               specimens.form LIKE ? OR specimens.sex LIKE ? OR specimens.other like ? OR
+               taxa.scientific_name LIKE ? OR taxa.common_name LIKE ?",
               q, q, q,
               lk, lk,
-              lk, lk, lk, lk,
-              lk, lk, lk, lk)
+              lk, lk, lk, lk, lk,
+              lk, lk, lk)
     end
   end
 

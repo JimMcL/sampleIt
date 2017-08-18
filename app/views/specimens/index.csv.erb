@@ -15,12 +15,12 @@ month - ordinal month in which the Event occurred; http://rs.tdwg.org/dwc/terms/
 year - four-digit year in which the Event occurred, according to the Common Era Calendar; http://rs.tdwg.org/dwc/terms/year
 
 recordedBy - A list (concatenated and separated) of names of people, groups, or organizations responsible for recording the original Occurrence; http://rs.tdwg.org/dwc/terms/recordedBy
-
+lifeStage - The age class or life stage of the biological individual(s) at the time the Occurrence was recorded; http://rs.tdwg.org/dwc/terms/lifeStage
 %>
 <%- headers = ['id', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'taxonRank', 'scientificName', 'scientificNameAuthorship', 'vernacularName',
     	       'decimalLatitude', 'decimalLongitude', 'coordinateUncertaintyInMeters', 'elevation', 'locationRemarks',
                'time', 'day', 'month', 'year',
-               'recordedBy', 'description', 'quantity', 'bodylength', 'sex', 'form', 'notes', 'idconfidence', 'other', 'ref',
+               'recordedBy', 'description', 'quantity', 'bodylength', 'sex', 'lifeStage', 'form', 'notes', 'idconfidence', 'other', 'ref',
                'disposition', 'numphotos'] -%>
 <%= CSV.generate_line headers -%>
 <%- @specimens.each do | specimen | -%>
@@ -56,6 +56,7 @@ recordedBy - A list (concatenated and separated) of names of people, groups, or 
               specimen.quantity,
               specimen.body_length,
               specimen.sex,
+              specimen.life_stage,
               specimen.form,
               specimen.notes,
               specimen.id_confidence,

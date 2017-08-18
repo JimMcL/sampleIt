@@ -22,7 +22,7 @@
     <%= f.text_field :common_name %>
     <%= labelled_block 'Query taxon'.html_safe do %>
       <%= link_to 'Google', "http://www.google.com/search?q=#{@taxon.scientific_name}" %>
-      <%= link_to 'Aus faunal dir', "https://biodiversity.org.au/afd/taxa/#{@taxon.scientific_name.tr(' ', '_')}" %>
+      <%= link_to 'Aus faunal dir', "https://biodiversity.org.au/afd/taxa/#{@taxon.scientific_name ? @taxon.scientific_name.tr(' ', '_') : ''}" %>
     <% end %>
   <% end %>
  
