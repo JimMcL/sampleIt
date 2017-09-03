@@ -125,7 +125,7 @@ class SpecimensController < ApplicationController
   def query_params
     params.permit(:id, :description, :site_id, :quantity, :body_length, :notes,
                   :created_at, :updated_at, :taxon_id, :id_confidence,
-                  :other, :ref, :disposition, :form, :life_stage, :sex)
+                  :other, :ref, :disposition, :form, :life_stage, :sex, :sql)
 
   end
 

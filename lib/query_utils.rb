@@ -48,7 +48,7 @@ module QueryUtils
   # which can be passed to the where method. E.g
   # params_to_where({id: '[10,12,13]', name: 'ruby'}, {id: true})  => ['id IN ? AND name = ?', [10, 12, 13], 'ruby']
   #
-  # Special parameter 'sql' is just embeded as is.
+  # Special parameter 'sql' is just embedded as is.
   #
   # params - hash of parameters
   # allow_array - hash where key is name of parameters which may be processed as an array, value is bool
