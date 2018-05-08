@@ -1,0 +1,15 @@
+Clean installation on Windows
+
+Install Ruby (https://rubyinstaller.org/downloads/)
+
+Install bundler: from a Windows command prompt (not cygwin)
+$ gem install bundler
+
+Then run
+$ bundler install
+
+If that fails, try updating gem versions using $ bundler update gem*
+
+Then just run it!
+
+$ server.bat -p

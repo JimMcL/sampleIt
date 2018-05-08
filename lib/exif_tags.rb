@@ -113,7 +113,7 @@ module ExifTags
       #d_o -= (lens_info!(exif_hash).length - c.flange_focal_distance) / 1000.0
 
       puts "Focal length #{f}, lens length #{lens_info!(exif_hash).length / 1000}, adjusted focus dist #{d_o} -> mag #{(f / (f - d_o)).abs} or #{f / (d_o - 2 * f)}"
-      # From experimentation, this seems to be the correct formula, but the result is too inaccurate to be useful
+      # From experimentation, this seems to be the correct formula, but the result is too inaccurate/imprecise to be useful
       f / (d_o - 2 * f)
     end
   end

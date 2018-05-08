@@ -17,6 +17,10 @@ see **and edit** all of the data and photos.
 
 It uses a vanilla RoR setup.
 
+* TODO
+
+  * Allow relative urls in taxon descriptions.
+
 * Ruby version:
 ruby 2.2.4p230 (2015-12-16 revision 53155) [i386-mingw32]
 
