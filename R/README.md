@@ -1,0 +1,1 @@
+This directory contains R source code to simplify access to the API.
