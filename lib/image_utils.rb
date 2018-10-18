@@ -47,7 +47,9 @@ module ImageUtils
   def self.get_image_dimensions(file)
     # Works for videos, but _extremely_ slow
     # Note: shellwords works for bash, not windows shell
-    %x(#{Shellwords::escape(IMAGEMAGICK_IDENTIFY)} -ping -format "%w %h" "#{file}").split(' ')
+    o = %x(#{Shellwords::escape(IMAGEMAGICK_IDENTIFY)} -ping -format "%w %h" "#{file}")
+    raise "cannot get image dimensions, check that ImageMagick is installed and in PATH" unless(o)
+    o.split(' ')
   end
   
   def self.exif_to_json(file)

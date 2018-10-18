@@ -16,7 +16,7 @@ class PhotosController < ApplicationController
       # ftype will be returned. Special parameter 'sql' just gets
       # embedded into the where clause
       has_ftype = !!params[:ftype]
-      qry = QueryUtils::params_to_where(adjust_query_params(ViewAngle.expand_query_params(query_params)))
+      qry = QueryUtils::params_to_where(adjust_query_params(ViewAngle.expand_query_params(query_params)), {imageable_id: true})
       @photos = has_ftype ? Photo.joins(:photo_files).where(*qry) : Photo.where(*qry)
     end
     

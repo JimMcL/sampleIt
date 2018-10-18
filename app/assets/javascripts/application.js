@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require jquery-ui
 // Cause problems with paging loading scripts = require turbolinks
-//= require_tree .
+//This causes a problem in debug mode, but not in production!!! = require_tree .
 // = require jquery.lazyload.js
 
 function UpdateQueryString(key, value, url) {

@@ -13,10 +13,13 @@ module ExifTags
   ALTITUDE = 'GPSAltitude'
   GPS_HORIZONTAL_ERROR = 'GPSHPositioningError'  # metres
   GPS_IMAGE_DIRECTION = 'GPSImgDirection'
+  CAMERA_TEMPERATURE = 'CameraTemperature'       # Degrees C, often completely wrong on Olympus TG-5
   DATETIME = 'DateTimeOriginal'
   DOF = "DepthOfField"                           # "metres metres"
+  FOCUS_DISTANCE = "FocusDistance"               # metres - Olympus
   FOCUS_DIST_UPPER = "FocusDistanceUpper"        # metres
   FOCUS_DIST_LOWER = "FocusDistanceLower"        # metres
+  FOCAL_LENGTH = "FocalLengthIn35mmFormat"       # mm - Olympus
   MIN_FOCAL_LEN = "MinFocalLength"               # mm
   MAX_FOCAL_LEN = "MaxFocalLength"               # mm
 
@@ -33,6 +36,11 @@ module ExifTags
   
   def self.time(exif_hash)
     exif_hash.blank? ? nil : parse_gps_datetime(exif_hash[ExifTags::DATETIME])
+  end
+
+  # Take this value with a grain of salt
+  def self.cameraTemperature(exif_hash)
+    exif_hash.blank? ? nil : exif_hash[ExifTags::CAMERA_TEMPERATURE]
   end
 
   def self.camera_model(exif_hash)
@@ -58,7 +66,9 @@ module ExifTags
   end
 
   def self.focus_distance(exif_hash)
-    if exif_hash.key?(ExifTags::DOF)
+    if exif_hash.key?(ExifTags::FOCUS_DISTANCE)
+      exif_hash[ExifTags::FOCUS_DISTANCE]
+    elsif exif_hash.key?(ExifTags::DOF)
       # Take the mean of the 2 extents of the depth of field as the distance
       exif_hash[ExifTags::DOF].split.inject(0.0){|sum, el| sum + el.to_f} / 2
     elsif exif_hash.key?(ExifTags::FOCUS_DIST_UPPER) && exif_hash.key?(ExifTags::FOCUS_DIST_LOWER)
@@ -72,6 +82,8 @@ module ExifTags
   def self.focal_length(exif_hash)
     if exif_hash.key?(ExifTags::MIN_FOCAL_LEN) && exif_hash.key?(ExifTags::MAX_FOCAL_LEN)
       (exif_hash[ExifTags::MIN_FOCAL_LEN] + exif_hash[ExifTags::MAX_FOCAL_LEN]) / 2
+    elsif exif_hash.key?(ExifTags::FOCAL_LENGTH)
+      exif_hash[ExifTags::FOCAL_LENGTH]
     else
       nil
     end
@@ -87,7 +99,7 @@ module ExifTags
   def self.derive_magnification(exif_hash)
     f = focal_length(exif_hash)
     #d_o = focus_distance(exif_hash)
-    d_o = exif_hash[ExifTags::FOCUS_DIST_LOWER]
+    d_o = exif_hash[ExifTags::FOCUS_DIST_LOWER] || exif_hash[ExifTags::FOCUS_DISTANCE]
     # See https://en.wikipedia.org/wiki/Magnification
     # From http://www.physicsclassroom.com/class/refrn/Lesson-5/The-Mathematics-of-Lenses
     # Magnification equation:
@@ -105,14 +117,14 @@ module ExifTags
       # Convert focal length from mm to metres
       f /= 1000.0
 
-      l = lens_info!(exif_hash)
+      #l = lens_info!(exif_hash)
       c = camera_info!(exif_hash)
       
       # Subtract lens length (converted to metres) from focus distance.
       # I think this is required because focus distance is measured from camera body or sensor, but optics formula measures from the lens
       #d_o -= (lens_info!(exif_hash).length - c.flange_focal_distance) / 1000.0
 
-      puts "Focal length #{f}, lens length #{lens_info!(exif_hash).length / 1000}, adjusted focus dist #{d_o} -> mag #{(f / (f - d_o)).abs} or #{f / (d_o - 2 * f)}"
+      puts "Focal length #{f}, adjusted focus dist #{d_o} -> mag #{(f / (f - d_o)).abs} or #{f / (d_o - 2 * f)}"
       # From experimentation, this seems to be the correct formula, but the result is too inaccurate/imprecise to be useful
       f / (d_o - 2 * f)
     end
@@ -121,8 +133,11 @@ module ExifTags
   def self.magnification!(exif_hash)
     # Magnification might be stored directly in exif, or might need to be derived
     unless exif_hash.blank?
-      #mag = exif_hash[ExifTags::MACRO_MAG] || derive_magnification(exif_hash)
       mag = exif_hash[ExifTags::MACRO_MAG]
+      if !mag
+        c = camera_info!(exif_hash)
+        mag = derive_magnification(exif_hash) if c.allow_derived_mag
+      end
       return mag if mag
     end
     Rails.logger.debug "EXIF data: #{exif_hash}\n"
