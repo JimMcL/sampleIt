@@ -1,5 +1,7 @@
 REM Simple bat file to run the server
 REM Run with -p to run production (note, not a real production server, just uses webrick)
+
+
 if "%1"=="-p" (goto PRODUCTION)
 
 ruby bin\rails server -p 80

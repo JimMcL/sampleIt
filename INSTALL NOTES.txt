@@ -13,3 +13,17 @@ If that fails, try updating gem versions using $ bundler update gem*
 Then just run it!
 
 $ server.bat -p
+
+
+############################
+sqlite problems
+Sqlite can be hard to install on Windows. I had the error 
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sqlite3-1.3.13-x64-mingw32/lib/sqlite3.rb:6:in `require': cannot load such file -- sqlite3/sqlite3_native (LoadError)
+
+Solution seemed to be to download sqlite-amalgamation-3260000, sqlite-dll-win64-x64-3260000 and sqlite-tools-win32-x86-3260000 from sqlite.org, 
+unpack them all to C:/Jim/products/sqlite,
+copy sqlite3.dll and sqlite3.def to C:\Ruby25-x64\bin
+then run 
+gem uninstall sqlite3
+followed by
+gem install sqlite3 --platform=ruby -- --with-sqlite3-dir=C:/Jim/products/sqlite --with-sqlite3-include=C:/Jim/products/sqlite

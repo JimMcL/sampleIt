@@ -2,103 +2,97 @@
 # The database contains information about specimens and their photos.
 # 
 # The database is queried using an HTTP interface.
-# The host defaults to localhost, but can be specified on the R command line as 
-# Rscript ... -h <host>
-# or by setting the global variable MORPHO_HOST.
+# The host defaults to localhost, but can be specified by setting the global variable MORPHO_HOST.
 #
-LoadFns("download")
 library(ggmap)
 
 
 # Returns the name of the host for database queries.
-# Check the R command line for an option like '-host <host>'
-# otherwise if MORPHO_HOST is set, returns it, otherwise returns 'localhost'.
-DbChooseHost <- function(args = commandArgs(TRUE)) {
-  host <- JCLIValue('h', 'host')
-  if (!is.null(host))
-    host
-  else if (exists('MORPHO_HOST'))
-    MORPHO_HOST
+# If SI_HOST is set, returns it, otherwise returns 'localhost'.
+SIChooseHost <- function() {
+  if (exists('SI_HOST'))
+    SI_HOST
   else
     'localhost'
 }
 
 # Returns a URL by pasting arguments on the end of 'http://MORPHO_HOST/'
-DbUrl <- function(...) {
-  u <- sprintf("http://%s/%s", DbChooseHost(), paste0(...))
+SIUrl <- function(...) {
+  u <- sprintf("http://%s/%s", SIChooseHost(), paste0(...))
   #cat(paste0(u, '\n'))
   u
 }
 
 # Returns data from the database
-DbQuery <- function(...) {
-  read.csv(DbUrl(...), stringsAsFactors = F, strip.white=TRUE)
+SIQuery <- function(...) {
+  read.csv(SIUrl(...), stringsAsFactors = F, strip.white=TRUE)
 }
 
 # Returns photo metadata from the database. Any arguments are used to construct the URL
-DbQueryPhotos <- function(...) {
-  DbQuery('photos.csv?', ...)
+SIQueryPhotos <- function(...) {
+  SIQuery('photos.csv?', ...)
 }
 
 # Returns specimen metadata from the database. Any arguments are used to construct the URL
-DbQuerySpecimens <- function(...) {
-  DbQuery('specimens.csv?', ...)
+SIQuerySpecimens <- function(...) {
+  SIQuery('specimens.csv?', ...)
 }
 
 # Returns specimen metadata corresponding to a set of photos
-DbQuerySpecimensForPhotos <- function(photos) {
+SIQuerySpecimensForPhotos <- function(photos) {
   specimenIds <- unique(photos[photos$imageabletype == 'Specimen',]$imageableid)
-  DbQuerySpecimens(sprintf("id=[%s]", paste(specimenIds, collapse=',')))
+  SIQuerySpecimens(sprintf("id=[%s]", paste(specimenIds, collapse=',')))
 }
 
+### TODO make this work
 # Returns a data frame containing details of all photos in the database which satisfy the passed in query.
 # The photo image files are downloaded to a local cache, and the file name is stored in the column "file".
 #
-# ... - arguments passed to DbQueryPhotos
+# ... - arguments passed to SIQueryPhotos
 # tempfileFnFn - optional function which returns a function passed to JDownload as the tempfileFnFn argument. Called with 1 argument, the photos data frame.
 # strictOnly - if TRUE (the default), only strict outlines are returned (only meaningful for outlines)
 # NOTE: only returns strict outlines
-DbGetPhotoData <- function(..., dir = JCacheDir, tempfileFnFn = NULL, strictOnly = FALSE, debug = FALSE) {
+## SIGetPhotoData <- function(..., dir = JCacheDir, tempfileFnFn = NULL, strictOnly = FALSE, debug = FALSE) {
   
-  # Get the list of matching photos
-  photos <- DbQueryPhotos(...)
+##   # Get the list of matching photos
+##   photos <- SIQueryPhotos(...)
 
-  # Allow caller to specify how to name downloaded files
-  tempfileFn <- NULL
-  if (!is.null(tempfileFnFn))
-    tempfileFn <- tempfileFnFn(photos)
+##   # Allow caller to specify how to name downloaded files
+##   tempfileFn <- NULL
+##   if (!is.null(tempfileFnFn))
+##     tempfileFn <- tempfileFnFn(photos)
   
-  # Download the photos
-  file <- JDownload(photos$url, verbose = F, cacheDir = dir, tempfileFn = tempfileFn, debug = debug)
+##   # Download the photos
+##   file <- JDownload(photos$url, verbose = F, cacheDir = dir, tempfileFn = tempfileFn, debug = debug)
   
-  ## Read specimen info for each photo, and add to each photo
-  specimens <- DbQuerySpecimensForPhotos(photos)
-  # Some entries in the dbs have multiple specimens, which we don't care about, so eliminate them
-  specimens <- unique(specimens)
-  # Match specimens to photos
-  fac <- specimens[match(photos$imageableid, specimens$id),]
-  # Determine mimc type before removing description column
-  mt <- mimicType(fac)
-  # Remove columns with duplicate names in both photos and specimens
-  fac <- fac[,!colnames(fac) %in% c('id', 'description')]
+##   ## Read specimen info for each photo, and add to each photo
+##   specimens <- SIQuerySpecimensForPhotos(photos)
+##   # Some entries in the dbs have multiple specimens, which we don't care about, so eliminate them
+##   specimens <- unique(specimens)
+##   # Match specimens to photos
+##   fac <- specimens[match(photos$imageableid, specimens$id),]
+##   # Determine mimic type before removing description column
+##   mt <- mimicType(fac)
+##   # Remove columns with duplicate names in both photos and specimens
+##   fac <- fac[,!colnames(fac) %in% c('id', 'description')]
 
-  ## Build photos data frame containing info about photos and specimens
-  cbind(photos, 
-        file, 
-        type = mt, 
-        label = sprintf("%s, %s", photos$imageableid, photos$id), 
-        individualId = individualIds(photos, sOrL, mt),
-        speciesId = speciesIds(fac, sOrL, mt),
-        typeId = typeIds(sOrL, mt),
-        fac,
-        stringsAsFactors = F)
-}
+##   ## Build photos data frame containing info about photos and specimens
+##   cbind(photos, 
+##         file, 
+##         type = mt, 
+##         label = sprintf("%s, %s", photos$imageableid, photos$id), 
+##         individualId = individualIds(photos, sOrL, mt),
+##         speciesId = speciesIds(fac, sOrL, mt),
+##         typeId = typeIds(sOrL, mt),
+##         fac,
+##         stringsAsFactors = F)
+## }
 
 # Returns a data frame containing details of all photos in the database with the specified viewing angle.
 # The photo image files are downloaded to a local cache, and the file name is stored in the column "file".
 # angle - 'dorsal' or 'lateral'
-DbGetOutlines <- function(angle) {
-  DbGetPhotoData("ptype=Outline&imageable_type=Specimen&view_angle=", angle, strictOnly = TRUE)
+SIGetOutlines <- function(angle) {
+  SIGetPhotoData("ptype=Outline&imageable_type=Specimen&view_angle=", angle, strictOnly = TRUE)
 }
 
 #######################################################################
@@ -106,7 +100,7 @@ DbGetOutlines <- function(angle) {
 
 ### TODO make this work
 ## # Plots a map of the specimens' collection sites
-## DbMapSpecimenSites <- function(specimens, xlimFrac = 0.05, ylimFrac = 0.05, showLegend = FALSE) {
+## SIMapSpecimenSites <- function(specimens, xlimFrac = 0.05, ylimFrac = 0.05, showLegend = FALSE) {
 ##   sites <- specimens[specimens$type == MTP_SPIDER,c('scientificName', 'decimalLatitude', 'decimalLongitude')]
 ##   xlim <- extendrange(sites$decimalLongitude, f = xlimFrac)
 ##   ylim <- extendrange(sites$decimalLatitude, f = ylimFrac)
