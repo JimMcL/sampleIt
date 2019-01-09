@@ -23,6 +23,8 @@ module ExifTags
   MIN_FOCAL_LEN = "MinFocalLength"               # mm
   MAX_FOCAL_LEN = "MaxFocalLength"               # mm
 
+  # Camera model codes from https://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Olympus.html
+  CAMERA_MODELS = {'D4593' => 'TG-5'}
 
   def self.parse_gps_datetime(datetime)
     datetime ? DateTime.strptime(datetime, '%Y:%m:%d %H:%M:%S') : nil
@@ -44,7 +46,8 @@ module ExifTags
   end
 
   def self.camera_model(exif_hash)
-    exif_hash[ExifTags::CAMERA_MODEL]
+    model = exif_hash[ExifTags::CAMERA_MODEL]
+    CAMERA_MODELS.key?(model) ? CAMERA_MODELS[model] : model
   end
   
   def self.camera_info!(exif_hash)

@@ -65,7 +65,6 @@ class Photo < ApplicationRecord
         return where("view_phi = ? AND view_lambda = ?", va.phi, va.lambda) if va.valid?
       rescue
       end
-      lk = "%#{q}%"
       where(QueryUtils::q_to_where(q, "photos", [:id, :imageable_id], [:ptype, :source, :imageable_type, :description, :state, :source, :camera]))
     end
   end

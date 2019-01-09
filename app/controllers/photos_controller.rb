@@ -16,7 +16,7 @@ class PhotosController < ApplicationController
       # ftype will be returned. Special parameter 'sql' just gets
       # embedded into the where clause
       has_ftype = !!params[:ftype]
-      qry = QueryUtils::params_to_where(adjust_query_params(ViewAngle.expand_query_params(query_params)), {imageable_id: true})
+      qry = QueryUtils::params_to_where(adjust_query_params(ViewAngle.expand_query_params(query_params)), {id: true, imageable_id: true})
       @photos = has_ftype ? Photo.joins(:photo_files).where(*qry) : Photo.where(*qry)
     end
     
@@ -27,6 +27,8 @@ class PhotosController < ApplicationController
         @photos = @photos.page(params[:page]).per_page(11).order('rating DESC')
       end
       format.csv do
+        # Note that only 1 URL for a photo representation is returned, based on the value of ftype
+        # This is probably not a good design
         @ftype = params[:ftype] || :photo
         headers['Content-Disposition'] = "attachment; filename=\"photos.csv\""
         headers['Content-Type'] ||= 'text/csv'
