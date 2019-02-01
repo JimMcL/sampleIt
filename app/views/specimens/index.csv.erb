@@ -15,14 +15,16 @@ month - ordinal month in which the Event occurred; http://rs.tdwg.org/dwc/terms/
 year - four-digit year in which the Event occurred, according to the Common Era Calendar; http://rs.tdwg.org/dwc/terms/year
 
 recordedBy - A list (concatenated and separated) of names of people, groups, or organizations responsible for recording the original Occurrence; http://rs.tdwg.org/dwc/terms/recordedBy
+individualCount - The number of individuals represented present at the time of the Occurrene.; http://rs.tdwg.org/dwc/terms/individualCount
 lifeStage - The age class or life stage of the biological individual(s) at the time the Occurrence was recorded; http://rs.tdwg.org/dwc/terms/lifeStage
+
 %>
 <%- headers = ['id',
                'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'taxonRank', 'scientificName', 'scientificNameAuthorship', 'vernacularName',
                'decimalLatitude', 'decimalLongitude', 'coordinateUncertaintyInMeters', 'elevation', 'locationRemarks',
                'time', 'day', 'month', 'year',
                'recordedBy', 'siteId',
-               'description', 'quantity', 'bodylength', 'sex', 'lifeStage', 'form', 'notes', 'idconfidence', 'other', 'ref',
+               'description', 'individualCount', 'bodylength', 'sex', 'lifeStage', 'form', 'notes', 'idconfidence', 'other', 'ref',
                'disposition', 'numphotos'] -%>
 <%= CSV.generate_line headers -%>
 <%- @specimens.each do | specimen | -%>
@@ -30,7 +32,8 @@ lifeStage - The age class or life stage of the biological individual(s) at the t
   <%- site = specimen.site -%>
   <%- loc = site.location -%>
   <%# Duplicate the row for each specimen %>
-  <% for i in 1..(specimen.quantity || 1) %>
+  <%# I no longer like this idea! %>
+  <%# for i in 1..(specimen.quantity || 1) %>
     <% values = [
               specimen.id,
               txn.ancestor_with_rank(:Kingdom).scientific_name,
@@ -69,5 +72,5 @@ lifeStage - The age class or life stage of the biological individual(s) at the t
               specimen.photos.length
         ] %>
     <%= CSV.generate_line(values).html_safe -%>
-  <%- end -%>
+  <%#- end -%>
 <%- end -%>
