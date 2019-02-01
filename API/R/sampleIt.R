@@ -25,7 +25,10 @@ SIUrl <- function(...) {
 
 # Returns data from the database
 SIQuery <- function(...) {
-  read.csv(SIUrl(...), stringsAsFactors = F, strip.white=TRUE)
+  tryCatch(
+    read.csv(SIUrl(...), stringsAsFactors = F, strip.white=TRUE),
+    error = function(e) stop(sprintf("SIQuery failed with arguments (%s): %s", paste(..., sep = ", "), e))
+  )
 }
 
 # Returns photo metadata from the database. Any arguments are used to construct the URL
