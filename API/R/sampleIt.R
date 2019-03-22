@@ -1,11 +1,10 @@
-# Functions to query the samples database.
+# R functions to query the samples database.
 # The database contains information about specimens and their photos.
 # 
 # The database is queried using an HTTP interface.
-# The host defaults to localhost, but can be specified by setting the global variable MORPHO_HOST.
+# The host defaults to localhost, but can be specified by setting the global variable SI_HOST.
 #
-library(ggmap)
-
+# See the file sampleItMaps.R for some mapping functionality.
 
 # Returns the name of the host for database queries.
 # If SI_HOST is set, returns it, otherwise returns 'localhost'.
@@ -16,7 +15,7 @@ SIChooseHost <- function() {
     'localhost'
 }
 
-# Returns a URL by pasting arguments on the end of 'http://MORPHO_HOST/'
+# Returns a URL by pasting arguments on the end of 'http://SI_HOST/'
 SIUrl <- function(...) {
   u <- sprintf("http://%s/%s", SIChooseHost(), paste0(...))
   #cat(paste0(u, '\n'))
@@ -97,37 +96,4 @@ SIQuerySpecimensForPhotos <- function(photos) {
 SIGetOutlines <- function(angle) {
   SIGetPhotoData("ptype=Outline&imageable_type=Specimen&view_angle=", angle, strictOnly = TRUE)
 }
-
-#######################################################################
-# Mapping functions
-
-### TODO make this work
-## # Plots a map of the specimens' collection sites
-## SIMapSpecimenSites <- function(specimens, xlimFrac = 0.05, ylimFrac = 0.05, showLegend = FALSE) {
-##   sites <- specimens[specimens$type == MTP_SPIDER,c('scientificName', 'decimalLatitude', 'decimalLongitude')]
-##   xlim <- extendrange(sites$decimalLongitude, f = xlimFrac)
-##   ylim <- extendrange(sites$decimalLatitude, f = ylimFrac)
-##   MapSpeciesOcc(sites, columnNames = c("scientificName", "decimalLongitude", "decimalLatitude"), xlim = xlim, ylim = ylim, scaleFactor = 5, showLegend = showLegend)
-##   map.cities(minpop = 50000)
-## }
-
-# Plots a google map of the specimens' collection sites
-GMapSpecimenSites <- function(specimens, xlimFrac = 0.5, ylimFrac = 0.5, showLegend = FALSE) {
-
-  cols <- c('decimalLatitude', 'decimalLongitude')
-  sites <- ddply(specimens, cols, nrow)
-  names(sites) <- c(cols, 'Count')
-  
-  xlim <- extendrange(sites$decimalLongitude, f = xlimFrac)
-  ylim <- extendrange(sites$decimalLatitude, f = ylimFrac)
-  m <- get_map(c(xlim[1], ylim[1], xlim[2], ylim[2]))
-
-  # Explicitly print so that it works when plotting to a device  
-  print(ggmap(m) + 
-          geom_point(data = sites, aes(x = decimalLongitude, y = decimalLatitude, size = Count), 
-                     color = 'black', fill= 'red', pch = 21, alpha = 0.5) + 
-          scale_size_continuous(range = c(5, 20)) +
-          theme(plot.margin = unit(c(0, 0, 0, 0), "cm")))
-}
-
 
