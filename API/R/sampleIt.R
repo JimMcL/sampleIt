@@ -40,10 +40,15 @@ SIQuerySpecimens <- function(...) {
   SIQuery('specimens.csv?', ...)
 }
 
+# Given a set of specimen IDs, returns their specimen records
+SIQuerySpecimensByIds <- function(ids) {
+  SIQuerySpecimens(sprintf("id=[%s]", paste(ids, collapse=',')))
+}
+
 # Returns specimen metadata corresponding to a set of photos
 SIQuerySpecimensForPhotos <- function(photos) {
   specimenIds <- unique(photos[photos$imageabletype == 'Specimen',]$imageableid)
-  SIQuerySpecimens(sprintf("id=[%s]", paste(specimenIds, collapse=',')))
+  SIQuerySpecimensByIds(specimenIds)
 }
 
 ### TODO make this work
@@ -97,3 +102,8 @@ SIGetOutlines <- function(angle) {
   SIGetPhotoData("ptype=Outline&imageable_type=Specimen&view_angle=", angle, strictOnly = TRUE)
 }
 
+# Returns the specimen collection date time.
+SIRecordedDateTime <- function(specimens) {
+  date <- paste(specimens$year, specimens$month, specimens$day, sep = "-")
+ strptime(paste(date, specimens$time), format = "%Y-%m-%d %H:%M")
+}
