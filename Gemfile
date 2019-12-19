@@ -8,7 +8,7 @@ gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
 # I'm doing this as recommended here: https://github.com/sparklemotion/sqlite3-ruby/issues/224#issuecomment-416800097
 gem 'sqlite3', git: "https://github.com/larskanis/sqlite3-ruby", branch: "add-gemspec"
 # Use Puma as the app server
-gem 'puma', '~> 3.0'
+gem 'puma', '~> 3.12'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
